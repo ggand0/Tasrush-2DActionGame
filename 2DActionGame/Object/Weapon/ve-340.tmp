@@ -1,0 +1,836 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Audio;
+
+namespace _2DActionGame
+{
+	/// <summary>
+	///  Bulletの射撃の管理クラス。射撃する敵は全てTurretを生成して射撃処理を委譲させるのが楽。
+	/// </summary>
+	public class Turret : Weapon
+	{
+		#region Member variable
+
+		private static readonly int defBulletNum = 3;
+		private static readonly int defShootInterval = 120;
+		private static readonly int defBulletInterval = 20;
+
+		/// <summary>
+		/// Turretが持つbulletの個数。射撃が終わるたびに回収して使いまわす
+		/// </summary>
+		private int bulletNumber = defBulletNum;
+		/// <summary>
+		/// 攻撃の間隔[frame]
+		/// </summary>
+		private int shootInterval = defShootInterval;
+		/// <summary>
+		/// １回の攻撃における射撃の間隔[frame]
+		/// </summary>
+		private int bulletInterval = defBulletInterval;
+
+		/// <summary>
+		/// Turretが大きいなら複数射撃点があってもいい、もしくはturretにturretを作る
+		/// </summary>
+		private List<Vector2> shootPositions;
+		private SoundEffect damageSound, hitSound;
+		private Vector2 shootPosition;
+		private int timeInterval;
+		private int bulletCounter;
+		private int shootCounter;
+		
+		private int motionDelayTime = 120;
+		/// <summary>
+		/// shootPatternの中での細かいパターン。後で消す
+		/// </summary>
+		private int shootOption;
+		/// <summary>
+		/// trueにすると自動で射撃しなくなる。射撃させたい時にuserがUpdateメソッドを呼ぶ。
+		/// </summary>
+		private bool shootManually;
+
+		public List<Bullet> bullets { get; private set; }
+		public Vector2 defaultPosition { get; private set; }
+		public bool isStandard { get; private set; }
+		public int textureType { get; private set; }
+		public int bulletTextureType { get; private set; }
+		public int bulletType { get; private set; }
+		public int shootPattern { get; private set; }
+		/// <summary>
+		///  (位置的に)userに従属するか否か
+		/// </summary>
+		public bool isSubsidiary { get; private set; }
+		/// <summary>
+		/// 表示(描画)するか否か
+		/// </summary>
+		public bool isVisible { get; internal set; }
+		/// <summary>
+		/// 弾を射撃した瞬間
+		/// </summary>
+		public bool hasShot { get; private set; }
+		/*/// <summary>
+		/// 1回の射撃が終了したか
+		/// </summary>
+		public bool isEnd { get; internal set; }*/
+		/// <summary>
+		/// 1回のまとまった攻撃単位の中での射撃した回数
+		/// </summary>
+		public int shootNum { get; internal set; }
+		/// <summary>
+		/// 射撃した弾を回収して次の射撃に使うか。まだ使ってない
+		/// </summary>
+		public bool reuseBullets { get; private set; }
+
+		/// <summary>
+		/// userが任意の方向に飛ばさせたい時に指定
+		/// </summary>
+		public Vector2 bulletSpeed { get; set; }
+		public float bulletSpeed1D { get; private set; }
+
+		// Enemy Attribute
+		private int comboTime, comboCount, delayTime, totalHits;
+		#endregion
+		#region Constructors
+		/*// Basic : userに追従して射撃するだけ																																// ↓参照してるクラス
+        public Turret(Stage stage,  float x, float y, int width, int height)
+            : this(stage, null, new Vector2(0, 0), width, height)
+        {   
+            // time=0は不要 "//shoot()用"
+        }
+        public Turret(Stage stage, Object user,Vector2 shootPosition, int width, int height)
+            : this(stage, user,shootPosition, width, height, 1)
+        {
+        }
+        public Turret(Stage stage, Object user, Vector2 shootPosition, int width, int height, int shootPattern)																	// FE1,FE3
+            : this(stage, user, shootPosition, width, height, shootPattern, 3)
+        {
+        }
+        public Turret(Stage stage, Object user, Vector2 shootPosition, int width, int height, int shootPattern, int bulletNum)													// Boss(4Fuujin),FE,FE2,FE3,SE,SE3,Sword
+            : this(stage, user, shootPosition, width, height, shootPattern, bulletNum, false)
+        {
+        }
+        public Turret(Stage stage, Object user, Vector2 shootPosition, int width, int height, int shootPattern, int bulletNum, bool shootManually)								// Raijin.beamTurret
+            : this(stage, user, shootPosition, width, height, shootPattern, bulletNum, shootManually, true, false, 1)
+        {
+			shootPositions = new List<Vector2>();
+            shootPositions.Add(shootPosition);
+            this.shootPosition = shootPosition;
+        }
+
+        // Variation : 以下では自立して行動するTurretも生成可能
+        public Turret(Stage stage, Object user, Vector2 defPosition, int width, int height, int shootPattern, int bulletNum,
+            bool shootManually, bool isSubsidary, bool canBeDestroyed, int HP)// nothing
+            : this(stage, user, defPosition, width, height, shootPattern, bulletNum, shootManually, isSubsidary, canBeDestroyed, HP, 0, 0)
+        {
+        }
+
+        public Turret(Stage stage, Object user, Vector2 defPosition, int width, int height, int shootPattern, int bulletNum,// 驚きの引数14個
+            bool shootManually, bool isSubsidiary, bool canBeDestroyed, int HP, int textureType, int bulletTextureType)															// Raijin.thnderTurret
+            : this(stage, user, defPosition, width, height, shootPattern, bulletNum, shootManually, isSubsidiary, canBeDestroyed, HP, textureType, bulletTextureType, 14)
+        {
+        }
+
+        public Turret(Stage stage, Object user, Vector2 defPosition, int width, int height, int shootPattern, int bulletNum,// 驚きの引数15個
+            bool shootManually, bool isSubsidiary, bool canBeDestroyed, int HP, int textureType, int bulletTextureType, float bulletSpeed)										// Raijin.thnderTurret
+            : this(stage, user, defPosition, width, height, shootPattern, bulletNum, shootManually, isSubsidiary, canBeDestroyed, HP, textureType, bulletTextureType, bulletSpeed, 0, 180, 20)
+        {
+        }
+
+		/// <summary>
+		/// 一番細かくパラメータを設定できるコンストラクタ。
+		/// </summary>
+		/// <param name="stage"></param>
+		/// <param name="user"></param>
+		/// <param name="defPosition"></param>
+		/// <param name="width"></param>
+		/// <param name="height"></param>
+		/// <param name="shootPattern"></param>
+		/// <param name="bulletNum"></param>
+		/// <param name="shootManually"></param>
+		/// <param name="isSubsidiary"></param>
+		/// <param name="canBeDestroyed"></param>
+		/// <param name="HP"></param>
+		/// <param name="textureType"></param>
+		/// <param name="bulletTextureType"></param>
+		/// <param name="bulletSpeed"></param>
+		/// <param name="shootOption"></param>
+		/// <param name="shootInterval"></param>
+		/// <param name="bulletInterval"></param>
+        public Turret(Stage stage, Object user, Vector2 defPosition, int width, int height, int shootPattern, int bulletNum,
+            bool shootManually, bool isSubsidiary, bool canBeDestroyed, int HP, int textureType, int bulletTextureType
+			, float bulletSpeed, int shootOption, int shootInterval, int bulletInterval)																						// Raijin.thnderTurret
+            : base(stage, defPosition.X, defPosition.Y, width, height, user)
+        {
+			// type0:bullet、type1:beam、type3:else
+            this.shootInterval = shootInterval;
+            this.bulletInterval = bulletInterval;
+            this.defaultPosition = defPosition;
+            this.shootPattern = shootPattern;
+            this.bulletNumber = bulletNum;
+			if (isSubsidiary) {
+				this.position = user.position + defPosition;					// (isSubsidiaryで呼び出すとこの時点でdefPosition = shootPositionである)
+			} else {
+				this.position = defPosition;
+			}
+            this.shootOption = shootOption;
+            this.shootManually = shootManually;
+            this.isSubsidiary = isSubsidiary;
+            this.canBeDestroyed = canBeDestroyed;
+            this.HP = HP;
+            this.textureType = textureType;
+            this.bulletTextureType = bulletTextureType;
+            this.bulletSpeed1D = bulletSpeed;
+
+			bullets = new List<Bullet>();
+            animation = new Animation(width, height);
+            AddBullets();													// 自身のbulletsListに追加
+			foreach (Bullet bullet in bullets) stage.bullets.Add(bullet);	// StageのListに追加
+			Load();
+        }*/
+
+		// Basic : userに追従して射撃するだけ																																				// ↓参照してるクラス
+		public Turret(Stage stage, float x, float y, int width, int height)
+			: this(stage, null, new Vector2(0, 0), width, height)
+		{
+		}
+		public Turret(Stage stage, Object user, Vector2 shootPosition, int width, int height)
+			: this(stage, user, shootPosition, width, height, 0, 1)
+		{
+		}
+		public Turret(Stage stage, Object user, Vector2 shootPosition, int width, int height, int bulletType, int shootPattern)																	// Boss(4Fuujin)
+			: this(stage, user, shootPosition, width, height, bulletType, shootPattern, 3)
+		{
+		}
+		public Turret(Stage stage, Object user, Vector2 shootPosition, int width, int height, int bulletType, int shootPattern, int bulletNum)													// FE, FE3, SE, SE3, Sword
+			: this(stage, user, shootPosition, width, height, bulletType, shootPattern, bulletNum, false)
+		{
+		}
+		public Turret(Stage stage, Object user, Vector2 shootPosition, int width, int height, int bulletType, int shootPattern, int bulletNum, bool shootManually)								// Raijin.beamTurret
+			: this(stage, user, shootPosition, width, height, bulletType, shootPattern, bulletNum, shootManually, true, false, 1)
+		{
+			shootPositions = new List<Vector2>();
+			shootPositions.Add(shootPosition);
+			this.shootPosition = shootPosition;
+		}
+
+		// Variation : 以下では自立して行動するTurretも生成可能
+		public Turret(Stage stage, Object user, Vector2 defPosition, int width, int height, int bulletType, int shootPattern, int bulletNum,
+			bool shootManually, bool isSubsidary, bool canBeDestroyed, int HP)// nothing
+			: this(stage, user, defPosition, width, height, bulletType, shootPattern, bulletNum, shootManually, isSubsidary, canBeDestroyed, HP, 0, 0)
+		{
+		}
+
+		public Turret(Stage stage, Object user, Vector2 defPosition, int width, int height, int bulletType, int shootPattern, int bulletNum,
+			bool shootManually, bool isSubsidiary, bool canBeDestroyed, int HP, int textureType, int bulletTextureType)																			// FE2, Raijin.ballTurret, Fuujin.cutterTurre, Rival.(thunderT, cutterT, syuriken)
+			: this(stage, user, defPosition, width, height, bulletType, shootPattern, bulletNum, shootManually, isSubsidiary, canBeDestroyed, HP, textureType, bulletTextureType, 14)
+		{
+		}
+
+		public Turret(Stage stage, Object user, Vector2 defPosition, int width, int height, int bulletType, int shootPattern, int bulletNum,
+			bool shootManually, bool isSubsidiary, bool canBeDestroyed, int HP, int textureType, int bulletTextureType, float bulletSpeed)
+			: this(stage, user, defPosition, width, height, bulletType, shootPattern, bulletNum, shootManually, isSubsidiary, canBeDestroyed, HP, textureType, bulletTextureType, bulletSpeed, 180, 20)
+		{
+		}
+
+		/// <summary>
+		/// 一番細かくパラメータを設定できるコンストラクタ。
+		/// </summary>
+		/// <param name="stage"></param>
+		/// <param name="user"></param>
+		/// <param name="defPosition"></param>
+		/// <param name="width"></param>
+		/// <param name="height"></param>
+		/// <param name="shootPattern"></param>
+		/// <param name="bulletNum"></param>
+		/// <param name="shootManually"></param>
+		/// <param name="isSubsidiary"></param>
+		/// <param name="canBeDestroyed"></param>
+		/// <param name="HP"></param>
+		/// <param name="textureType"></param>
+		/// <param name="bulletTextureType"></param>
+		/// <param name="bulletSpeed"></param>
+		/// <param name="shootOption"></param>
+		/// <param name="shootInterval"></param>
+		/// <param name="bulletInterval"></param>
+		public Turret(Stage stage, Object user, Vector2 defPosition, int width, int height, int bulletType, int shootPattern, int bulletNum,
+			bool shootManually, bool isSubsidiary, bool canBeDestroyed, int HP, int textureType, int bulletTextureType
+			, float bulletSpeed, int shootInterval, int bulletInterval)																						// Raijin.thnderTurret, Raijin.thnderTurrets, Raijin.thnderTurret8Way
+			: base(stage, defPosition.X, defPosition.Y, width, height, user)
+		{
+			// type0:bullet、type1:beam、type3:else
+			this.shootInterval = shootInterval;
+			this.bulletInterval = bulletInterval;
+			this.defaultPosition = defPosition;
+			this.bulletType = bulletType;
+			this.shootPattern = shootPattern;
+			this.bulletNumber = bulletNum;
+			if (isSubsidiary) {
+				this.position = user.position + defPosition;					// (isSubsidiaryで呼び出すとこの時点でdefPosition = shootPositionである)
+			} else {
+				this.position = defPosition;
+			}
+			this.shootManually = shootManually;
+			this.isSubsidiary = isSubsidiary;
+			this.canBeDestroyed = canBeDestroyed;
+			this.HP = HP;
+			this.textureType = textureType;
+			this.bulletTextureType = bulletTextureType;
+			this.bulletSpeed1D = bulletSpeed;
+
+			bullets = new List<Bullet>();
+			animation = new Animation(width, height);
+			AddBullets();													// 自身のbulletsListに追加
+			foreach (Bullet bullet in bullets) stage.bullets.Add(bullet);	// StageのListに追加
+			Load();
+		}
+		#endregion
+
+		protected override void Load()
+		{
+			base.Load();
+
+			texture = content.Load<Texture2D>("Object\\Weapon\\Turret");
+			damageSound = content.Load<SoundEffect>("Audio\\SE\\damage");
+			hitSound = content.Load<SoundEffect>("Audio\\SE\\hit_big");
+		}
+		/// <summary>
+		/// 途中で止めてまた再開するときなどに(撃つObjectが意図的に調整するときに使用)
+		/// </summary>
+		public void Inicialize()
+		{
+			foreach (Bullet bullet in bullets) {
+				//bullet.position = this.position;
+				bullet.isShot = false;//true
+				bullet.counter = 0;
+				bullet.movedDistance = 0;
+				if (bullet is Thunder) (bullet as Thunder).Inicialize();
+			}
+			bulletCounter = 0;
+			timeInterval = 0;
+			counter = 0;
+			hasShot = false;
+			if (isSubsidiary) position = user.position + shootPosition;
+		}
+		/// <summary>
+		/// 指定された弾の個数だけListに追加
+		/// </summary>
+		private void AddBullets()
+		{
+			/*if (shootPattern == 1 || shootPattern == 0 || shootPattern == 5)
+				for (int i = 0; i < bulletNumber; i++)//
+					bullets.Add(new Bullet(stage, this, 16, 16, bulletTextureType));
+			else if (shootPattern == 2) 
+				for (int i = 0; i < bulletNumber; i++)
+					bullets.Add(new Beam(stage, this, 64, 400, 1));
+			else if (shootPattern == 3) {
+				for (int i = 0; i < bulletNumber; i++)
+					bullets.Add(new Thunder(stage, this, 100, 8, 0));
+			}*/
+			switch (bulletType) {
+				case 0:
+					for (int i = 0; i < bulletNumber; i++)//
+						bullets.Add(new Bullet(stage, this, 16, 16, bulletTextureType));
+					break;
+				case 1:
+					for (int i = 0; i < bulletNumber; i++)
+						bullets.Add(new Beam(stage, this, 64, 400, 1));
+					break;
+				case 2:
+					for (int i = 0; i < bulletNumber; i++)
+						bullets.Add(new Thunder(stage, this, 100, 8, 0));
+					break;
+			}
+
+		}
+
+		public override void Update()
+		{
+			if (IsActive()) {
+				/*if (!shootManually) UpdateShooting(this.shootInterval, this.bulletInterval);
+				else if (shootManually && isBeingUsed) UpdateShootingOnce(this.bulletInterval);*/
+
+				//UpdateShootingN0(this.shootInterval, this.bulletInterval, shootManually);
+
+				// Method USN0でまとめようとしたが、Manualで射撃させようとするとBeamが表示されないバグが
+				if (!shootManually) {
+					UpdateShootingN0(this.shootInterval, this.bulletInterval, shootManually);
+				} else if (shootManually && isBeingUsed) { UpdateShootingOnce(this.bulletInterval); }
+
+				UpdateNumbers();
+				UpdateAnimation();
+				base.Update();
+
+				if (canBeDestroyed) {
+					if (hasPlayedSE) hasPlayedSE = false;
+
+					base.Update();
+
+					if (HP <= 0 && time > comboTime) {
+						if (!hasPlayedSE) {
+							if (!game.isMuted) damageSound.Play(SoundControl.volumeAll, 0f, 0f);
+							hasPlayedSE = true;
+						}
+						isAlive = false;
+					}// HP0でフルボッコが終わったら志望
+					if (!isAlive && counter == 0) { isEffected = true; deathEffected = true; counter++; }// 1回だけフラグを立てる
+					if (time > comboTime) comboCount = 0;
+
+					if (stage.player.isThrusting && isDamaged) MotionUpdate();
+					MotionDelay();
+					time++;
+					delayTime++;
+				}
+			}
+		}
+		public override void Draw(SpriteBatch spriteBatch)
+		{
+			if ((isBeingUsed && canBeDestroyed && !isVisible) || (canBeDestroyed && isVisible)) {// 壊れない&&描画したいときもあるだろうが今はこの仕様で。
+				spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, MathHelper.ToRadians(-degree), Vector2.Zero, Vector2.One, SpriteEffects.None, 0);
+			}
+		}
+
+		// 補助メソッド
+		#region ShootPatterns
+		// old:
+		/// <summary>
+		/// 弾に直線的な速度を与えるパターン
+		/// </summary>
+		private void ShootPattern0(Bullet bullet, Vector2 bulletSpeed)
+		{
+			bullet.speed = bulletSpeed;
+			bullet.isShot = true;
+		}
+		/// <summary>
+		/// Playerへ直線的にホーミングさせる速度を与えるパターン。
+		/// </summary>
+		private void ShootPattern1(Object target_object, Bullet bullet, float speed)
+		{
+			double rad = Math.Atan2(target_object.position.Y - position.Y, target_object.position.X - position.X);
+			bullet.rot = -(float)rad + (float)Math.PI;
+			bullet.degree = -(float)MathHelper.ToDegrees((float)rad + (float)Math.PI);
+
+			// 移動量を計算
+			bullet.speed =  new Vector2((float)Math.Cos(rad) * speed, (float)Math.Sin(rad) * speed);	
+			bullet.isShot = true;
+		}
+		/// <summary>
+		/// Thunder用のメソッド。 4/14 角度の計算までここに入れてしまおうか?
+		/// </summary>
+		private void ShootPattern2(/*Bullet bullet, */params int[] degrees)
+		{
+			//bullet.position = position;// 発射時に同じ処理してるし意味無いよな... つまりdegree調整処理を追加してthunderの時もここを参照するようにすべき
+			//bullet.degree = degree;
+
+			if (degrees.Length == 1) {
+				foreach (Bullet bul in bullets)
+					bul.degree = degrees[0];
+			} else {
+				for (int i = 0; i < bullets.Count; i++) {
+					bullets[i].degree = degrees[i];
+					if (i == degrees.Length - 1) break;
+				}
+			}
+		}
+		/// <summary>
+		/// 参考：http://hakuhin.jp/as/shot.html#SHOT_00_00 の「拡散させる動き」
+		/// </summary>
+		/// <param name="bullet"></param>
+		private void ShootPattern5(Object targetObject)
+		{
+			float speed = 5;	                                                                            // 個々のbulletのスピード
+			float width = 60;                                                                               // 射撃するbulletsの幅(degree)
+			double rad = Math.Atan2(targetObject.position.Y - position.Y, targetObject.position.X - position.X);    // 全体としての基準となる向き.
+			double rotation = 0;                                                                            // 最終的な個々のbulletに与える角度(radian)
+
+			// 角度の割り振り
+			for (int i = 0; i < bullets.Count; i++) {// 最初以外は全部同じangleになってるっぽい.全然割り振られていない.
+				float tmp = (((float)bullets.Count - 1) - i) / ((float)bullets.Count - 1);//(bullets.Count==1 ? 2 :bullets.Count - 1);	// 0.0～1.0に丸める (i.e. *1/5, *2/5,...  <結論：整数が切り捨てられてた>
+				tmp -= .5f;	                // -0.5～0.5にする
+				double rot = tmp * width;	// 角度を求める
+				rotation = rad + MathHelper.ToRadians((float)rot); // rotはもしかしてdegreeで来てるな？これが原因か
+
+				//bullets[i].degree = MathHelper.ToDegrees((float)rotation) + 180;//MathHelper.ToDegrees((float)rad) + (float)rot;//MathHelper.ToDegrees((float)rad);     // 元絵の関係で調整←- 180は要ら内っぽい  何故characterによって角度が違ってくるのか？
+				bullets[i].rot = -(float)rotation;
+				bullets[i].degree = MathHelper.ToDegrees((float)rotation);
+
+				bullets[i].speed.X = (float)Math.Cos(rotation) * speed;	        // x方向の移動量を計算
+				bullets[i].speed.Y = (float)Math.Sin(rotation) * speed;         // y方向の移動量を計算
+			}
+		}
+
+		// new: 8/16　弾種→射撃パターンでまとめる
+		private void ShootPatternNormal0(Bullet bullet, Vector2 bulletSpeed)
+		{
+			bullet.speed = bulletSpeed;
+			bullet.isShot = true;
+		}
+		private void ShootPatternNormal1(Object targetObject, Bullet bullet, float speed)
+		{
+			// 180°分回転度数を変更したい
+			double rad = Math.Atan2(targetObject.position.Y - position.Y, targetObject.position.X - position.X);
+
+			bullet.rot = -(float)rad + (float)Math.PI;
+			bullet.degree = -(float)MathHelper.ToDegrees((float)rad + (float)Math.PI) + 180;// + 180で向きは修正された？
+
+			// 移動量を計算
+			bullet.speed = new Vector2((float)Math.Cos(rad) * speed, (float)Math.Sin(rad) * speed);
+			bullet.isShot = true;
+		}
+		private void ShootPatternBeam0(float degree)
+		{
+			foreach (Bullet bul in bullets) bul.degree = degree;
+		}
+		private void ShootPatternBeam1(params float[] degrees)
+		{
+			//foreach (Bullet bul in bullets) bul.degree = degree;
+			if (degrees.Length == 1) {
+				foreach (Bullet bul in bullets)
+					bul.degree = degrees[0];
+			} else {
+				for (int i = 0; i < bullets.Count; i++) {
+					bullets[i].degree = degrees[i];
+					if (i == degrees.Length - 1) break;
+				}
+			}
+		}
+		private void ShootPatternThunder0(float defDegree, float unitDegree)
+		{
+			for (int i = 0; i < bullets.Count; i++) bullets[i].degree = defDegree + i * unitDegree;
+		}
+		private void ShootPatternAll0(Object targetObject)
+		{
+			float speed = 5;	                                                                            // 個々のbulletのスピード
+			float width = 60;                                                                               // 射撃するbulletsの幅(degree)
+			double rad = Math.Atan2(targetObject.position.Y - position.Y, targetObject.position.X - position.X);    // 全体としての基準となる向き.
+			double rotation = 0;                                                                            // 最終的な個々のbulletに与える角度(radian)
+
+			// 角度の割り振り
+			for (int i = 0; i < bullets.Count; i++) {
+				float tmp = (((float)bullets.Count - 1) - i) / ((float)bullets.Count - 1);
+				tmp -= .5f;					// -0.5～0.5にする
+				double rot = tmp * width;	// 角度を求める
+				rotation = rad + MathHelper.ToRadians((float)rot);
+
+				bullets[i].rot = -(float)rotation;
+				bullets[i].degree = MathHelper.ToDegrees((float)rotation);
+
+				bullets[i].speed.X = (float)Math.Cos(rotation) * speed;
+				bullets[i].speed.Y = (float)Math.Sin(rotation) * speed;
+			}
+		}
+		#endregion
+		#region MovePatterns
+		private void MovePattern0(Vector2 defaultPosition)
+		{
+			speed.X = -5;
+			if (position.X < defaultPosition.X - 200) isBeingUsed = false;
+		}
+		#endregion
+		private bool NeedIni(Bullet bullet)
+		{
+			return bullet.isShot && bullet.counter == 0;
+		}
+
+		// 射撃管理メイン
+		/// <summary>
+		/// リファクタリング中の代替メソッド。
+		/// </summary>
+		/// <param name="shootInterval">射撃間隔</param>
+		/// <param name="bulletInterval">>1回の射撃における弾の間隔</param>
+		public void UpdateShootingN0(int shootInterval, int bulletsInterval, bool isManual)
+		{
+			// 初期化
+			switch (shootPattern) {
+				default:
+					InicializeShootingN(true, isManual);
+					break;
+				case 5:
+					InicializeShootingN(false, isManual);
+					break;
+			}
+
+			// bulletsの挙動を管理する。最初の１フレームだけだったり毎フレームだったり
+			if (hasShot) {
+				switch (bulletType) {
+					case 0:							// normal
+						switch (shootPattern) {
+							case 0:
+								foreach (Bullet bullet in bullets) if (NeedIni(bullets[0])) ShootPatternNormal0(bullet, bulletSpeed);
+								break;
+							case 1:// 現在射撃中の弾のみホーミング座標更新 // bulletCounter - 1か...?
+								if (user is Fuujin) { }
+								/*foreach (Bullet bullet in bullets)*/ if (NeedIni(bullets[bulletCounter - 1])) ShootPatternNormal1(stage.player, bullets[bulletCounter], bulletSpeed1D);// 跳ね返した次の射撃で呼ばれてないでござる
+								break;
+							case 2:// 毎フレーム座標更新：鬼ホーミング
+								// 全弾に対して更新＋弾同士の間隔が狭いと無理ゲー
+								foreach (Bullet bullet in bullets) ShootPatternNormal1(stage.player, bullet, bulletSpeed1D);
+								break;
+							case 5:
+								if (NeedIni(bullets[0])) ShootPatternAll0(stage.player);
+								break;
+						}
+						break;
+					case 1:							// beam
+						switch (shootPattern) {
+							case 0:
+								if (NeedIni(bullets[0])) ShootPatternBeam1(0);
+								break;
+							case 1:
+								if (NeedIni(bullets[0])) ShootPatternBeam1(0);
+								break;
+						}
+						break;
+					case 2:							// thunder
+						switch (shootPattern) {
+							case 0:
+								if (!(user is Raijin)) {
+									if (!user.turnsRight) {
+										if (NeedIni(bullets[0])) ShootPatternBeam1(135, 215, 250);
+									} else if (user.turnsRight)
+										if (NeedIni(bullets[0])) ShootPatternBeam1(40, -10, -65);
+								} else {
+									if (!turnsRight) ShootPatternBeam1(135, 215, -250);
+									else if (turnsRight) ShootPatternBeam1(40, -10, -65);
+								}
+								break;
+							case 1:
+								ShootPatternBeam0(-90);
+								break;
+							case 2:
+								ShootPatternBeam1(-100, -135, -60);
+								break;
+							case 3:
+								ShootPatternThunder0(90, 30);
+								break;
+						}
+						break;
+				}
+				shootCounter++;// (撃ってからの)時間
+			}
+
+			timeInterval++;
+
+			// bulletが自然にexpireするようにしなきゃ... hasShotは単に全弾撃ち終わった意味にしたい
+			// 912:sI次第で全弾打ち終わる前に終わる
+			if (hasShot && /*!bullets[bullets.Count - 1].isShot*/ ++shootCounter == shootInterval/**/) {
+				hasShot = false;
+				shootCounter = bulletCounter = shootNum = 0;
+				if (isManual) isEnd = true;
+				foreach (Bullet bul in bullets) {
+					bul.isHostile = true;// 終了する時にも一応
+					bul.position = position + defaultPosition;
+					bul.EndFlying();
+				}
+
+				isEnd = true;
+				//if (bullets[bullets.Count - 1].isEnd) isEnd = true;// thunder用
+			}
+		}
+		/// <summary>
+		/// 射撃開始時に呼ばれる初期化メソッド。
+		/// </summary>
+		/// <param name="shootInTurn">順に射撃するか一斉射撃か</param>
+		/// <param name="immediate">ShootOnceをメソッド内に組み込むために使う予定のパラメータ。まだ使えない</param>
+		private void InicializeShootingN(bool shootInTurn, bool immediate)
+		{
+			// １回の射撃の開始
+			if (!immediate && timeInterval % shootInterval == 0 || immediate) {
+				hasShot = true;
+				isEnd = false;
+				bulletCounter = shootCounter = 0;
+				foreach (Bullet bul in bullets) {
+					bul.position = position + defaultPosition;
+					bul.hasFlied = bul.isShot = bul.isEnd = false;
+					bul.counter = 0;
+					bul.isHostile = true;
+					if (!shootInTurn) bul.isShot = true;
+				}
+			}
+			// 1射撃の中での１弾目の射撃開始
+			if (hasShot && timeInterval % bulletInterval == 0 && shootNum < bulletNumber /**/) {// bulletが1個だとsIが長いせいで1回の射撃で2回よばれてるな...? shootNum < bulletNumberを追加
+				if (shootInTurn) {
+					if (bulletCounter < bulletNumber) {
+						bullets[bulletCounter].isShot = true;
+						bullets[bulletCounter].counter = 0;
+					}
+					if (bulletCounter + 1 < bulletNumber || bulletNumber == 1) bulletCounter++;
+				}
+				shootNum++;
+			}
+		}
+		/// <summary>
+		/// 1回射撃して終了させたいときに使用するメソッド。USN0にまとめたがまだバグがあるのでこちらを残している
+		/// </summary>
+		/// <param name="shootInterval">射撃間隔</param>
+		/// <param name="bulletInterval">1回の射撃における弾の間隔</param>
+		public void UpdateShootingOnce(int bulletsInterval)
+		{
+			if (timeInterval == 0) {
+				hasShot = true;
+				isEnd = false;
+				bulletCounter = 0;
+				foreach (Bullet bul in bullets) {
+					bul.position = position;
+					bul.isShot = false;
+				}
+			}
+			if (hasShot && timeInterval % bulletsInterval == 0) {
+				if (shootPattern != 5) {
+					bullets[bulletCounter].isShot = true;
+					if (bulletCounter + 1 < bullets.Count) bulletCounter++;
+					if (bulletCounter > bulletNumber) bulletCounter = 0;
+				} else
+					foreach (Bullet bul in bullets) bul.isShot = true;
+			}
+			timeInterval++;
+
+			if (hasShot) {
+				if (shootPattern != 5)
+					foreach (Bullet bullet in bullets)// Shoot()は2個目以降も呼ばれている
+						if (bullet.isShot)
+							if (bullet.counter == 0)// 0以上なら既に撃たれた後のはず
+								switch (shootPattern) {
+									case 0: ShootPattern0(bullet, bulletSpeed); break;
+									case 1: ShootPattern1(stage.player, bullet, bulletSpeed1D); break;
+									case 2: ShootPattern2(0); break;// 4Raijin
+									case 3: ShootPattern2(0); break;// 4Raijin
+									default: break;
+								} else if (bullets[0].isShot && bullets[0].counter == 0)
+								ShootPattern5(stage.player);
+			}
+			if (hasShot) counter++;
+
+			if (!bullets[bullets.Count - 1].isShot && hasShot && shootPattern != 3/* && counter > shootInterval*/) {
+				hasShot = false;
+				counter = 0;
+				bulletCounter = 0;
+				timeInterval = 0;
+				isEnd = true;
+				//if ((bullets[bullets.Count - 1] is Thunder) && (bullets[bullets.Count - 1] as Thunder).isEnd) isEnd = true;
+			}
+			if ((bullets[bullets.Count - 1] is Thunder) && (bullets[bullets.Count - 1] as Thunder).isEnd) isEnd = true;
+		}
+		/// <summary>
+		/// 1回射撃して終了。工事中
+		/// </summary>
+		/// <param name="shootInterval">射撃間隔</param>
+		/// <param name="bulletInterval">1回の射撃における弾の間隔</param>
+		public void UpdateShootingOnceN(int bulletsInterval, bool ini)
+		{
+			if (ini) {
+				hasShot = true;
+				isEnd = false;
+				bulletCounter = 0;
+				foreach (Bullet bul in bullets) {
+					bul.position = position;
+					bul.isShot = false;
+				}
+			}
+
+			if (hasShot && timeInterval % bulletsInterval == 0) {
+				if (shootPattern != 5) {
+					bullets[bulletCounter].isShot = true;
+					if (bulletCounter + 1 < bullets.Count) bulletCounter++;
+					if (bulletCounter > bulletNumber) bulletCounter = 0;
+				} else
+					foreach (Bullet bul in bullets) bul.isShot = true;
+			}
+			timeInterval++;
+
+			if (hasShot) {
+				if (shootPattern != 5)
+					foreach (Bullet bullet in bullets)// Shoot()は2個目以降も呼ばれている
+						if (bullet.isShot)
+							if (bullet.counter == 0)// 0以上なら既に撃たれた後のはず
+								switch (shootPattern) {
+									case 0: ShootPattern0(bullet, bulletSpeed); break;
+									case 1: ShootPattern1(stage.player, bullet, bulletSpeed1D); break;
+									case 2: ShootPattern2(0); break;// 4Raijin
+									case 3: ShootPattern2(0); break;// 4Raijin
+									default: break;
+								} else if (bullets[0].isShot && bullets[0].counter == 0)
+								ShootPattern5(stage.player);
+			}
+			if (hasShot) counter++;
+
+			if (!bullets[bullets.Count - 1].isShot && hasShot && shootPattern != 3/* && counter > shootInterval*/) {
+				hasShot = false;
+				counter = 0;
+				bulletCounter = 0;
+				timeInterval = 0;
+				isEnd = true;
+				//if ((bullets[bullets.Count - 1] is Thunder) && (bullets[bullets.Count - 1] as Thunder).isEnd) isEnd = true;
+			}
+			if ((bullets[bullets.Count - 1] is Thunder) && (bullets[bullets.Count - 1] as Thunder).isEnd) isEnd = true;
+		}
+
+		// 補助メソッド(普通のObjectとしての振る舞い関係)
+		public override void MotionUpdate()
+		{
+			float distance = position.X - stage.player.position.X;
+
+			if (isDamaged && isAlive) {
+				if (stage.player.isAttacking3) {
+					if (distance > 0) speed.X += 5;
+					else speed.X += -5;
+					speed.Y -= 5;
+					HP--;
+				} else if (stage.player.isThrusting && time % 3 == 0) {
+					if (distance > 0) speed.X += 1;
+					else speed.X += -1;
+					speed.Y -= 1;
+				} else if (!stage.player.isThrusting) {
+					if (distance > 0) speed.X += 1.5f;
+					else speed.X += -1.5f;
+				}
+				
+				if (!game.isMuted) hitSound.Play(SoundControl.volumeAll, 0f, 0f);
+
+				HP--;
+				totalHits += 1;
+				time = 0;
+				delayTime = 0;
+				isEffected = true;
+				damageEffected = true;
+				if (time < comboTime) comboCount++;
+				time++;
+
+				int adj = 0;
+				adj = stage.maxComboCount;
+				game.score += stage.inComboObjects.Count + (1 + stage.maxComboCount * .01f);//10 * stage.inComboObjects.Count * stage.maxComboCount;
+			}
+		}
+		internal virtual void MotionDelay()
+		{
+			if (delayTime < motionDelayTime) {
+				Gravity = .60;
+				if (stage.player.normalComboCount < 3) {
+					speed.Y = 0;
+					Gravity = 0;
+				}
+				//isInDamageMotion = true;
+				//isWinced = true;
+			} else {
+				//isInDamageMotion = false;
+				Gravity = .60;
+				//isWinced = false;
+			}
+		}
+		protected override void UpdateNumbers()
+		{
+			if (user != null && isSubsidiary) {
+				if (shootPosition != Vector2.Zero) this.position = user.position + shootPosition;
+				else this.position = user.position + this.defaultPosition;
+			}
+		}
+		public override void UpdateAnimation()
+		{
+			animation.Update(2, 0, 64, 48, 6, 1);
+		}
+	}
+}

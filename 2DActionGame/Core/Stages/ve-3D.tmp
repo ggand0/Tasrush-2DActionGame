@@ -1,0 +1,115 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Audio;
+
+namespace _2DActionGame
+{
+    public class BossTest : Stage
+    {
+        //private Boss boss;
+        public BossTest(Game1 game)
+            : base(game)
+        {
+            this.game = game;
+            Inicialize();
+            contentDirectory = "BossTest";
+
+            scrollingBackGround = new ScrollingBackground(new Vector2(0, 0));
+            frontalScrollingBackGround = new ScrollingBackground(new Vector2(0, 260));
+
+            surfaceHeightAtBoss = 482;
+
+
+
+            // character[0]をplayerに代入していたがやはり不便なので分離した
+            player = new Player(game, this, 100, 100, 32, 48, 0);
+            characters.Add(player);
+            sword = player.sword;//new Sword(game, this, player, 200, 100, 64, 8, 0);
+            weapons.Add(sword);
+
+
+            boss = new Raijin(game, this, 500, 100, 210, 210, 50, 0);
+            //boss = new Fuujin(game, this, 500, 100, 210, 210, 50, 0,5,1);
+            characters.Add(boss);
+            bossLocation = boss.vector + new Vector2(-640, 0);
+
+            //characters.Add(new StationalEnemy(game, this, 150, 100, 48, 48, 5));
+            //characters.Add(new StationalEnemy(game, this, 200, 100, 48, 48, 5));
+            /*characters.Add(new StationalEnemy(game, this, 250, 100, 48, 48, 5));// 毎フレームダメージ判定入れる技の調整用
+            characters.Add(new JumpingEnemy(game, this, 300, 100, 32, 32, 5));
+            characters.Add(new FlyingEnemy(game, this, 350, 100, 32, 32, 5));
+            characters.Add(new ShootingEnemy(game, this, 400, 100, 48, 48, 5));// サイズ変更
+            characters.Add(new FlyingOutEnemy(game, this, 4500, 480 - 32, 32, 32, 5));*/
+
+            objects1.Add(player);
+            //sword = new Sword(game, this,player, 200, 100, 64, 8, 0);
+            
+            //input_second = new string[500];
+            //input_last = new string[500, 5];
+            //LoadMapData(1, "Flat_Map.txt", 0, 0);//"Flat_Map3840.txt"
+            LoadMapData(1, "BossTest.txt", 0, 0);
+
+            //LoadMapData(1, "Flat_Map3840.txt", CheckMapEnd(input_last) * 2 + 32);
+            /*LoadMapData(1, "Flat_Map3840.txt", CheckMapEnd(input_last) * 3 + 32);
+            LoadMapData(1, "Flat_Map3840.txt", CheckMapEnd(input_last) * 4 + 32);
+            LoadMapData(1, "Flat_Map3840.txt", CheckMapEnd(input_last) * 5 + 32);
+            LoadMapData(1, "Flat_Map3840.txt", CheckMapEnd(input_last) * 6 + 32);
+            LoadMapData(1, "Flat_Map3840.txt", CheckMapEnd(input_last) * 7 + 32);// このくらいでちょっと重くなってくる(GetDirection切った上体で)
+            //LoadMapData(1, "Flat_Map3840.txt", CheckMapEnd(input_last)*2 + 32);*/
+            // CheckMapEndを使うとすごく重くなるようだ？　端が重なる値にしたからかもしれないが...
+            // Mapを追加すると重いのかもCheckMapEndは全然関係なさそう　1つのファイルから読み込んだ場合は長くても重くならないような...
+
+            //LoadMapData(1, "Flat_Map2.txt", 0);
+            //LoadMapData(1, "Flat_Map2.txt", CheckMapEnd(input_last));
+            /*LoadMapData(1, "Flat_Map2.txt", CheckMapEnd(input_last) * 2);
+            LoadMapData(1, "Flat_Map2.txt", CheckMapEnd(input_last) * 3);
+            LoadMapData(1, "Flat_Map2.txt", CheckMapEnd(input_last) * 4);
+            LoadMapData(1, "Flat_Map2.txt", CheckMapEnd(input_last) * 5);*/
+            GetDirection();
+        }
+        public override void Load()
+        {
+            base.Load();
+            player.Load(game.Content, contentDirectory + "\\" + "Player1");
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            //isScrolled = true;
+            //characters[1].scalarSpeed = camera.scalarSpeed;
+
+            base.Update(gameTime);
+            //characters[1].scalarSpeed = scrollSpeed;
+            // speed.Xだとずれていくので画面にくっつけることに
+            // しかしshootPositionの関係でやはりspeed.Xを持たせたい
+
+            //characters[1].vector.X = camera.vector.X +200;
+
+            /*if(camera.vector.X > 1000){
+                camera.vector.X = 0;
+                for(int i=0;i<characters.Count;i++){
+                    characters[i].vector.X =0;
+                }
+            }*/
+            
+        }
+        /*protected override void ScrollUpdate()
+        {
+            for(int i=0;i<objects1.Count;i++){// Object全体に対する処理はobjectsでやると便利
+                camera.ScrollUpdate(objects1[i]);
+            }
+
+            //camera.ScrollUpdate(sword); なぜ剣だけ..?
+            if (isScrolled) { }// ボス戦は背景だけループさせた方がずっと軽いし楽ではなかろうか
+                //camera.vector.X += scrollSpeed;//.60f
+                //camera.scalarSpeed = scrollSpeed;
+        }*/
+
+    }
+}

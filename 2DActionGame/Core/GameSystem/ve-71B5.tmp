@@ -1,0 +1,128 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace _2DActionGame
+{
+    /// <summary>
+    /// どのCharacterからダメージを受けたか、何フレーム目で判定を入れるかなどの処理をする？
+    /// DamageControlで管理.
+    /// </summary>
+    public class Damage
+    {
+        private Stage stage;
+        private Game1 game;
+        private int damageFrame;                        // 何フレーム目でダメージを入れるか(HPを減らすか)
+        private int damageCounter;
+        private int type;                               // ダメージのタイプ.damagedObject側で指定してもよい.
+
+        public Object attackedObject { get; set; }      // 攻撃をヒットさせたObject
+        public Object damagedObject { get; set; }       // 攻撃を受けたObject
+        public Object2 adObject { get; set; }
+        public bool hasDamaged { get; set; }
+
+        public Damage (Game1 game, Stage stage, Object attackedObject, Object damagedObject)
+        {
+            this.game = game;
+            this.stage = stage;
+            this.attackedObject = attackedObject;
+            this.damagedObject = damagedObject;
+
+            damageFrame = 0;
+        }
+        public Damage(Game1 game, Stage stage, Object2 ADObject)
+        {
+            this.game = game;
+            this.stage = stage;
+            this.adObject = ADObject;
+
+            damageFrame = 0;
+        }
+        
+        public void Update()
+        {
+            // isDamagedはUpdate中trueにしたままで、他の細かいフラグを使う.
+
+
+            if(!attackedObject.hasAttacked){                                                // 攻撃中なら:敵とPlayerが物理的にあたった時はif(damageCounter > 60) hasDamaged = trueとか
+            //if(damagedObject.damageFromAttacking){
+                if(damageCounter == damageFrame){                                           // ダメージを与えるフレームを絞る.後々はisDamagedOnceとかで決定するようにする
+                    //damagedObject.HP--;
+                    damagedObject.isDamaged = true;
+
+                    if (damagedObject is Player) (damagedObject as Player).DamageUpdate();
+                    else damagedObject.MotionUpdate();
+
+                    //hasDamaged = true;
+                }
+            //}
+                damagedObject.isDamaged = false;                                            // 決まったフレームでのみtrueにする.それ以外ではfalse
+                damageCounter++;
+            }
+            else 
+                hasDamaged = true;
+
+        }
+
+        /// <summary>
+        /// さらに改良したver
+        /// </summary>
+        public void Update2()
+        {
+            // 12/27:致命的なバグを発見した.同じ的に対して複数のその敵以外からの攻撃が同時に加わった場合、damageFromAttackingが干渉しあって
+            // 他のDamageがupdate中でもfalseにしちゃったりして正常に働かなくなっている.面倒だな...
+            // つまりdamageFromAttackingの場合は"誰からの"フラグかという情報まで必要なわけだが...全部dFTにしてもいいかもしれん
+            if (adObject.object1 is Player && adObject.object2 is StationalEnemy)
+            { }
+
+            if(adObject.object2.damageFromAttacking){//&& (adObject.object1 is Ball)) {// isAttacking=trueのときに勝手にdFAがfalseになっているでござる   // 超ハードコーディング
+                // Playerの名残でhasAttackedにしてたけどBossとかを考えてisAttackingにしよう(if(!hasAttacked))
+                // 1回しか判定されないがなぜだろう(Player.sword→Enemy)
+                if(adObject.object1.isAttacking) {                                                  // 攻撃中なら:敵とPlayerが物理的にあたった時はif(damageCounter > 60) hasDamaged = trueとか
+                //if(!adObject.object1.hasAttacked){ 
+                    if(damageCounter == damageFrame){//damageCounterではぶられてた                                               // ダメージを与えるフレームを絞る.後々はisDamagedOnceとかで決定するようにする
+                        adObject.object2.isDamaged = true;
+                        adObject.object2.MotionUpdate();
+                    }
+
+                    adObject.object2.isDamaged = false;                                             // 決まったフレームでのみtrueにする.それ以外ではfalse
+                    damageCounter++;
+                }
+                else {// flyingenemy→stationalEで生成されるが攻撃してないので当然1frame目でここに.
+                    hasDamaged = true;
+                    adObject.object2.isDamaged = false;
+                    if (adObject.object1 is Player && adObject.object2 is StationalEnemy)
+                    { }
+                    // これでいけるか...?→さっきよりマシになったが全然当たらなくなった.
+                    if (stage.damageControl.damages.Any((x) => x != this && x.adObject.object2 == this.adObject.object2)) { }
+                        // このオブジェクト以外で、adO.obj2を被ダメージ側として処理してるDamageオブジェクトがあればfalseにしない
+                    else
+                        adObject.object2.damageFromAttacking = false;
+                    damageCounter = 0;
+                }
+            }
+            else if(adObject.object2.damageFromTouching) {// こっちも上と同現象か...? 12/29:else if→if→else if
+                if(damageCounter <= 60){
+                    if(damageCounter == damageFrame) {
+                        adObject.object2.isDamaged = true;
+                        adObject.object2.MotionUpdate();
+                    }
+
+                    adObject.object2.isDamaged = false;
+                    damageCounter++;
+                }
+                else {
+                    hasDamaged = true;
+                    if (stage.damageControl.damages.Any((x) => x != this && x.adObject.object2 == this.adObject.object2)) { }
+                    else
+                        adObject.object2.damageFromTouching = false;
+                    damageCounter = 0;
+                }
+            }
+
+
+        }
+
+    }
+}

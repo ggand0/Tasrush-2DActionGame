@@ -1,0 +1,88 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace _2DActionGame
+{
+    public class DamageControl
+    {
+        // WeaponとPlayerでそれぞれやるよりは統一したほうがいいだろう bulletも剣で跳ね返すのに
+        Game1 game;
+        Stage stage;
+
+        public int[] damageTime = new int[100];         // 攻撃が当たってから何フレーム目でダメージを与えるか 10体まで同時攻撃
+        public int[] damagedObjectNum = new int[100];   // Listに直さねば...
+        public List<Object> damagedObjects { get; set; }// ダメージを受けたObject.ステージを参照する
+        public List<Damage> damages { get; set; }
+        private int counter;
+
+        public DamageControl(Game1 game, Stage stage)
+        {
+            this.game = game;
+            this.stage = stage;
+
+            damagedObjects = new List<Object>();
+            damages = new List<Damage>();
+        }
+
+        /// <summary>
+        /// Sword.DamageUpdateを移植
+        /// </summary>
+        public void Update()
+        {   
+            // Playerと敵の判定に限定→より汎用的にしたい
+            if(!stage.player.hasAttacked){
+                for(int i=0;i<stage.activeObjects.Count;i++){
+                    if(stage.activeObjects[i].isDamaged){                                       // 最初にtrueになったときのみに限定
+                        if (stage.activeObjects[i] is Player)
+                            stage.player.DamageUpdate();                                        // Raijinの件はここが原因か.HP制にする場合はここを消すだけで行けるような気が...
+
+                        if(damagedObjectNum.Any((x) => x == i)){                                // 既にList中にある場合は何もしない
+                        }
+                        else {
+                            damagedObjects.Add(stage.activeObjects[i]);                         // 無い場合（新しくダメージをもらったObjectのとき）Listに追加
+                            damagedObjectNum[0 + (damagedObjects.Count - 1)/*counter*/] = i;    // 判定済みの敵を記憶
+                        }
+                        for(int l=0;l<damagedObjects.Count;l++){                                // その敵の判定開始 2回(damageC.Count分)damageTimeが判定されてしまう　面倒だ
+                            damageTime[l]++;
+                        }
+                        for(int m=0;m<stage.damagedObjects.Count;m++){
+                            if(damageTime[0 + m]==1){
+                                stage.activeObjects[damagedObjectNum[m]].MotionUpdate();
+                            }
+                        }
+                        counter++;
+                        stage.activeObjects[i].isDamaged = false;
+                    }
+                }
+            }
+        }
+        /// <summary>
+        /// より汎用的な処理に.暫定
+        /// </summary>
+        public void Update2()
+        {
+            foreach(Object obj in stage.activeObjects){
+                if(obj.isDamaged){
+                    if (obj is Player) stage.player.DamageUpdate();
+
+                    if (damages.Count > 0 && damages.Any((x) => x.damagedObject == obj)) { }
+                    else damages.Add(new Damage(game, stage, stage.player, obj));                   // ダメージを受けた敵の参照を渡す.参照なのでその後敵が画面外に出ても大丈夫.
+                }
+            }
+            if(damages.Count > 0){
+                for(int i=0;i<damages.Count;i++){
+                    damages[i].Update();
+                    if (damages[i].hasDamaged){
+                        damages[i].damagedObject.isDamaged = false;
+                        damages[i].damagedObject.isDamagedOnce = false;
+                        damages.RemoveAt(i);
+                    }
+                }
+            }
+
+        }
+
+    }
+}

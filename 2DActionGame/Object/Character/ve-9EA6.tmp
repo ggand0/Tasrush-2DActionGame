@@ -1,0 +1,80 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Content;
+
+namespace _2DActionGame
+{
+    public class Character : Object
+    {
+        #region Numbers
+        public Object user;// BossなどがEnemtを使ったりとかする際に。nullの場合は通常の処理
+        public List<Terrain> ridingTerrains = new List<Terrain>();//現在乗っている地形
+        public List<Weapon> weapons = new List<Weapon>();// 所有武器：当たり判定の計算用に使うので、派生クラスで別の変数を使ってUpdateの最後に代入という形でもいいかも
+        public double gravityInAction = .40;// 未使用
+        public double frinctionAir = 0.15; 
+
+        //public bool turnsRight;
+        public bool turnsLeft;
+        //public bool isMovingRight;
+        //public bool isAlive = true;
+        //public bool isAttacking { get; set; }
+        //public bool isDamaged { get; set; }
+        //public bool isJumping  { get; set; }
+        public bool isDashing { get; set; }
+        //public bool hasDashed { get; set; }
+        public bool isBlownAway;// 吹き飛ばされたときに例外メソッドを呼ぶより物理の調整をしたほうがよいと思われる
+        //public bool isBeingUsed { get; set; }
+
+        
+        public int totalHits { get; set; }// デバッグ用
+        public int comboTime = 30;
+        public int comboCount { get; set; }
+        public bool isInDamageMotion { get; set; }
+        public bool onConveyor { get; set; }// フラグでいいよもう
+        
+        #endregion
+
+        public Character() : base()
+        {
+        }
+        public Character(Game1 game, Stage stage,  float x, float y, int width, int height)
+            :this(game, stage, x, y, width, height, null)
+        {
+        }
+        public Character(Game1 game, Stage stage, float x, float y, int width, int height, Character user)
+            : base(game, stage, x, y, width, height)
+        {
+            animation = new Animation();
+            this.user = user;
+        }
+
+        public override void Update()
+        {
+            if(isActive) {
+                UpdateNumbers();
+                UpdateAnimation();
+            }
+            if (user != null && !isAlive)   // これ書いて大丈夫か...?
+                isBeingUsed = false;
+        }
+        public virtual  void UpdateAnimation()
+        {
+        }
+
+        public override void Draw(SpriteBatch sprite)
+        {
+            sprite.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.BackToFront, SaveStateMode.None);
+            if(isActive) {
+                if(user!=null) {// userが指定されているときはuserのフラグで管理させる
+                    if(isBeingUsed) sprite.Draw(texture, drawVector, animation.rect, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, .4f);
+                }
+                else sprite.Draw(texture, drawVector, animation.rect, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, .4f); //sprite.Draw(textures, drawVector, animation.rect, Color.White);
+            }
+            sprite.End();
+        }
+    }
+}
