@@ -73,10 +73,11 @@ namespace _2DActionGame
             Content.RootDirectory = "Content";
 
 			random = new Random();
+			
 			isMuted = true;
 			//noEnemy = true;
         }
-
+		
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -105,7 +106,6 @@ namespace _2DActionGame
 			Object.Inicialize(this, spriteBatch, Content);
 			SoundControl.Initialize(this, Content);
 			Scene.Initialize(this, spriteBatch, Content);
-
             // TODO: use this.content to load your game content here
 			PushScene(new MainTitle(null));
 

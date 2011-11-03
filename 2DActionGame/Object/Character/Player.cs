@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Audio;
+using System.Xml;
+using System.Reflection;
 
 namespace _2DActionGame
 {
@@ -16,16 +18,17 @@ namespace _2DActionGame
 	public class Player : Character
 	{
 		#region Member variable
+		// 定数でもXMLから読み取るものはプロパティにせざるを得ない
 		private readonly float timeCoefPlayer = 0.5f;
-		public readonly int MAXTAS = 1800;
-		public readonly int initialTAS = 900;
+		public int MAXTAS { get; private set; }//readonly 
+		public int initialTAS { get; private set; }//readonly
 
 		/// <summary>
 		/// スクリーン座標：画面上にもってきたい位置：画面スクロール中Playerはずっとこの位置
 		/// </summary>
-		public static readonly Vector2 screenPosition = new Vector2(200, 0);
-		public static readonly float firstJumpSpeed = -13.0f;
-		public static readonly float secondJumpSpeed = -10.0f;
+		public static Vector2 screenPosition { get; private set; }//static readonly = new Vector2(200, 0);
+		public float firstJumpSpeed { get; private set; }//static readonly = -13.0f;
+		public float secondJumpSpeed { get; private set; }//static readonly = -10.0f;
 		/// <summary>
 		/// 20frame≒1/3[s]
 		/// </summary>
@@ -38,41 +41,44 @@ namespace _2DActionGame
 		private SoundEffect footstep, jumpSound, landingSound, tasSound, damageSound;
 
 		//private bool hasJumped;
-		private bool inCombo1, inCombo2, inCombo3, inCombo4, inCombo5, inCombo6, inCombo7;
+		private bool inCombo1, inCombo2, inCombo3, inCombo4, inCombo5, inCombo6, inCombo7;// 配列にしたい
 
 		// Input
 		private int workKeyNum, workButtonNum, workStickNum;
 		private Direction[] stickNum = new Direction[5] { Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN, Direction.NEWTRAL };
-		private Keys[] keyNum = new Keys[6] { Keys.Left, Keys.Right, Keys.Up, Keys.Down, Keys.LeftShift, Keys.C };//キーコードの配列
+		/// <summary>
+		/// キーコードの配列
+		/// </summary>
+		private Keys[] keyNum = new Keys[6] { Keys.Left, Keys.Right, Keys.Up, Keys.Down, Keys.LeftShift, Keys.C };
 		private int[] buttonNum = new int[8] { 0, 1, 2, 3, 4, 5, 6, 7 };
 
 
-		public int TASpower { get; set; }
-		public Sword sword { get; set; }
+		public int TASpower { get; set; }// reverseに使われててprivateにできない
+		public Sword sword { get; private set; }
 		// Attacking
 		public bool isInCombo { get; private set; }
-		public bool isInNormalCombo { get; set; }
+		public bool isInNormalCombo { get; private set; }
 		/// <summary>
 		/// １段目弱
 		/// </summary>
-		public bool isAttacking1 { get; set; }
+		public bool isAttacking1 { get; private set; }
 		/// <summary>
 		/// 2段目弱
 		/// </summary>
-		public bool isAttacking2 { get; set; }
+		public bool isAttacking2 { get; private set; }
 		/// <summary>
 		/// 強
 		/// </summary>
-		public bool isAttacking3 { get; set; }
+		public bool isAttacking3 { get; private set; }
 		/// <summary>
 		/// 斬り上げ
 		/// </summary>
-		public bool isCuttingUp { get; set; }
-		public bool isCuttingUpV2 { get; set; }
+		public bool isCuttingUp { get; private set; }
+		public bool isCuttingUpV2 { get; private set; }
 		/// <summary>
 		/// 斬り下げ
 		/// </summary>
-		public bool isCuttingDown { get; set; }
+		public bool isCuttingDown { get; set; }// Swordで移行してない技があってprivateにできない
 		/// <summary>
 		/// 空中斬り下げ
 		/// </summary>
@@ -84,7 +90,7 @@ namespace _2DActionGame
 		/// <summary>
 		/// 吹き飛ばし
 		/// </summary>
-		public bool isCuttingAway { get; set; }
+		public bool isCuttingAway { get; private set; }
 		/// <summary>
 		/// 溜め攻撃前のモーション
 		/// </summary>
@@ -106,7 +112,7 @@ namespace _2DActionGame
 		/// 百列斬り
 		/// </summary>
 		public bool isThrusting { get; set; }
-		public bool isReversing { get; set; }
+		public bool isReversing { get; private set; }
 		/// <summary>
 		/// 3段目で切り上げる時の挙動のモード
 		/// </summary>
@@ -114,13 +120,13 @@ namespace _2DActionGame
 		/// <summary>
 		/// 空中下
 		/// </summary>
-		public bool isAirial { get; set; }
+		public bool isAirial { get; private set; }
 		public int normalComboCount { get; private set; }
 
 		// behavior
-		public bool spawnEnemy { get; set; }
-		public int jumpTime { get; set; }
-		public int damageTime { get; set; }
+		public bool spawnEnemy { get; private set; }
+		public int jumpTime { get; private set; }
+		public int damageTime { get; private set; }
 		/// <summary>
 		/// 何らかの静的な地形の左側にいるかどうか（スクロールとの挟まり判定に使う）
 		/// </summary>
@@ -138,6 +144,7 @@ namespace _2DActionGame
 		public Player(Stage stage, float x, float y, int width, int height, int HP)
 			: base(stage, x, y, width, height)
 		{
+			LoadXMLTest();
 			this.TASpower = initialTAS;
 			this.HP = HP;
 			sword = new Sword(stage, 200, 100, 64, 8, this);
@@ -145,6 +152,7 @@ namespace _2DActionGame
 			animation = new Animation(width, height);
 			syouryuuMode = true;
 
+			
 			Load();
 		}
 
@@ -157,6 +165,112 @@ namespace _2DActionGame
 			damageSound = content.Load<SoundEffect>("Audio\\SE\\damage2");
 
 			texture = content.Load<Texture2D>("Object\\Character\\Player1");
+		}
+		/// <summary>
+		/// XMLファイルからパラメータ値を読み込むテスト。
+		/// </summary>
+		/// <see cref="http://www.kisoplus.com/file/xml2.html"/>
+		/// <seealso cref="http://note.phyllo.net/?eid=540726"/>
+		private void LoadXMLTest()
+		{
+			XmlReader xmlReader = XmlReader.Create("parameters_Player_test.xml");
+			string str = "";
+
+			while (xmlReader.Read()) {												// XMLファイルを１ノードずつ読み込む
+				xmlReader.MoveToContent();
+
+				/*if (xmlReader.NodeType == XmlNodeType.Element) {					// ノード要素にデータがある場合
+					if (xmlReader.LocalName.Equals("obj")) {						// ノード要素がある場合 localname : "objects"→"obj" 順に進む
+						str = xmlReader.ReadString();// \nしか読み込まれなかった。確かにタグ間に値は入れてなかった
+					}
+				}*/
+
+				if (xmlReader.NodeType == XmlNodeType.Element) {// && xmlReader.HasAttributes) {
+					if (xmlReader.Name == "obj") {
+						xmlReader.MoveToAttribute(0);
+						//xmlReader.GetAttribute(0);
+						if (xmlReader.Name == "Name" && xmlReader.Value == "Player") {
+							//str = xmlReader.Value;									// 属性データを取得
+							// 以下、各パラメータを読み込む処理
+							while (!(xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name == "obj")) {//xmlReader.NodeType == XmlNodeType.Element &&
+								xmlReader.Read();
+								/*if (xmlReader.Name == "MAXTAS") {
+									this.MAXTAS = Int32.Parse(xmlReader.ReadString());// ktkr
+								}*/
+
+								Type type = this.GetType();
+								xmlReader.MoveToFirstAttribute();
+								if (xmlReader.Name == "type") {
+									switch (xmlReader.Value) {
+										case "property":
+											xmlReader.MoveToContent();
+											PropertyInfo pInfo = type.GetProperty(xmlReader.Name);
+											if (pInfo != null) {// whiteSpaceなどの場合はここで回避
+												SetProperty(xmlReader, pInfo);
+											}
+											break;
+										case "field":
+											xmlReader.MoveToContent();
+											FieldInfo fInfo = type.GetField(xmlReader.Name);
+											if (fInfo != null) {
+												SetField(xmlReader, fInfo);
+											}
+											break;
+									}
+								}
+
+								// readonlyのプロパティのときはスルーされてnullになった　厳密にコンストラクタ内じゃないとダメらしい
+							}
+						}
+					}
+				}
+
+			}
+		}
+		private void SetProperty(XmlReader xmlReader, PropertyInfo pInfo)
+		{
+			string str = "";
+			
+			switch (pInfo.PropertyType.Name) {
+				case "Int32":
+					pInfo.SetValue(this, Int32.Parse(xmlReader.ReadString()), null);
+					break;
+				case "Single":
+					pInfo.SetValue(this, float.Parse(xmlReader.ReadString()), null);//Single
+					break;
+				case "Double":
+					pInfo.SetValue(this, Double.Parse(xmlReader.ReadString()), null);
+					break;
+				case "Vector2":
+					string[] tmp = new string[2];
+					str = xmlReader.ReadString();
+					tmp = str.Split(',');
+					pInfo.SetValue(this, new Vector2(float.Parse(tmp[0]), float.Parse(tmp[1])), null);
+					break;
+			}
+			//pInfo.SetValue(this, Int32.Parse(xmlReader.ReadString()), null);// ｷﾀｰ
+		}
+		private void SetField(XmlReader xmlReader, FieldInfo fInfo)
+		{
+			string str = "";
+
+			switch (fInfo.FieldType.Name) {
+				case "Int32":
+					fInfo.SetValue(this, Int32.Parse(xmlReader.ReadString()));
+					break;
+				case "float":
+					fInfo.SetValue(this, float.Parse(xmlReader.ReadString()));
+					break;
+				case "Double":
+					fInfo.SetValue(this, Double.Parse(xmlReader.ReadString()));
+					break;
+				case "Vector2":
+					string[] tmp = new string[2];
+					str = xmlReader.ReadString();
+					tmp = str.Split(',');
+					fInfo.SetValue(this, new Vector2(float.Parse(tmp[0]), float.Parse(tmp[1])));
+					break;
+			}
 		}
 
 		#region Update
@@ -1125,15 +1239,15 @@ namespace _2DActionGame
 				else if (jumpTime > 45 && jumpTime < 80) scalarSpeed = firstJumpSpeed;*/
 				if (jumpTime <= 5)
 					speed.Y = -10;
-				else if (jumpTime > 5 && jumpTime <= 6) speed.Y = -14;
-				else speed.Y = -14;
+				else if (jumpTime > 5 && jumpTime <= 6) speed.Y = firstJumpSpeed;//-14
+				else speed.Y = firstJumpSpeed;//-14
 				//scalarSpeed = firstJumpSpeed;
 				//position.Y += (float)scalarSpeed;
 				if (!game.isMuted) jumpSound.Play(SoundControl.volumeAll, 0f, 0f);
 				jumpCount = 1;
 			} else if (jumpCount == 1) {
-				speed.Y = (float)secondJumpSpeed;
-				position.Y += (float)speed.Y;
+				speed.Y = secondJumpSpeed;
+				position.Y += speed.Y;
 				jumpCount = 2;
 				if (!game.isMuted) jumpSound.Play(SoundControl.volumeAll, 0f, 0f);
 			} else if (game.inDebugMode && jumpCount >= 2) {

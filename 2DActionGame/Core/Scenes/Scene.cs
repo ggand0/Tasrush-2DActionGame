@@ -86,6 +86,10 @@ namespace _2DActionGame
 		/// </summary>
 		protected Scene upperScene { get; private set; }//higher..?
 
+
+		public Scene()
+		{
+		}
 		/// <summary>
 		/// 開始状態のシーンを生成する。
 		/// </summary>

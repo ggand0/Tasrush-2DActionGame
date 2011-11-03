@@ -19,7 +19,7 @@ namespace _2DActionGame
 		public Option(Scene privousScene)
 			: base(privousScene)
 		{
-			buttonNum = 3;
+			buttonNum = 4;
 			button = new Button[buttonNum];
 
 			for (int i = 0; i < button.Length; i++) {
