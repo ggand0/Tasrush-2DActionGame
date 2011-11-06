@@ -166,7 +166,7 @@ namespace _2DActionGame
 		/// <param name="targetObject"></param>
 		public void IsHit2(Object targetObject)
 		{
-			if (isFirstTimeInAFrame) {
+			if (firstTimeInAFrame) {
 				isHit = false;// 複数の敵と判定するので結局falseになってしまう
 				//isOnSomething = false;
 			}
@@ -182,7 +182,7 @@ namespace _2DActionGame
 				isHit = true;// collapsingBlock:objectsのはtrueになってもdynamicTerrrainsのほうはtrueにならないでござる(解決)
 				targetObject.isHit = true;
 				//targetObject.isOnSomething ~ 
-				isFirstTimeInAFrame = false;
+				firstTimeInAFrame = false;
 				//ontop = false; onleft = false; onright = false;// 初期化(デバッグ用)
 
 				// targetObjectが下に移動中
@@ -197,7 +197,7 @@ namespace _2DActionGame
 					targetObject.jumpCount = 0;      // Playerに限定したかったが諦めた
 					targetObject.isJumping = false;　// 着地したらJumpできるように
 
-					if (type == 0) targetObject.friction = .40f;
+					if (type == 0) targetObject.friction = defFriction;
 					else if (type == 1) targetObject.friction = .05f;
 
 					//ontop = true;
@@ -272,10 +272,10 @@ namespace _2DActionGame
 		// 補助メソッド
 		protected virtual void ChangeFlags(Object targetObject)
 		{
-			if (targetObject.isFirstTimeInAFrame) { //3/14 もう何かに乗ってると判断されてるなら飛ばしてもいいかもしれない
+			if (targetObject.firstTimeInAFrame) { //3/14 もう何かに乗ってると判断されてるなら飛ばしてもいいかもしれない
 				targetObject.isHit = false;// 複数の敵と判定するので結局falseになってしまう
 				//(targetObject as Character).onConveyor = false;
-				targetObject.isFirstTimeInAFrame = false;
+				targetObject.firstTimeInAFrame = false;
 				isHitCB = false;
 				targetObject.isOnSomething = false;
 				if (targetObject is Player) (targetObject as Player).isHitLeftSide = false;
@@ -285,7 +285,7 @@ namespace _2DActionGame
 		{
 			isHit = true;
 			targetObject.isHit = true;
-			isFirstTimeInAFrame = false;
+			firstTimeInAFrame = false;
 
 		}
 

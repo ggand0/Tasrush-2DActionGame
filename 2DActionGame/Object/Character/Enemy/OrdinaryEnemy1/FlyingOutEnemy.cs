@@ -60,9 +60,9 @@ namespace _2DActionGame
                 //defaultHeight = this.position.Y;
                 //position = defaultPosition;// 攻撃を受けると沈んでいくがspeedは(0,0)のままだし謎である。そこでこの1行
                 isOnSomething = false;// 近づく前に飛び出してもらっては困る
-                Gravity = 0;// 落ちても困る
+                gravity = 0;// 落ちても困る
             }
-            if (hasFlownOut) Gravity = .60;
+            if (hasFlownOut) gravity = defGravity;
             if(distance < flyingOutDistance && !hasFlownOut) {
                 if(counter==0) {
                     //hasFlownOut=true;
@@ -78,7 +78,7 @@ namespace _2DActionGame
             }*/
             if(hasFlownOut && isOnSomething) {
                 // 飛び出し着地後の歩く処理
-                RoundTripMotion(2);
+				RoundTripMotion(defPos, moveDistance, 2);
                 counter = 0;
             }
         }
@@ -137,18 +137,18 @@ namespace _2DActionGame
             if (delayTime < motionDelayTime) {
                 if (stage.player.normalComboCount < 3) {
                     speed.Y = 0;
-                    if (isAlive) Gravity = 0;
-                    else Gravity = .60;
+                    if (isAlive) gravity = 0;
+                    else gravity = defGravity;
                 }
                 isMovingAround = false;
                 isInDamageMotion = true;
                 isWinced = true;
-                //Gravity = .60;
+                //gravity = defGravity;
             }
             else {
                 isMovingAround = true;
                 isInDamageMotion = false;
-                if(hasFlownOut) Gravity = .60;
+                if(hasFlownOut) gravity = defGravity;
                 //isWinced = true;
             }
         }

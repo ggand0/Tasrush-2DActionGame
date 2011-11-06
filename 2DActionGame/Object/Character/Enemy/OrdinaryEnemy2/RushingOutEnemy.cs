@@ -45,14 +45,14 @@ namespace _2DActionGame
             distance = Math.Abs(this.position.X - stage.player.position.X);
             if (!hasFlownOut && !isEndingAttack) {
                 isOnSomething = false;
-                Gravity = 0; 
+                gravity = 0; 
             }
 
             if(distance < flyingOutDistance && !hasFlownOut&& !isEndingAttack) {
                 if(counter == 0) {
                     hasFlownOut=true;
                     speed.Y = flyingOutspeed;
-                    Gravity = .60;
+                    gravity = defGravity;
 					if (!game.isMuted) splashSound.Play(SoundControl.volumeAll, 0f, 0f);
                 }
                 counter++;
@@ -70,7 +70,7 @@ namespace _2DActionGame
                 hasReached = false;
                 counter = 0;
                 speed = Vector2.Zero;
-                Gravity = 0;// 一応
+                gravity = 0;// 一応
                 isEndingAttack = true;
             }
             if(isEndingAttack)
@@ -80,7 +80,7 @@ namespace _2DActionGame
                     isEndingAttack = false;
                     speed = Vector2.Zero;
                     position = defaultPosition;
-                    Gravity = 0;
+                    gravity = 0;
                 }
         }
         

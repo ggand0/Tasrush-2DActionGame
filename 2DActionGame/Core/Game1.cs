@@ -74,7 +74,7 @@ namespace _2DActionGame
 
 			random = new Random();
 			
-			isMuted = true;
+			//isMuted = true;
 			//noEnemy = true;
         }
 		

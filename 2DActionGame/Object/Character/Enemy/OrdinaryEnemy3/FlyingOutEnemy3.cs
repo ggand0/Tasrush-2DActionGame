@@ -37,7 +37,7 @@ namespace _2DActionGame
             distance = Math.Abs(this.position.X - stage.player.position.X);
             if (!hasFlownOut) {
                 isOnSomething = false;
-                Gravity = 0;
+                gravity = 0;
             }
             if(distance < flyingOutDistance && !hasFlownOut) {
                 if(counter==0) {
@@ -46,7 +46,7 @@ namespace _2DActionGame
                 }
                 counter++;
             }
-            if (hasFlownOut) Gravity = .60;
+            if (hasFlownOut) gravity = defGravity;
             if(hasFlownOut && Math.Abs(speed.Y) < 5) // 頂点付近
                 hasReached = true;
 
@@ -55,7 +55,7 @@ namespace _2DActionGame
                 hasFlownOut = false;
                 hasReached = false;
                 isOnSomething = false;
-                Gravity = 0;
+                gravity = 0;
                 speed = Vector2.Zero;//new Vector2(0, 0);
                 position = defaultPosition;
                 counter = 0;

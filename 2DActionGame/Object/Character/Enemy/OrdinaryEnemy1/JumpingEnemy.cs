@@ -15,9 +15,19 @@ namespace _2DActionGame
     /// </summary>
     public class JumpingEnemy : Enemy
     {
+		public readonly float defSpeed;//-2.5f
+		public readonly float jumpSpeed;//-10
+
 		private SoundEffect jumpSound;
+		/// <summary>
+		/// ジャンプ回数。途中で行動を変えるときに使えるかも
+		/// </summary>
         private int jumpNum;
-        public bool isDerived { get; set; }  // 分裂しているか否か：テクスチャのLoad時に用いる
+		/// <summary>
+		/// 分裂しているか否か：テクスチャのLoad時に用いる
+		/// </summary>
+        public bool isDerived { get; set; }
+		
 
         public JumpingEnemy(Stage stage,  float x, float y, int width, int height, int HP)
             : this(stage, x, y, width, height, HP, null)
@@ -26,10 +36,15 @@ namespace _2DActionGame
         public JumpingEnemy(Stage stage, float x, float y, int width, int height, int HP, Character user)
 			: base(stage, x, y, width, height, HP, user)
         {
-            isMovingRight = true;
+			LoadXML("JumpingEnemy");
             isMovingAround = true;
             moveDistance = 80;
-            speed.X = 5;
+            speed.X = defSpeed;
+			movePattern = defMovePattern;
+			if (defSpeed > 0) {
+				isMovingRight = true;
+				turnsRight = true;
+			}
             delayTime = motionDelayTime + 1;
 
 			Load();
@@ -44,75 +59,79 @@ namespace _2DActionGame
 
         public override void Update()
         {
-            //MotionDelay();
-            if(isMovingAround && isAlive && isActive) MovementUpdate( -10, 40, 2);
-
+			if (isMovingAround && isAlive && isActive) {
+				MovementUpdate(jumpSpeed, 40, 2);
+			}
             base.Update();
         }
         public override void UpdateAnimation()
         {
-            if(!isDerived) {
-                if(game.stageNum==6) {
-                    if (speed.Y > 0)            animation.Update(0, 0, 64, 64, 0, 0);
-                    else if (isOnSomething)     animation.Update(1, 0, 64, 64, 0, 0);
-                    else if (speed.Y < 0)       animation.Update(2, 0, 64, 64, 0, 0);
-                }
-                else{
-                    if (speed.Y > 0)            animation.Update(0, 0, 40, 40, 0, 0);
-                    else if (isOnSomething)     animation.Update(1, 0, 40, 40, 0, 0);
-                    else if (speed.Y < 0)       animation.Update(2, 0, 40, 40, 0, 0);
-                }
-            }
-            else {
-                if (speed.Y > 0)                animation.Update(0, 0, 20, 20, 0, 0);
-                else if (isOnSomething)         animation.Update(1, 0, 20, 20, 0, 0);
-                else if (speed.Y < 0)           animation.Update(2, 0, 20, 20, 0, 0);
-            }
-            /*
-             * if (speed.Y > 0)             animation.Update(0, 0, textures.Width, textures.Height, 0, 0);
-             else if (isOnSomething) animation.Update(1, 0, textures.Width, textures.Height, 0, 0);
-             else if (speed.Y < 0) animation.Update(2, 0, textures.Width, textures.Height, 0, 0);
-             */
+			if (!isDerived) {
+				if (game.stageNum == 6) {
+					if (speed.Y > 0) animation.Update(0, 0, 64, 64, 0, 0);
+					else if (isOnSomething) animation.Update(1, 0, 64, 64, 0, 0);
+					else if (speed.Y < 0) animation.Update(2, 0, 64, 64, 0, 0);
+				} else {
+					if (speed.Y > 0) animation.Update(0, 0, 40, 40, 0, 0);
+					else if (isOnSomething) animation.Update(1, 0, 40, 40, 0, 0);
+					else if (speed.Y < 0) animation.Update(2, 0, 40, 40, 0, 0);
+				}
+			} else {
+				if (speed.Y > 0) animation.Update(0, 0, 20, 20, 0, 0);
+				else if (isOnSomething) animation.Update(1, 0, 20, 20, 0, 0);
+				else if (speed.Y < 0) animation.Update(2, 0, 20, 20, 0, 0);
+			}
         }
-        public virtual void MovementUpdate(float jumpSpeed, int jumpTime, float moveRange)
+        public virtual void MovementUpdate(float jumpSpeed, int jumpTime, float roundTriipMoveSpeed)
         {
-            jumpNum++;
+			switch (movePattern) {
+				case 0:// ←に移動するだけ　
+					break;
+				case 1:// 往復移動
+					//RoundTripMotion(defPos, moveDistance, roundTriipMoveSpeed);
+					RoundTripMotion(defSpeed, defPos.X - moveDistance, defPos.X + moveDistance);
+					turnsRight = isMovingRight;
+					break;
+				case 2:
+					// 機もい動き
+					if (isMovingRight) {
+						speed.X = 4;
+						moveDistance += (float)speed.X;
+					} else {
+						speed.X = -4;
+						moveDistance += (float)speed.X;
+					}
+					if (moveDistance > 20 || moveDistance < -20) {
+						moveDistance = 0;
+						if (isMovingRight) isMovingRight = false;
+						else isMovingRight = true;
+					}
+					break;
+			}
+
+			
+			// 周期的にジャンプ
             if (isOnSomething && jumpNum % jumpTime == 0) {
                 speed.Y = jumpSpeed;// 40, -10, 2
                 isJumping = true;
+				jumpNum++;
                 if (!game.isMuted) jumpSound.Play(SoundControl.volumeAll, 0f, 0f);
-            }
-            else if (isOnSomething && jumpNum % jumpTime != 0)
-                isJumping = false;
-
-            // 規定範囲を往復する仕様 speed.Xには干渉し無い方針
-            //RoundTripMotion(moveRange);
-            isMovingRight = false;
-            speed.X = -2.5f;
-
-            // 機もい動き
-            /*if (isMovingRight) {
-                speed.X = 4;
-                movedDistance += (float)speed.X;
-            }
-            else{
-                speed.X = -4;
-                movedDistance += (float)speed.X;
-            }
-            if (movedDistance > 20 || movedDistance < -20) {
-                movedDistance = 0;
-                if(isMovingRight) isMovingRight = false;
-                else isMovingRight = true;
-            }*/
+			} else if (isOnSomething && jumpNum % jumpTime != 0) {
+				isJumping = false;
+			}
+			jumpNum++;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if(isAlive && isActive) {
-                if(!isMovingRight)  spriteBatch.Draw(texture, drawPos, animation.rect, Color.White);
-                else                spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, 0, Vector2.Zero, 1, SpriteEffects.FlipHorizontally, 0);
-                DrawComboCount(spriteBatch);
-            }
+			if (IsActive()) {
+				if (!turnsRight) {
+					spriteBatch.Draw(texture, drawPos, animation.rect, Color.White);
+				} else {
+					spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, 0, Vector2.Zero, 1, SpriteEffects.FlipHorizontally, 0);
+				}
+				DrawComboCount(spriteBatch);
+			}
         }
     }
 }

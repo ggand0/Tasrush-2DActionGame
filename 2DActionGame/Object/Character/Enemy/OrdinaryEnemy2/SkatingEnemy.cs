@@ -45,17 +45,17 @@ namespace _2DActionGame
             if (delayTime < motionDelayTime) {
                 if (stage.player.normalComboCount < 3) {
                     speed = Vector2.Zero;
-                    Gravity = 0;
+                    gravity = 0;
                 }
                 isMovingAround = false;
                 isInDamageMotion = true;
-                Gravity = 0;
+                gravity = 0;
                 isWinced = true;
             }
             else {
                 isMovingAround = true;
                 isInDamageMotion = false;
-                Gravity = .60;
+                gravity = defGravity;
                 isWinced = false;
             }
         }

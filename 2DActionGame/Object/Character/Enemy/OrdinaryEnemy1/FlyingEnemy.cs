@@ -17,6 +17,7 @@ namespace _2DActionGame
 	{
 		private SoundEffect flappingSound;
 		private SoundEffectInstance flappingSoundInstance;
+
 		private float jumpNum;
 		/// <summary>
 		/// 動きのタイプ（弾を出すか、など）
@@ -40,6 +41,7 @@ namespace _2DActionGame
 			// 動き回る仕様
 			isMovingAround = true;
 			delayTime = motionDelayTime + 1;
+
 			// 弾を射撃するか否か
 			if (motionType == 1) {
 				shootPosition = new Vector2(5, 5);
@@ -60,7 +62,7 @@ namespace _2DActionGame
 		{
 			float distance;
 
-			if (isAlive && isActive) {
+			if (IsActive()) {
 				if (isMovingAround) MovementUpdate();
 				if (isWinced) turret.isBeingUsed = false;
 				else turret.isBeingUsed = true;
@@ -71,8 +73,9 @@ namespace _2DActionGame
 				if (distance > 200) turret.isBeingUsed = false;
 				if (distance > 0) turnsRight = true;
 				else turnsRight = false;
-			} else
+			} else {
 				turret.isBeingUsed = false;
+			}
 
 			base.Update();
 		}
@@ -89,7 +92,8 @@ namespace _2DActionGame
 			}
 			if (position.Y > 300) speed.Y = -9;
 
-			RoundTripMotion(2);
+			RoundTripMotion(defPos, moveDistance, 2);
+
 			if (flappingSoundInstance.State == SoundState.Stopped) {
 				if (!game.isMuted) { flappingSoundInstance.Volume = SoundControl.volumeAll; flappingSoundInstance.Play(); }
 			}
@@ -98,11 +102,12 @@ namespace _2DActionGame
 		}
 		public override void Draw(SpriteBatch spriteBatch)
 		{
-			if (isAlive && isActive) {
-				if (!turnsRight)
+			if (IsActive()) {
+				if (!turnsRight) {
 					spriteBatch.Draw(texture, drawPos, animation.rect, Color.White);
-				else
+				} else {
 					spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, 0, Vector2.Zero, 1, SpriteEffects.FlipHorizontally, 0);
+				}
 				DrawComboCount(spriteBatch);
 			}
 		}

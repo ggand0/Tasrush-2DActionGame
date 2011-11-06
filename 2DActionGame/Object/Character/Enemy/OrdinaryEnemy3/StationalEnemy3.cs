@@ -48,7 +48,7 @@ namespace _2DActionGame
         public void MovementUpdate()
         {
             // ※浮かない仕様になりました
-            //Gravity = .10;
+            //gravity = .10;
             //if (position.Y > defaultPosition.Y + 50) speed.Y = -4.5f;
             
             if(isHiding && time > jumpInterval) {
@@ -68,7 +68,7 @@ namespace _2DActionGame
                 time = 0;
             }
 
-            RoundTripMotion(2);
+			RoundTripMotion(defPos, moveDistance, 2);
             time++;
         }
         public override void UpdateAnimation()

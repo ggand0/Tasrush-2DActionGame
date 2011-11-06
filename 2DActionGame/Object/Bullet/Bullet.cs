@@ -23,7 +23,7 @@ namespace _2DActionGame
 		private Boss boss;
 		//protected int damageTime;
 		protected int textureType;
-
+		
 		/// <summary>
 		/// userの座標を基準にしたBUlletの位置。Turret手動に移行した今となっては使用していない。
 		/// </summary>
@@ -61,7 +61,7 @@ namespace _2DActionGame
 		/// </summary>
 		public int disappearPattern { get; protected set; }
 		public bool hasBeenShot { get; private set; }
-
+		public double movedDistance { get; internal set; }
 		// コンストラクタ
 		public Bullet(Stage stage, Turret turret, int width, int height)
 			: this(stage, turret, width, height, 0)

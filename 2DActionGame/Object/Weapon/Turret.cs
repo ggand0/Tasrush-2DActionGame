@@ -373,6 +373,7 @@ namespace _2DActionGame
 			timeInterval = 0;
 			counter = 0;
 			hasShot = false;
+			turnsRight = true;
 			if (isSubsidiary) position = user.position + shootPosition;
 		}
 		/// <summary>
@@ -417,13 +418,13 @@ namespace _2DActionGame
 				base.Update();
 
 				if (canBeDestroyed) {
-					if (hasPlayedSE) hasPlayedSE = false;
+					if (hasPlayedSoundEffect) hasPlayedSoundEffect = false;
 					//base.Update();
 
 					if (HP <= 0 && time > comboTime) {
-						if (!hasPlayedSE) {
+						if (!hasPlayedSoundEffect) {
 							if (!game.isMuted) damageSound.Play(SoundControl.volumeAll, 0f, 0f);
-							hasPlayedSE = true;
+							hasPlayedSoundEffect = true;
 						}
 						isAlive = false;
 					}
@@ -582,6 +583,7 @@ namespace _2DActionGame
 			speed.X = -5;
 			if (position.X < defaultPosition.X - 200) isBeingUsed = false;
 		}
+		
 		#endregion
 		/// <summary>
 		/// 与えられたBulletに初期化が必要かどうか判定するメソッド
@@ -905,16 +907,16 @@ namespace _2DActionGame
 		internal virtual void MotionDelay()
 		{
 			if (delayTime < motionDelayTime) {
-				Gravity = .60;
+				gravity = defGravity;
 				if (stage.player.normalComboCount < 3) {
 					speed.Y = 0;
-					Gravity = 0;
+					gravity = 0;
 				}
 				//isInDamageMotion = true;
 				//isWinced = true;
 			} else {
 				//isInDamageMotion = false;
-				Gravity = .60;
+				gravity = defGravity;
 				//isWinced = false;
 			}
 		}

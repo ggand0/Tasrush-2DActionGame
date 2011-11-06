@@ -30,7 +30,7 @@ namespace _2DActionGame
 
         public override void IsHit(Object targetObject)
         {
-            if (isFirstTimeInAFrame)
+            if (firstTimeInAFrame)
                 isHit = false;
              targetObject.isHit = false;
 
@@ -43,7 +43,7 @@ namespace _2DActionGame
             }else{   // 当たりあり
                 isHit = true;
                 targetObject.isHit = true;
-                isFirstTimeInAFrame = false;
+                firstTimeInAFrame = false;
 
                 // 動かす方向へ速度を与える
                 //targetObject.speed = tmpSpeed;

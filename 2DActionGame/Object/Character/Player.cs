@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Audio;
-using System.Xml;
-using System.Reflection;
+
 
 namespace _2DActionGame
 {
@@ -18,30 +18,30 @@ namespace _2DActionGame
 	public class Player : Character
 	{
 		#region Member variable
-		// 定数でもXMLから読み取るものはプロパティにせざるを得ない
-		private readonly float timeCoefPlayer = 0.5f;
-		public int MAXTAS { get; private set; }//readonly 
-		public int initialTAS { get; private set; }//readonly
-
+		// Const
 		/// <summary>
 		/// スクリーン座標：画面上にもってきたい位置：画面スクロール中Playerはずっとこの位置
 		/// </summary>
-		public static Vector2 screenPosition { get; private set; }//static readonly = new Vector2(200, 0);
-		public float firstJumpSpeed { get; private set; }//static readonly = -13.0f;
-		public float secondJumpSpeed { get; private set; }//static readonly = -10.0f;
+		public readonly static Vector2 screenPosition;// = new Vector2(200, 0);
 		/// <summary>
-		/// 20frame≒1/3[s]
+		/// 20[frame] ~ 0.3[second]
 		/// </summary>
 		public static readonly int normaFirstComboTime = 40;
 		public static readonly int normaSecondComboTime = 40;
 
-		// Animation, Sound
-		private bool isInJumpAnim, inDmgMotion;
-		private int animCounter, animCounter2;
+		private readonly float timeCoefPlayer = 0.5f;
+		public readonly float firstJumpSpeed;//= -13.0f;
+		public readonly float secondJumpSpeed;//= -10.0f;
+		public readonly int MAXTAS;
+		public readonly int initialTAS;
+		
+		// Basis
 		private SoundEffect footstep, jumpSound, landingSound, tasSound, damageSound;
-
-		//private bool hasJumped;
-		private bool inCombo1, inCombo2, inCombo3, inCombo4, inCombo5, inCombo6, inCombo7;// 配列にしたい
+		public Sword sword { get; private set; }
+		private bool isInJumpAnim, inDmgMotion;
+		private bool inCombo1, inCombo2, inCombo3, inCombo4, inCombo5, inCombo6, inCombo7;// 配列にしたい　いや、リストか...
+		private int animCounter, animCounter2;
+		public int TASpower { get; set; }					// protected化：reverseの修正
 
 		// Input
 		private int workKeyNum, workButtonNum, workStickNum;
@@ -52,9 +52,6 @@ namespace _2DActionGame
 		private Keys[] keyNum = new Keys[6] { Keys.Left, Keys.Right, Keys.Up, Keys.Down, Keys.LeftShift, Keys.C };
 		private int[] buttonNum = new int[8] { 0, 1, 2, 3, 4, 5, 6, 7 };
 
-
-		public int TASpower { get; set; }// reverseに使われててprivateにできない
-		public Sword sword { get; private set; }
 		// Attacking
 		public bool isInCombo { get; private set; }
 		public bool isInNormalCombo { get; private set; }
@@ -78,15 +75,11 @@ namespace _2DActionGame
 		/// <summary>
 		/// 斬り下げ
 		/// </summary>
-		public bool isCuttingDown { get; set; }// Swordで移行してない技があってprivateにできない
+		public bool isCuttingDown { get; set; }				// private化：Swordの修正
 		/// <summary>
 		/// 空中斬り下げ
 		/// </summary>
 		public bool isCuttingDownFromAir { get; set; }
-		/// <summary>
-		/// 空中斬り下げ
-		/// </summary>
-		public bool isCuttingDownFromAirV2 { get; set; }
 		/// <summary>
 		/// 吹き飛ばし
 		/// </summary>
@@ -123,14 +116,15 @@ namespace _2DActionGame
 		public bool isAirial { get; private set; }
 		public int normalComboCount { get; private set; }
 
-		// behavior
-		public bool spawnEnemy { get; private set; }
-		public int jumpTime { get; private set; }
-		public int damageTime { get; private set; }
+		// Behavior
 		/// <summary>
 		/// 何らかの静的な地形の左側にいるかどうか（スクロールとの挟まり判定に使う）
 		/// </summary>
 		public bool isHitLeftSide { get; set; }
+		public bool spawnEnemy { get; private set; }
+		public int jumpTime { get; private set; }
+		public int damageTime { get; private set; }
+		
 		#endregion
 
 		public Player()
@@ -144,7 +138,7 @@ namespace _2DActionGame
 		public Player(Stage stage, float x, float y, int width, int height, int HP)
 			: base(stage, x, y, width, height)
 		{
-			LoadXMLTest();
+			LoadXML("Player");
 			this.TASpower = initialTAS;
 			this.HP = HP;
 			sword = new Sword(stage, 200, 100, 64, 8, this);
@@ -155,7 +149,6 @@ namespace _2DActionGame
 			
 			Load();
 		}
-
 		protected override void Load()
 		{
 			footstep = content.Load<SoundEffect>("Audio\\SE\\foot");
@@ -166,112 +159,6 @@ namespace _2DActionGame
 
 			texture = content.Load<Texture2D>("Object\\Character\\Player1");
 		}
-		/// <summary>
-		/// XMLファイルからパラメータ値を読み込むテスト。
-		/// </summary>
-		/// <see cref="http://www.kisoplus.com/file/xml2.html"/>
-		/// <seealso cref="http://note.phyllo.net/?eid=540726"/>
-		private void LoadXMLTest()
-		{
-			XmlReader xmlReader = XmlReader.Create("parameters_Player_test.xml");
-			string str = "";
-
-			while (xmlReader.Read()) {												// XMLファイルを１ノードずつ読み込む
-				xmlReader.MoveToContent();
-
-				/*if (xmlReader.NodeType == XmlNodeType.Element) {					// ノード要素にデータがある場合
-					if (xmlReader.LocalName.Equals("obj")) {						// ノード要素がある場合 localname : "objects"→"obj" 順に進む
-						str = xmlReader.ReadString();// \nしか読み込まれなかった。確かにタグ間に値は入れてなかった
-					}
-				}*/
-
-				if (xmlReader.NodeType == XmlNodeType.Element) {// && xmlReader.HasAttributes) {
-					if (xmlReader.Name == "obj") {
-						xmlReader.MoveToAttribute(0);
-						//xmlReader.GetAttribute(0);
-						if (xmlReader.Name == "Name" && xmlReader.Value == "Player") {
-							//str = xmlReader.Value;									// 属性データを取得
-							// 以下、各パラメータを読み込む処理
-							while (!(xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name == "obj")) {//xmlReader.NodeType == XmlNodeType.Element &&
-								xmlReader.Read();
-								/*if (xmlReader.Name == "MAXTAS") {
-									this.MAXTAS = Int32.Parse(xmlReader.ReadString());// ktkr
-								}*/
-
-								Type type = this.GetType();
-								xmlReader.MoveToFirstAttribute();
-								if (xmlReader.Name == "type") {
-									switch (xmlReader.Value) {
-										case "property":
-											xmlReader.MoveToContent();
-											PropertyInfo pInfo = type.GetProperty(xmlReader.Name);
-											if (pInfo != null) {// whiteSpaceなどの場合はここで回避
-												SetProperty(xmlReader, pInfo);
-											}
-											break;
-										case "field":
-											xmlReader.MoveToContent();
-											FieldInfo fInfo = type.GetField(xmlReader.Name);
-											if (fInfo != null) {
-												SetField(xmlReader, fInfo);
-											}
-											break;
-									}
-								}
-
-								// readonlyのプロパティのときはスルーされてnullになった　厳密にコンストラクタ内じゃないとダメらしい
-							}
-						}
-					}
-				}
-
-			}
-		}
-		private void SetProperty(XmlReader xmlReader, PropertyInfo pInfo)
-		{
-			string str = "";
-			
-			switch (pInfo.PropertyType.Name) {
-				case "Int32":
-					pInfo.SetValue(this, Int32.Parse(xmlReader.ReadString()), null);
-					break;
-				case "Single":
-					pInfo.SetValue(this, float.Parse(xmlReader.ReadString()), null);//Single
-					break;
-				case "Double":
-					pInfo.SetValue(this, Double.Parse(xmlReader.ReadString()), null);
-					break;
-				case "Vector2":
-					string[] tmp = new string[2];
-					str = xmlReader.ReadString();
-					tmp = str.Split(',');
-					pInfo.SetValue(this, new Vector2(float.Parse(tmp[0]), float.Parse(tmp[1])), null);
-					break;
-			}
-			//pInfo.SetValue(this, Int32.Parse(xmlReader.ReadString()), null);// ｷﾀｰ
-		}
-		private void SetField(XmlReader xmlReader, FieldInfo fInfo)
-		{
-			string str = "";
-
-			switch (fInfo.FieldType.Name) {
-				case "Int32":
-					fInfo.SetValue(this, Int32.Parse(xmlReader.ReadString()));
-					break;
-				case "float":
-					fInfo.SetValue(this, float.Parse(xmlReader.ReadString()));
-					break;
-				case "Double":
-					fInfo.SetValue(this, Double.Parse(xmlReader.ReadString()));
-					break;
-				case "Vector2":
-					string[] tmp = new string[2];
-					str = xmlReader.ReadString();
-					tmp = str.Split(',');
-					fInfo.SetValue(this, new Vector2(float.Parse(tmp[0]), float.Parse(tmp[1])));
-					break;
-			}
-		}
 
 		#region Update
 		/// <summary>
@@ -280,22 +167,24 @@ namespace _2DActionGame
 		/// <returns></returns>
 		private int[] KeyCheck()
 		{
-			workKeyNum = keyNum.Length;                   //使用するキーコード分だけチェック
-			int[] keyCheck = new int[workKeyNum];         //キーが押されたかのチェック
+			workKeyNum = keyNum.Length;						//使用するキーコード分だけチェック
+			int[] keyCheck = new int[workKeyNum];			//キーが押されたかのチェック
 
-			for (int i = 0; i < keyNum.Length; i++)
+			for (int i = 0; i < keyNum.Length; i++) {
 				if (KeyInput.IsOnKeyDown(keyNum[i])) keyCheck[i] = 1;
 				else keyCheck[i] = 0;
-			return keyCheck;                          // 押されているキーを返す
+			}
+			return keyCheck;								// 押されているキーを返す
 		}
 		private int[] ButtonCheck()
 		{
 			workButtonNum = buttonNum.Length;
 			int[] buttonCheck = new int[workButtonNum];
 
-			for (int i = 0; i < buttonNum.Length; i++)
+			for (int i = 0; i < buttonNum.Length; i++) {
 				if (Controller.KEY(buttonNum[i])) buttonCheck[i] = 1;
 				else buttonCheck[i] = 0;
+			}
 			return buttonCheck;
 		}
 		private int[] StickCheck()
@@ -303,9 +192,10 @@ namespace _2DActionGame
 			workStickNum = stickNum.Length;
 			int[] stickCheck = new int[workStickNum];
 
-			for (int i = 0; i < stickNum.Length; i++)
+			for (int i = 0; i < stickNum.Length; i++) {
 				if (Controller.stickDirection == (stickNum[i])) stickCheck[i] = 1;
 				else stickCheck[i] = 0;
+			}
 			return stickCheck;
 		}
 
@@ -355,6 +245,14 @@ namespace _2DActionGame
 						isAttacking = false;
 					}
 				}
+				if (isCuttingDownFromAir) {
+					sword.SlashDownFromAir(turnsRight,110,8);//適当
+					if (sword.isEnd) {
+						isCuttingDownFromAir = false;
+						hasAttacked = true;
+						isAttacking = false;
+					}
+				}
 				if (isCuttingAway) {
 					sword.BlowAway(turnsRight, 110, 8);
 					if (sword.isEnd) {
@@ -376,6 +274,14 @@ namespace _2DActionGame
 					sword.MegaThrust(turnsRight, 80, 8);
 					if (sword.isEnd) {
 						isThrusting = false;
+						hasAttacked = true;
+						isAttacking = false;
+					}
+				}
+				if (isDashAttacking) {// これ実際もう１段階抽象化できるよな...Swordは動きだけ管理すればいいんだから
+					sword.ThrustInDashing(turnsLeft, 110, 16);
+					if (sword.isEnd) {
+						isDashAttacking = false;
 						hasAttacked = true;
 						isAttacking = false;
 					}
@@ -413,7 +319,6 @@ namespace _2DActionGame
 			if (KeyInput.IsOnKeyDown(Keys.K)) { isAttacking = true; sword.isBeingUsed = true; isCuttingUp = true; }
 			if (KeyInput.IsOnKeyDown(Keys.L)) { TrackEnemy2(); }
 			if (KeyInput.IsOnKeyDown(Keys.O)) { isAttacking = true; sword.isBeingUsed = true; isCuttingDownFromAir = true; }
-			if (KeyInput.IsOnKeyDown(Keys.P)) { isAttacking = true; sword.isBeingUsed = true; isCuttingDownFromAirV2 = true; }
 			// 向き変更
 			if (KeyInput.IsOnKeyDown(Keys.CapsLock)) {
 				if (turnsRight) { turnsRight = false; turnsLeft = true; } else if (!turnsRight) { turnsRight = true; turnsLeft = false; }
@@ -509,7 +414,7 @@ namespace _2DActionGame
 
 			// NormalCombo: △ △ ○
 			// LaunchCombo: △ △ △＋↑ ○/× △...
-			#region ×(□)
+			#region cross(rect)
 			if (/*KeyInput.IsOnKeyDown(Keys.Down) || */Controller.IsOnKeyDown(0)) {//□ //isAttacking = true; sword.isBeingUsed=true; isCuttingDown = true; }// Fにしたらカオス
 				if (normalComboCount == 4) {
 					if (time < normaSecondComboTime) {
@@ -527,7 +432,7 @@ namespace _2DActionGame
 				}
 			}
 			#endregion
-			#region □
+			#region rect
 			if (/*KeyInput.IsOnKeyDown(Keys.Right) || */Controller.IsOnKeyDown(0)) {
 				//BackStep();
 				if (normalComboCount == 0) {  // テスト
@@ -543,7 +448,7 @@ namespace _2DActionGame
 				}
 			}
 			#endregion
-			#region ○
+			#region circle
 			if (Controller.IsOnKeyDown(3)) {// Controller.IsOnKeyDown(1)) {
 				if (normalComboCount == 0) { // 単発の強攻撃？
 					hasAttacked = true;
@@ -594,7 +499,7 @@ namespace _2DActionGame
 				}
 			}
 			#endregion
-			#region △
+			#region triangle
 			if (/*KeyInput.IsOnKeyDown(Keys.Up) ||*/ Controller.IsOnKeyDown(1)) {
 				if (normalComboCount == 0) {
 					hasAttacked = true;
@@ -690,7 +595,7 @@ namespace _2DActionGame
             }*/
 			#endregion
 			#endregion
-			#region △+↑
+			#region triangle+↑
 			// 押しっぱなし+↑ではなく、↑押しっぱで△3回押して斬り上げる感じのほうがいいらしい　要修正
 			// 2撃目を出すために△を押したフレームのときは飛ばしたい
 			#region !syoryu
@@ -784,7 +689,7 @@ namespace _2DActionGame
 			}
 			#endregion
 			#endregion
-			#region △+↓
+			#region triangle+↓
 			if ((Controller.IsOnKeyDown(1) && Controller.stickDirection == Direction.DOWN) || (Controller.KEY(1) && Controller.onStickDirectionChanged && Controller.Vector.Y > .5)) {// コンボを強制終了させる　とりあえずコンボから独立させよう
 				if (/*normalComboCount == 2 &&*/ time != 0 || time == 0) {
 					//if(time < normaSecondComboTime) {
@@ -1016,19 +921,19 @@ namespace _2DActionGame
 				damageTime = 0;
 				if (normalComboCount == 4 || normalComboCount == 0) isTrackingEnemy = false;
 				//isJumping = false;
-			} else hasPlayedSE = false;
-			if (isOnSomething && !hasPlayedSE) {
+			} else hasPlayedSoundEffect = false;
+			if (isOnSomething && !hasPlayedSoundEffect) {
 				if (!game.isMuted) landingSound.Play(SoundControl.volumeAll, 0f, 0f);
-				hasPlayedSE = true;
+				hasPlayedSoundEffect = true;
 			}
 
 			if (inAirReflection && airReflectCount <= 5) AdjustReflect(reflectSpeed);
 			// 加速
 			if (isAttacking /*&& (!hasJumped || !isJumping)|| isOnSomething*/&& (!syouryuuMode || (syouryuuMode && !isTrackingEnemy)) && !isAirial && !inAirReflection) {
-				Gravity = .60; speed.Y = 0;
+				gravity = defGravity; speed.Y = 0;
 			}// isOnSomethingもいれるとばぐる
-			else Gravity = .60;
-			speed.Y += (float)Gravity * timeCoef;//if(!isAttacking)で絞ってもあまり変わらない
+			else gravity = defGravity;
+			speed.Y += (float)gravity * timeCoef;//if(!isAttacking)で絞ってもあまり変わらない
 
 			// 減速 scalarSpeed *= friction;
 			if (speed.X > 0) {
@@ -1230,6 +1135,7 @@ namespace _2DActionGame
 		#endregion
 		#region Movement
 		// ジャンプ・特殊移動など
+
 		private void Jump(int jumpPower)
 		{
 			isJumping = true;

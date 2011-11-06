@@ -157,7 +157,7 @@ namespace _2DActionGame
 		}
 		protected virtual void MoveIni()
 		{
-			hasPlayedSE = false;
+			hasPlayedSoundEffect = false;
 		}
 		protected virtual void PlaySEWhileMoving()
 		{
@@ -298,7 +298,7 @@ namespace _2DActionGame
 		}
 		protected override void UpdateNumbers()
 		{
-			speed.Y += (float)Gravity;
+			speed.Y += (float)gravity;
 
 			if (speed.X > 0) {
 				speed.X += -(.40f * friction);

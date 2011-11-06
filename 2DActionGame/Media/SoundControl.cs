@@ -17,6 +17,9 @@ namespace _2DActionGame
 		public static ContentManager content { get; private set; }
 		public static float volumeAll = defVolume;
 
+		static SoundControl()
+		{
+		}
 		public static void Initialize(Game1 game, ContentManager Content)
 		{
 			SoundControl.game = game;

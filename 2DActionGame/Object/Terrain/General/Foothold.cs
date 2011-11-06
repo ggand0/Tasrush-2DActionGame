@@ -28,10 +28,10 @@ namespace _2DActionGame
 
         public override void IsHit(Object targetObject)
         {
-            if(targetObject.isFirstTimeInAFrame) { //3/14 もう何かに乗ってると判断されてるなら飛ばしてもいいかもしれない
+            if(targetObject.firstTimeInAFrame) { //3/14 もう何かに乗ってると判断されてるなら飛ばしてもいいかもしれない
                 isHit = false;// 複数の敵と判定するので結局falseになってしまう
                 //(targetObject as Character).onConveyor = false;
-                targetObject.isFirstTimeInAFrame = false;
+                targetObject.firstTimeInAFrame = false;
                 isHitCB = false;
                 //isOnSomething = false;
             }
@@ -48,7 +48,7 @@ namespace _2DActionGame
                 // 当たりあり
                 isHit = true;// collapsingBlock:objectsのはtrueになってもdynamicTerrrainsのほうはtrueにならない(解決)
                 targetObject.isHit = true;
-                isFirstTimeInAFrame = false;
+                firstTimeInAFrame = false;
 
                 // ↓――――――――――――――――――――――当たり判定処理――――――――――――――――――――――――↓
                 // targetObjectが下に移動中
@@ -71,7 +71,7 @@ namespace _2DActionGame
 
                             targetObject.position += this.speed;
 
-                            if (type == 0) targetObject.friction = .40f;
+                            if (type == 0) targetObject.friction = defFriction;
                             else if (type == 1) targetObject.friction = .05f;
                             
                             isUnderSomeone = true;

@@ -72,7 +72,7 @@ namespace _2DActionGame
                 //targetObject.isHit = true;
                 targetObject.isHitCB = true;
 
-                //isFirstTimeInAFrame = false;
+                //firstTimeInAFrame = false;
                 ontop = false; onleft = false; onright = false;// 初期化(デバッグ用)
 
                 // ↓――――――――――――――――――――――当たり判定処理――――――――――――――――――――――――↓
@@ -98,7 +98,7 @@ namespace _2DActionGame
 
                             targetObject.position.X += this.speed.X;  // これで慣性を再現できるか！？
 
-                            if (type == 0) targetObject.friction = .40f;
+                            if (type == 0) targetObject.friction = defFriction;
                             else if (type == 1) targetObject.friction = .05f;
                             
                             ontop = true;

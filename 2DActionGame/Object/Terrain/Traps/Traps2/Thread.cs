@@ -85,11 +85,11 @@ namespace _2DActionGame
 
             // オイラー法
             PhiT = Phi + dT * PhiSpeed;
-            PhiVt = PhiSpeed - dT * (float)Math.Sin(MathHelper.ToRadians(Phi)) * (float)Gravity / length;
+            PhiVt = PhiSpeed - dT * (float)Math.Sin(MathHelper.ToRadians(Phi)) * (float)gravity / length;
 
             // 修正オイラー法
             PhiNew = Phi + 0.5f * dT * (PhiSpeed + PhiSpeed);
-            PhiSpeedNew = PhiSpeed - 0.5f * dT *(float)(Math.Sin(MathHelper.ToRadians(Phi)) + Math.Sin(MathHelper.ToRadians(PhiT))) * (float)Gravity / length;
+            PhiSpeedNew = PhiSpeed - 0.5f * dT *(float)(Math.Sin(MathHelper.ToRadians(Phi)) + Math.Sin(MathHelper.ToRadians(PhiT))) * (float)gravity / length;
         }
 
         public override void MotionUpdate()

@@ -26,7 +26,7 @@ namespace _2DActionGame
 
         public override void Update()
         {
-            Gravity = 0;
+            gravity = 0;
             speed.Y = 0;
             speed.X = -2.0f;
             base.Update();

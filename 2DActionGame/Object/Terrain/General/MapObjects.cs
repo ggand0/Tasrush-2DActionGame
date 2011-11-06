@@ -49,7 +49,7 @@ namespace _2DActionGame
         {
             // meteorのuserをnullにすると当たり判定されてしまうので注意. このオブジェクト自身も
 			this.user = user;
-            hasPlayedSE = true;
+            hasPlayedSoundEffect = true;
             rnd = new Random();
             rnd2 = new Random();
 			switch (type) {
@@ -135,9 +135,9 @@ namespace _2DActionGame
 
             base.Update();
 
-            if (!hasPlayedSE) {
+            if (!hasPlayedSoundEffect) {
                 if(!game.isMuted) tornadeSound.Play(SoundControl.volumeAll, 0f, 0f);	// 3ボスでなぜかnullになる
-                hasPlayedSE = true;
+                hasPlayedSoundEffect = true;
             }
         }
 		/// <summary>
@@ -190,7 +190,7 @@ namespace _2DActionGame
 							terrain.isBeingUsed = true;
 							if (terrain is Icicle) {
 								(terrain as Icicle).isFallingDown = false;
-								terrain.hasPlayedSE = false;
+								terrain.hasPlayedSoundEffect = false;
 								terrain.speed = Vector2.Zero;
 							}
 						}
@@ -201,7 +201,7 @@ namespace _2DActionGame
 						isEnd = false;
 						t = 0;
 						spawnNum = 0;
-						//hasPlayedSE = false;
+						//hasPlayedSoundEffect = false;
 					}
 					// "ランダムっぽい"仕様.　順番に落としたいときはbreakするべし
 					/*for (int i = 0; i < mapObjects.Count; i++)
@@ -210,7 +210,7 @@ namespace _2DActionGame
 							mapObjects[i].position = startPosition + mapObjects[i].localPosition;
 							if(mapObjects[i] is Icicle) {
 								(mapObjects[i] as Icicle).isFallingDown = false;
-								(mapObjects[i] as Icicle).hasPlayedSE = false;
+								(mapObjects[i] as Icicle).hasPlayedSoundEffect = false;
 								mapObjects[i].speed = Vector2.Zero;
 							}
 						}*/
@@ -224,7 +224,7 @@ namespace _2DActionGame
 							if (mapObjects[spawnIndex[i]] is Icicle && (mapObjects[spawnIndex[i]] as Icicle).hasFalled) {
 								(mapObjects[spawnIndex[i]] as Icicle).hasFalled = false;
 								(mapObjects[spawnIndex[i]] as Icicle).isFallingDown = false;
-								mapObjects[spawnIndex[i]].hasPlayedSE = false;
+								mapObjects[spawnIndex[i]].hasPlayedSoundEffect = false;
 								mapObjects[spawnIndex[i]].speed = Vector2.Zero;
 								mapObjects[spawnIndex[i]].position = startPosition + mapObjects[spawnIndex[i]].localPosition;
 								mapObjects[spawnIndex[i]].isBeingUsed = true;
@@ -234,7 +234,7 @@ namespace _2DActionGame
 
 					if (isEnding && t == 0) {// coutner = 361
 						foreach (Terrain terrain in mapObjects) {
-							terrain.Gravity = gravity - gravity / 2;
+							terrain.gravity = gravity - gravity / 2;
 							(terrain as Icicle).hasFalled = true;
 						}
 						t++;
@@ -249,7 +249,7 @@ namespace _2DActionGame
 							//terrain.isBeingUsed = true;
 							if (terrain is Icicle) {
 								(terrain as Icicle).isFallingDown = false;
-								terrain.hasPlayedSE = false;
+								terrain.hasPlayedSoundEffect = false;
 								terrain.speed = Vector2.Zero;
 							}
 						}
@@ -269,7 +269,7 @@ namespace _2DActionGame
 						if (spawnNum == mapObjects.Count - 1) {//spawnIndex.Count - 1/* && !mapObjects[spawnIndex.isAlive*/) {
 							spawnNum = counter = 0;
 							isEnd = true;
-							foreach (Terrain terrain in mapObjects) terrain.Gravity = gravity;
+							foreach (Terrain terrain in mapObjects) terrain.gravity = gravity;
 						}
 					}
 					break;
@@ -280,7 +280,7 @@ namespace _2DActionGame
 			if (counter > endTime) {// 4/14　ここは到達している counter == 601
 				counter = 0;
 				isEnd = true;
-				foreach (Terrain terrain in mapObjects) terrain.Gravity = gravity;// 元の重力に戻す
+				foreach (Terrain terrain in mapObjects) terrain.gravity = gravity;// 元の重力に戻す
 			}
         }
 		private bool hasIniedAll;
@@ -302,7 +302,7 @@ namespace _2DActionGame
 				case 0:// 一斉に
 					if (counter == 0) {
 						isEnd = false;
-						hasPlayedSE = false;
+						hasPlayedSoundEffect = false;
 						hasIniedAll = false;
 						foreach (Terrain terrain in mapObjects) {
 							terrain.position = startPosition + terrain.localPosition;
@@ -315,7 +315,7 @@ namespace _2DActionGame
 				case 1:// 順に
 					if (counter == 0) {
 						isEnd = false;
-						hasPlayedSE = false;
+						hasPlayedSoundEffect = false;
 						hasIniedAll = false;
 						spawnNum = 0;
 						foreach (Terrain terrain in mapObjects) {

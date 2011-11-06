@@ -51,10 +51,10 @@ namespace _2DActionGame
                 if (!thread.isDivided) {
                     //position = thread.position+thread.weightVector;
                     position = thread.weightVector + thread.position - new Vector2(width/2,height);// +new Vector2(0, thread.height);
-                    //Gravity = 0;
+                    //gravity = 0;
                 }
                 else
-					Gravity = .60;
+					gravity = defGravity;
 
                 //if (turret.isEnd) turret.Inicialize();    // 面白いけど失敗.
                 if (!turret.isBeingUsed) turret.isBeingUsed = true;
@@ -102,7 +102,7 @@ namespace _2DActionGame
 
             position.Y = (float)Math.Sin(degree);
 
-            RoundTripMotion(2);
+			RoundTripMotion(defPos, moveDistance, 2);
             //base.MovementUpdate();
         }
         //private void MovementUpdate()
@@ -110,8 +110,8 @@ namespace _2DActionGame
 
         protected override void UpdateNumbers()
         {
-            Gravity = .60;
-			speed.Y += (float)Gravity * timeCoef;
+            gravity = defGravity;
+			speed.Y += (float)gravity * timeCoef;
             /*if (isOnSomething) scalarSpeed *= friction;
             else scalarSpeed *= frinctionAir;*/
             

@@ -40,7 +40,7 @@ namespace _2DActionGame
 
             if (!hasFlownOut) {
                 isOnSomething = false;
-                Gravity = 0;
+                gravity = 0;
             }
             if(distance < flyingOutDistance && !hasFlownOut) {
                 if(counter == 0) {

@@ -481,7 +481,7 @@ namespace _2DActionGame
 			t = distance.X / dx;
 			speed.X = dx;
 			speed.Y = (distance.Y - .5f * t * t * 7.2f * dt) / t;// 9.8
-			//speed.Y = (distanceToPlayer.Y - .5f * t * t * (float)Gravity * dt) / t;
+			//speed.Y = (distanceToPlayer.Y - .5f * t * t * (float)gravity * dt) / t;
 		}
 		/// <summary>
 		/// 飛ぶはずだった方向と実際のジャンプ方向が食い違ってしまった場合に呼ばれるジャンプメソッド。
@@ -756,7 +756,7 @@ namespace _2DActionGame
 				counter = 0;
 			} 
 			if (hasReached && !isShootingThunder && counter > 60/**/) {
-				Gravity = 0;
+				gravity = 0;
 				speed = Vector2.Zero;
 				//shootRightSide = targetInRightSide;
 
@@ -769,7 +769,7 @@ namespace _2DActionGame
 			if (thunderTurret.isEnd) {//isWaiting || attackCounter > 240) {
 				thunderTurret.isEnd = false;
 				hasReached = false;
-				Gravity = .60;
+				gravity = defGravity;
 				isEndingAttack = true;
 				isWaiting = true;
 				isShootingThunder = false;
@@ -859,7 +859,7 @@ namespace _2DActionGame
 				counter = 0;
 			} else if (hasReached && !isShootingThunder && counter > 60) {
 				// カッターの時は止めない方がｶｯｺｲｲかつ効率的
-				//Gravity = 0;
+				//gravity = 0;
 				//speed = Vector2.Zero;
 
 				isShootingThunder = true;
@@ -871,7 +871,7 @@ namespace _2DActionGame
 			// 終了処理:syurikenの終了を待って終わる
 			if (syuriken.isEnd) {//isWaiting || attackCounter > 240) {
 				hasReached = false;
-				//Gravity = .60;
+				//gravity = defGravity;
 				isEndingAttack = true;
 				isWaiting = true;
 				//thunderTurret.isBeingUsed = false;
@@ -987,7 +987,7 @@ namespace _2DActionGame
 				obstacleWindSmall.attackCounter = 0;
 				obsCounter = 0;
 				isEndingAttack = true;
-				Gravity = .60;
+				gravity = defGravity;
 				isShootingTornade = false;
 				//isWaiting = true;
 
@@ -999,7 +999,7 @@ namespace _2DActionGame
 				obstacleWindLarge.attackCounter = 0;
 				obsCounter = 0;
 				isEndingAttack = true;
-				Gravity = .60;
+				gravity = defGravity;
 				isShootingTornade = false;
 				isWaiting = true;
 
@@ -1024,7 +1024,7 @@ namespace _2DActionGame
 				//hasReached = false;
 
 				isEndingAttack = true;
-				Gravity = .60;
+				gravity = defGravity;
 				isShootingTornade = false;
 
 				isEnds[5] = true;
@@ -1189,7 +1189,7 @@ namespace _2DActionGame
 		protected override void UpdateNumbers()
 		{
 			if (!isBacking) {//&& !isOnSomething && !isAttacking) {
-				speed.Y += (float)Gravity;
+				speed.Y += (float)gravity;
 				if (speed.X > 0) {
 					speed.X += (float)-(.40 * friction);
 					if (speed.X < 0) speed.X = 0;

@@ -72,7 +72,7 @@ namespace _2DActionGame
 
         public override void IsHit(Object targetObject)
         {
-            if (isFirstTimeInAFrame) {// 1人or1匹でも触れていたらisHit=trueのままでいい
+            if (firstTimeInAFrame) {// 1人or1匹でも触れていたらisHit=trueのままでいい
                 isHit = false;
                 //targetObject.isInWater = false;
             }
@@ -94,7 +94,7 @@ namespace _2DActionGame
                 isHit = true;
                 targetObject.isHit = true;
                 targetObject.hasTouchedWater = true;
-                isFirstTimeInAFrame = false;
+                firstTimeInAFrame = false;
                 targetObject.isInWater = true;
                 // 追加
                 if (/*isOn &&*/ targetObject.position.Y > position.Y || targetObject.position.Y + targetObject.height > position.Y) { // isUNderでもWAterの下にいるとは限らないがとりあえず. 

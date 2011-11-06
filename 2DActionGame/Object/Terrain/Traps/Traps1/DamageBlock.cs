@@ -35,10 +35,10 @@ namespace _2DActionGame
 
         public override void IsHit(Object targetObject)
         {
-			if (targetObject.isFirstTimeInAFrame) { //3/14 もう何かに乗ってると判断されてるなら飛ばしてもいいかもしれない
+			if (targetObject.firstTimeInAFrame) { //3/14 もう何かに乗ってると判断されてるなら飛ばしてもいいかもしれない
 				isHit = false;// 複数の敵と判定するので結局falseになってしまう
 				//(targetObject as Character).onConveyor = false;
-				targetObject.isFirstTimeInAFrame = false;
+				targetObject.firstTimeInAFrame = false;
 				isHitCB = false;
 				//isOnSomething = false;
 			}
@@ -57,7 +57,7 @@ namespace _2DActionGame
 				targetObject.isHit = true;
 				//targetObject.isDamaged = true; // 上だけにしたい
 				//targetObject.isOnSomething ~ 
-				isFirstTimeInAFrame = false;
+				firstTimeInAFrame = false;
 				ontop = false; onleft = false; onright = false;// 初期化(デバッグ用)
 
 				// targetObjectが下に移動中
@@ -79,7 +79,7 @@ namespace _2DActionGame
 
 							targetObject.position.X += this.speed.X;								// これで慣性を再現できるか！？
 
-							if (type == 0) targetObject.friction = .40f;
+							if (type == 0) targetObject.friction = defFriction;
 							else if (type == 1) targetObject.friction = .05f;
 
 							ontop = true;

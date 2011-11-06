@@ -22,7 +22,6 @@ namespace _2DActionGame
 		public Rectangle rect = new Rectangle(0, 0, 80, 8);  // 大きめの画像から切り出すので剣の大きさは可変
 		public Character prevDamagedEnemy;
 		public Character curDamagedEnemy;
-		//public List<Character> damagedObjects { get; set; }
 		public List<Object> damagedObjects { get; set; }
 		private Player player { get; set; }
 		private Turret beamTurret { get; set; }
@@ -39,10 +38,9 @@ namespace _2DActionGame
 		private Vector2 deltaSize;
 		private bool isShootingBeam;
 		#endregion
-		//public bool isEnd { get; set; }     // 攻撃終了全般を示すフラグ
 		private SoundEffect[] slashSounds = new SoundEffect[5];
 		public Texture2D[] effects = new Texture2D[5];
-		//private Random rnd = new Random();
+
 		public Sword(Stage stage, float x, float y, int width, int height)
 			: this(stage, x, y, width, height, null)
 		{
@@ -97,15 +95,21 @@ namespace _2DActionGame
 			// CharacterにisAttacking2などのメンバを全て書くわけには行かないのでuser.～ではなくplayerを使う...しかしRivalは？
 			// 今の構造を維持するならPlayerとRivalを統合するクラスを作ることだが、継承関係の問題が発生してしまう。
 			// userが絡まない動きの部分だけメソッド化するなどで対処？
-			if (user is Player) PlayerAttacking((user as Character).turnsRight);
-			else if (user is Boss) BossAttacking((user as Character).turnsRight);
-
-			// 位置の情報(angle)
-			locusDegree.Add((int)degree);//drawVectorにすべきか？
-			if (locusDegree.Count > 2) locusDegree.RemoveAt(0);
-
+			if (user is Player) {
+				// メソッドを消して移行した
+				if (!player.isAttacking1 && !player.isAttacking2 && !player.isAttacking3) {
+					Inicialize();
+				}
+			} else if (user is Boss) {
+				// これも
+				(user as Rival).hasAttacked = false;
+			}
 			UpdateAnimation();
 
+			// ログの更新
+			locusDegree.Add((int)degree);//drawVectorにすべきか？
+			if (locusDegree.Count > 2) locusDegree.RemoveAt(0);
+			
 			time++;
 			counter++;
 		}
@@ -142,280 +146,6 @@ namespace _2DActionGame
 				drawPos = user.drawPos + new Vector2(8, user.height / 2);
 			}
 		}
-		private void PlayerAttacking(bool turnsRight)
-		{
-			#region Create
-			// ここも移植しようか？player.hasAttackedは各メソッドで初期化してるので問題ないし大丈夫だろう
-			//player.hasAttacked = false;   // weaponのupdateが後なのでずっとfalseになってしまう.よってplayer.updateに移行する
-			if (!player.isAttacking1 && !player.isAttacking2 && !player.isAttacking3)
-				Inicialize();
-			#endregion
-			#region Attack
-			if (player.isAttacking) {
-				// Basic
-				#region SlashVertically
-				// 移行済み
-				#endregion
-				#region SlashHorizontally
-				// 移行済み
-				#endregion
-				#region SlashUp
-				/*if(player.isCuttingUp) {// 斬り上げ2 角度ともに回転位置も変える(正直言ってどうせアニメーションを入れるので意 味 が な い)
-                    if (degreeCounter == 0) {// 角度と位置初期化
-                        degree = -20;
-                        for(int i=0; i<damageTime.Length;i++)　damageTime[i] = 0;// 追加してみた
-                        dx = 0;
-                        dy = 0;
-                        rect.Width = 110;// 少し長めにして攻撃中はずれないように
-                        drawPos = player.drawPos + new Vector2(player.width / 2, player.height - 10);
-                        position = player.position + new Vector2(player.width / 2, player.height - 10);
-                        degreeCounter++;// 初期化は1回
-                        DamageMethodInicialize();
-                        Cue cue = game.soundBank.GetCue("zangeki");
-                        if(!game.isMuted) cue.Play(SoundControl.volumeAll, 0f, 0f);
-                    }
-                    if(degree < 130) {
-                        // ジャンプ中だと描画位置がおかしくなるので毎フレーム上手く初期化する必要がある→dx,dy
-                        // ただしコンボ中のみに登場させるならこのままでもよい
-                        //rect.Width = 100;
-                        dx += 1;
-                        dy -= 2;
-                        position = player.position + new Vector2(player.width/2 + dx, player.height -10 + dy);
-                        drawPos = player.drawPos + new Vector2(player.width / 2 + dx, player.height - 10 + dy);
-                        degree += 15;
-                    }
-                    else{// 攻撃終了
-                        player.isCuttingUp = false;
-                        isHit = false;// 安心のfalse
-                        player.hasAttacked = true;
-                        player.isAttacking = false; isBeingUsed=false;
-                        degreeCounter = 0;
-                        DamageMethodInicialize();
-                        rect.Width = 80;
-                        dx = 0;
-                        dy = 0;
-                    }
-                }*/
-				#endregion
-				#region SlashDown
-				/*if (player.isCuttingDown) {// 斬り下げ：とりあえずはisAttacking1と同じモーションにするが後で変える
-                    if (degreeCounter == 0) {// 角度初期化
-                        degree = 100;
-                        dx = 0;
-                        dy = 0;
-
-                        drawPos = player.drawPos + new Vector2(player.width / 2, player.height -15);
-                        position = player.position + new Vector2(player.width / 2, player.height - 15);
-                        degreeCounter++;// 初期化は1回
-                        Cue cue = game.soundBank.GetCue("zangeki");
-                        if(!game.isMuted) cue.Play(SoundControl.volumeAll, 0f, 0f);
-                    }
-                    if (degree > -10) {
-                        
-                        dx += 1;
-                        dy += 1;
-                        position = player.position + new Vector2(player.width / 2 + dx, player.height - 15 + dy);
-                        drawPos = player.drawPos + new Vector2(player.width / 2 + dx, player.height - 15 + dy);
-                        degree += -20;// 振るスピード(°)
-                    }
-                    else{// 攻撃終了
-                        degree = 100;// 次の攻撃のために　多分初期化してればいらない
-
-                        player.isCuttingDown = false;
-                        isHit = false;// 攻撃が終われば当たりようがないので←敵のishitも変えなきゃ意味がない！←攻撃終了時に全ての敵のishitをfalseにする←これも関係ない
-                        player.hasAttacked = true;// hasAttackedは機能している
-                        player.isAttacking = false; isBeingUsed=false;
-                        degreeCounter = 0;
-                        dx = 0;
-                        dy = 0;
-                    }
-                }*/
-				if (player.isCuttingDownFromAir) {
-					if (degreeCounter == 0) {// 角度初期化
-						degree = 100;
-						degreeCounter++;// 初期化は1回
-						DamageMethodInicialize();
-						originVector = player.drawPos + new Vector2(player.width / 2, player.height / 2);
-					}
-					if (degree > -150) degree += -20;// 振るスピード(°)
-					else {// 攻撃終了
-						degree = 100;
-
-						player.isCuttingDown = false;// バグだが挙動が面白くなったので残す
-						isHit = false;
-						player.hasAttacked = true;
-						player.isAttacking = false; isBeingUsed = false;
-						degreeCounter = 0;
-						originVector = new Vector2(0, 0);
-						DamageMethodInicialize();
-					}
-				}
-				if (player.isCuttingDownFromAirV2) {
-					if (degreeCounter == 0) {// 角度初期化
-						degree = 100;
-						degreeCounter++;// 初期化は1回
-						DamageMethodInicialize();
-					}
-					if (degree > -150) degree += -20;// 振るスピード(°)
-					else {// 攻撃終了
-						degree = 100;
-
-						player.isCuttingDownFromAirV2 = false;
-						isHit = false;
-						player.hasAttacked = true;
-						player.isAttacking = false; isBeingUsed = false;
-						degreeCounter = 0;
-						DamageMethodInicialize();
-					}
-				}
-				#endregion
-				#region CutAway
-				/*if (player.isCuttingAway) {// 斬り飛ばし
-                    if (degreeCounter == 0) {// 角度初期化
-                        degree = 100;
-                        dx = 0;
-                        dy = 0;
-                        DamageMethodInicialize();
-                        drawPos = player.drawPos + new Vector2(player.width / 2, player.height -15);
-                        position = player.position + new Vector2(player.width / 2, player.height - 15);
-                        degreeCounter++;// 初期化は1回
-                        Cue cue = game.soundBank.GetCue("zangeki");
-                        if(!game.isMuted) cue.Play(SoundControl.volumeAll, 0f, 0f);
-                    }
-                    if (degree > -10) {
-                        
-                        dx += 1;
-                        dy += 1;
-                        position = player.position + new Vector2(player.width / 2 + dx, player.height - 15 + dy);
-                        drawPos = player.drawPos + new Vector2(player.width / 2 + dx, player.height - 15 + dy);
-                        degree += -20;// 振るスピード(°)
-                    }
-                    else{// 攻撃終了
-                        player.isCuttingAway = false;
-                        isHit = false;
-                        player.hasAttacked = true;
-                        player.isAttacking = false; isBeingUsed=false;
-                        degreeCounter = 0;
-                        DamageMethodInicialize();
-                        dx = 0;
-                        dy = 0;
-                    }
-                }*/
-				#endregion
-				// Variation
-				#region ThrustinDashing
-				if (player.isDashAttacking) {// ダッシュ攻撃1:剣
-					if (turnsRight) {
-						if (degreeCounter == 0) {// 角度初期化
-							degree = 0;
-							degreeCounter++;// 初期化は1回
-							DamageMethodInicialize();
-							rect.Width = 110;
-							rect.Height = 16;
-						}
-						delay++;
-						if (delay >= 40) {//指定frame攻撃を続かせて 終 了
-							player.isDashAttacking = false;
-							isHit = false;
-							player.hasAttacked = true;
-							player.isAttacking = false; isBeingUsed = false;
-							degreeCounter = 0;
-							delay = 0;
-							DamageMethodInicialize();
-						}
-					}
-				}
-				#endregion
-				#region SlashHardlly
-				// 移行済み
-				#endregion
-				#region Mega Thrust
-				// 百烈斬りのようなイメージ
-				if (player.isThrusting) {// 縦斬り
-
-				}
-				#endregion
-				#region ShootingBeam
-				if (player.isToChargingMotion) {
-					if (turnsRight) {// 右向きのとき
-						if (degreeCounter == 0) {// 角度初期化
-							degree = 0;
-							rect.Width = 120;// rect初期化
-							rect.Height = 8;
-							degreeCounter++;// 初期化は1回
-							DamageMethodInicialize();
-							if (!game.isMuted) slashSounds[0].Play(SoundControl.volumeAll, 0f, 0f);
-
-							//counter = 0;
-						}
-						if (degree < 135) degree += 20;// 振るスピード(°)
-						else {// 攻撃終了
-							player.isToChargingMotion = false;
-							player.isChargingPower = true;
-							//player.hasAttacked = true;
-							//player.isAttacking = false; isBeingUsed=false;
-							degreeCounter = 0;
-							DamageMethodInicialize();
-						}
-					}
-				}
-				if (player.isShootingBeam) {
-					if (turnsRight) {// 右向きのとき
-						if (degreeCounter == 0) {// 角度初期化
-							degree = 135;
-							rect.Width = 120;// rect初期化
-							rect.Height = 8;
-							degreeCounter++;// 初期化は1回
-							DamageMethodInicialize();
-							if (!game.isMuted) slashSounds[0].Play(SoundControl.volumeAll, 0f, 0f);
-						}
-						if (degree > -35) degree += -20;// 振るスピード(°)
-						else {// 攻撃終了
-							player.isShootingBeam = false;
-							isShootingBeam = true;
-							counter = 0;
-							player.hasAttacked = true;
-							player.isAttacking = false; isBeingUsed = false;
-							degreeCounter = 0;
-							DamageMethodInicialize();
-						}
-					}
-					beamTurret.Update();
-				}
-				#endregion
-				// 表示されているrectにメンバ変数の幅・高さを合わせる
-				width = rect.Width;
-				height = rect.Height;
-			}
-			#region ShootBeam
-			if (isShootingBeam /*&& counter < 100*/) {
-				if (counter == 0) beamTurret.Inicialize();
-			}
-			if (isShootingBeam && counter < 100) beamTurret.Update();
-			else if (isShootingBeam && counter > 100) {
-				isShootingBeam = false;
-				player.isShootingBeam = false;
-				beamTurret.Inicialize();
-				counter = 0;
-			}
-			#endregion
-			#endregion
-		}
-		private void BossAttacking(bool turnsRight)
-		{
-			#region Create
-			// ここも移植しようか？user.hasAttackedは各メソッドで初期化してるので問題ないし大丈夫だろう
-			(user as Rival).hasAttacked = false;// 暫定
-			/*if(turnsRight) {
-				position = user.position + new Vector2(user.width - 8,user.height / 2);
-				drawPos =  user.drawPos + new Vector2(user.width - 8, user.height / 2);
-			}
-			else{
-				position = user.position + new Vector2(8,user.height / 2);
-				drawPos =  user.drawPos + new Vector2(8, user.height / 2);
-			}*/
-			#endregion
-		}
 		#region Actions
 		/// <summary>
 		/// 剣の挙動。 PlayerAttackingのブロック中に書いていたのをメソッドに分割することにした。
@@ -434,8 +164,8 @@ namespace _2DActionGame
 				Inicialize();
 				isEnd = false;
 				degree = defaultDegree;
-				rect.Width = width;                                 // rect初期化
-				rect.Height = height;
+				this.width = rect.Width = width;                                 // rect初期化
+				this.height = rect.Height = height;
 				animation.poseCount = 0;
 				animation.count = 0;
 				if (!game.isMuted) slashSounds[0].Play(SoundControl.volumeAll, 0f, 0f);
@@ -468,8 +198,8 @@ namespace _2DActionGame
 				Inicialize();
 				isEnd = false;
 				degree = defaultDegree;                             // 角度初期化
-				rect.Width = width;                                 // rect初期化
-				rect.Height = height;
+				this.width = rect.Width = width;                    // rect初期化
+				this.height = rect.Height = height;
 				//DamageMethodInicialize();
 				animation2.poseCount = 0;
 				animation2.count = 0;
@@ -627,6 +357,41 @@ namespace _2DActionGame
 				degreeCounter = 0;
 			}
 		}
+		internal void SlashDownFromAir(bool turnsRight, int width, int height)
+		{
+			int adj;                                                // means "adjustment"
+			int defaultDegree;
+
+			if (turnsRight) adj = -1;
+			else adj = 1;
+			defaultDegree = 90 + adj * 10;
+
+			if (degreeCounter == 0) {// rival 再び0になってしまっているので無限ループ
+				Inicialize();
+				isEnd = false;
+				degree = defaultDegree;
+				rect.Width = width;                                 // rect初期化
+				rect.Height = height;
+				animation.poseCount = 0;
+				animation.count = 0;
+				drawPos = user.drawPos + new Vector2(user.width / 2, user.height / 2);
+				position = user.drawPos + new Vector2(user.width / 2, user.height / 2);
+
+				if (!game.isMuted) slashSounds[3].Play(SoundControl.volumeAll, 0f, 0f);
+				degreeCounter++;
+			}
+
+			if ((turnsRight) ?
+				degree > defaultDegree + adj * 250 :
+				degree < defaultDegree + adj * 250) {
+
+				degree += (-1) * adj * 20;                          // 振るスピード(°)
+			} else {                                                // 攻撃終了
+				isEnd = true;
+				isBeingUsed = false;
+				degreeCounter = 0;
+			}
+		}
 		internal void AirialSlash(bool turnsRight, int width, int height)
 		{
 			int adj;
@@ -698,7 +463,6 @@ namespace _2DActionGame
 				degreeCounter = 0;
 				//DamageMethodInicialize();   // これいらなくね?
 			}
-
 		}
 		internal void SwordBeam2(bool turnsRight, int width, int height)
 		{
@@ -718,13 +482,14 @@ namespace _2DActionGame
 
 					degreeCounter++;// 初期化は1回
 					isEnd = false;
+					degree = 30;
 				}
 				//Random rnd1 = new Random();
 				//randomDegree = rnd1.Next(10,60);
 				if (time % 3 == 0) {
 					if (!game.isMuted) slashSounds[0].Play(SoundControl.volumeAll, 0f, 0f);
 				}
-				degree = 30;// randomDegree;
+				// randomDegree;
 				/*Random rnd2 = new Random();
 				rnd1.Next(10);
 				position = player.position + new Vector2(8,rnd1.Next(0,32));
@@ -736,6 +501,119 @@ namespace _2DActionGame
 					degreeCounter = 0;
 				}
 			}
+		}
+		internal void ThrustInDashing(bool turnsRight, int width, int height)
+		{
+			int adj;                                                // means "adjustment"
+			int defaultDegree;
+
+			if (turnsRight) adj = -1;
+			else adj = 1;
+			defaultDegree = 90 + adj * 90;
+
+			if (degreeCounter == 0) {
+				Inicialize();
+				isEnd = false;
+				degree = defaultDegree;								// 判定矩形の角度を変えないのでここで初期化するだけ
+				rect.Width = width;                                 // rect初期化
+				rect.Height = height;
+				animation.poseCount = 0;
+				animation.count = 0;
+
+				if (!game.isMuted) slashSounds[3].Play(SoundControl.volumeAll, 0f, 0f);
+				degreeCounter++;
+			}
+
+			if (time > 30) {										// 攻撃終了
+				isEnd = true;
+				isBeingUsed = false;
+				degreeCounter = 0;
+			}
+
+			/*if (player.isDashAttacking) {// ダッシュ攻撃1:剣
+				if (turnsRight) {
+					if (degreeCounter == 0) {// 角度初期化
+						degree = 0;
+						degreeCounter++;// 初期化は1回
+						//DamageMethodInicialize();
+						rect.Width = 110;
+						rect.Height = 16;
+					}
+					delay++;
+					if (delay >= 40) {//指定frame攻撃を続かせて 終 了
+						player.isDashAttacking = false;
+						isHit = false;
+						player.hasAttacked = true;
+						player.isAttacking = false; isBeingUsed = false;
+						degreeCounter = 0;
+						delay = 0;
+						//DamageMethodInicialize();
+					}
+				}
+			}*/
+		}
+		internal void ShootBeam()
+		{
+			// 以下、前のをコピペしただけ
+			if (player.isToChargingMotion) {
+				if (turnsRight) {// 右向きのとき
+					if (degreeCounter == 0) {// 角度初期化
+						degree = 0;
+						rect.Width = 120;// rect初期化
+						rect.Height = 8;
+						degreeCounter++;// 初期化は1回
+						DamageMethodInicialize();
+						if (!game.isMuted) slashSounds[0].Play(SoundControl.volumeAll, 0f, 0f);
+
+						//counter = 0;
+					}
+					if (degree < 135) degree += 20;// 振るスピード(°)
+					else {// 攻撃終了
+						player.isToChargingMotion = false;
+						player.isChargingPower = true;
+						//player.hasAttacked = true;
+						//player.isAttacking = false; isBeingUsed=false;
+						degreeCounter = 0;
+						DamageMethodInicialize();
+					}
+				}
+			}
+			if (player.isShootingBeam) {
+				if (turnsRight) {// 右向きのとき
+					if (degreeCounter == 0) {// 角度初期化
+						degree = 135;
+						rect.Width = 120;// rect初期化
+						rect.Height = 8;
+						degreeCounter++;// 初期化は1回
+						DamageMethodInicialize();
+						if (!game.isMuted) slashSounds[0].Play(SoundControl.volumeAll, 0f, 0f);
+					}
+					if (degree > -35) degree += -20;// 振るスピード(°)
+					else {// 攻撃終了
+						player.isShootingBeam = false;
+						isShootingBeam = true;
+						counter = 0;
+						player.hasAttacked = true;
+						player.isAttacking = false; isBeingUsed = false;
+						degreeCounter = 0;
+						DamageMethodInicialize();
+					}
+				}
+				beamTurret.Update();
+			}
+
+			#region ShootBeam
+			if (isShootingBeam /*&& counter < 100*/) {
+				if (counter == 0) beamTurret.Inicialize();
+			}
+			if (isShootingBeam && counter < 100) beamTurret.Update();
+			else if (isShootingBeam && counter > 100) {
+				isShootingBeam = false;
+				player.isShootingBeam = false;
+				beamTurret.Inicialize();
+				counter = 0;
+			}
+			#endregion
 		}
 		/// <summary>
 		/// ジャンプ時のキャンセル用に呼ぶ

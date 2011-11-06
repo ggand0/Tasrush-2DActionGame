@@ -659,7 +659,7 @@ namespace _2DActionGame
 		protected override void UpdateNumbers()
 		{
 			// 加減速
-			speed.Y += (float)Gravity * timeCoef;
+			speed.Y += (float)gravity * timeCoef;
 			if (speed.X > 0) {
 				speed.X += -(.40f * friction) * timeCoef;
 				if (speed.X < 0) speed.X = 0;

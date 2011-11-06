@@ -65,7 +65,6 @@ namespace _2DActionGame
 
 			thunderTurret = new Turret(stage, this, this.position, 64, 48, 2, 0, 3, false, false, true, 3, 3, 3, 14, 120, 10);//, , 3...2
 			thunderTurret2 = new Turret(stage, this, this.position, 64, 48, 2, 0, 3, false, false, true, 3, 3, 3, 14, 120, 10);//, , 3...2
-			thunderTurret2.turnsRight = true;
 			thunderTurret3 = new Turret(stage, this, this.position, 64, 48, 2, 3, 3, false, false, true, 3, 3, 3, 14, 120, 10);//, , 3...2
 			beamTurret = new Turret(stage, this, new Vector2(width / 2 + 32, height), 32, 32, 1, 0, 1, true);//, , 2
 			thunderTurret8Way = new Turret(stage, this, this.position, 64, 48, 2, 3, 8, false, false, true, 3, 3, 3, 14, 360, 30);//...3
@@ -278,7 +277,7 @@ namespace _2DActionGame
 			//    speed = baseVector;
 
 			if (isEndingAttack /*&& distanceD < 5*/ || counter > 240) {
-				hasPlayedSE = false;
+				hasPlayedSoundEffect = false;
 				hasMoved = true;
 				speed = Vector2.Zero;
 				if (endAttack) {
@@ -318,7 +317,7 @@ namespace _2DActionGame
 				beamTurret.isBeingUsed = true; // isBeingUsedがtrueになる前に一瞬描画されてるぜfuck
 				//beamTurret.Inicialize();
 				speed = baseVectorT;
-				hasPlayedSE = false;
+				hasPlayedSoundEffect = false;
 				attackPos = new Vector2(startPos.X - 480, startPos.Y - 50);
 			}
 			if (isStartingAttack && distanceT < 5) {// 攻撃位置まで来たらフラグをたてて攻撃開始.
@@ -327,13 +326,13 @@ namespace _2DActionGame
 				isAttacking = true;
 			}
 			if (isAttacking) {
-				//hasPlayedSE = true;
+				//hasPlayedSoundEffect = true;
 				speed = baseVectorA;
 				//beamTurret.Update();
 			}
 			if (isStartingAttack || isAttacking || isEndingAttack) {
 				if (isEndingAttack) { }
-				if (!hasPlayedSE) {
+				if (!hasPlayedSoundEffect) {
 					if (counter % 8 == 0) {
 						if (!game.isMuted) thunderSoundBig.Play(SoundControl.volumeAll, 0f, 0f);
 					}
@@ -342,7 +341,7 @@ namespace _2DActionGame
 
 			if (isAttacking && distanceA < 5) {
 				isAttacking = false;
-				//hasPlayedSE = true;
+				//hasPlayedSoundEffect = true;
 				isEndingAttack = true;
 				willReturn = true;
 			}
@@ -357,7 +356,7 @@ namespace _2DActionGame
 					isEndingAttack = false;
 					isAttacking = false;
 					isWaiting = true;
-					hasPlayedSE = false;
+					hasPlayedSoundEffect = false;
 					attackCounter = 0;
 					counter = 0;
 				}
@@ -368,7 +367,7 @@ namespace _2DActionGame
 					isEndingAttack = false;
 					isAttacking = false;
 					isWaiting = true;
-					hasPlayedSE = false;
+					hasPlayedSoundEffect = false;
 					attackCounter = 0;
 					counter = 0;
 				}
@@ -431,7 +430,7 @@ namespace _2DActionGame
 				speed = Vector2.Zero;
 				isEndingAttack = false;
 				isAttacking = false;
-				hasPlayedSE = false;
+				hasPlayedSoundEffect = false;
 				isWaiting = true;
 				attackCounter = 0;
 				//counter = 0;
@@ -473,7 +472,7 @@ namespace _2DActionGame
 				isStartingAttack = false;
 				isEndingAttack = false;
 				isAttacking = false;
-				hasPlayedSE = false;
+				hasPlayedSoundEffect = false;
 				isWaiting = true;
 				attackCounter = 0;
 				counter = 0;
@@ -501,7 +500,6 @@ namespace _2DActionGame
 				thunderTurret2.Inicialize();
 
 				thunderTurret2.position = thunderTurret.position + new Vector2(-300, 0);
-				thunderTurret2.turnsRight = true;
 			}
 			thunderTurret.Update();
 			if (counter > 20) thunderTurret2.Update();
@@ -623,7 +621,7 @@ namespace _2DActionGame
 			targetTurret.isBeingUsed = true;
 			switch (type) {
 				case 0:
-					targetTurret.RoundTripMotion(defaultPosition - new Vector2(200, 0), 200, speedX);
+					//targetTurret.RoundTripMotion(defaultPosition - new Vector2(200, 0), 200, speedX);
 					break;
 				case 1:
 					targetTurret.speed = new Vector2(-speedX, 0);

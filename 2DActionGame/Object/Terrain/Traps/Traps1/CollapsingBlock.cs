@@ -21,7 +21,7 @@ namespace _2DActionGame
         public CollapsingBlock(Stage stage, float x, float y, int width, int height, Object user, Vector2 localPosition)
             : base(stage, x, y, width, height, 0, user, localPosition)
         {
-            Gravity = .40;
+            gravity = .40;
 			Load();
         }
 		protected override void Load()
@@ -37,8 +37,8 @@ namespace _2DActionGame
         protected override void UpdateNumbers()
         {
 			if (counter > timeToFall) {
-				//Gravity = .40;
-				speed.Y += (float)Gravity * timeCoef;
+				//gravity = .40;
+				speed.Y += (float)gravity * timeCoef;
 
 				if (speed.X > 0) {
 					speed.X += -(.40f * friction) * timeCoef;// 要調整箇所(敵の挙動的な意味で)0.5 accel
@@ -60,7 +60,7 @@ namespace _2DActionGame
         }
         public override void IsHit(Object targetObject)
         {
-			if (isFirstTimeInAFrame) {
+			if (firstTimeInAFrame) {
 				isHit = false;// 複数の敵と判定するので結局falseになってしまう
 			}
             targetObject.isHit = false;
@@ -74,7 +74,7 @@ namespace _2DActionGame
 				// 当たりあり
 				isHit = true;// collapsingBlock:objectsのはtrueになってもdynamicTerrrainsのほうはtrueにならないでござる(解決)
 				targetObject.isHit = true;
-				isFirstTimeInAFrame = false;
+				firstTimeInAFrame = false;
 				ontop = false; onleft = false; onright = false;// 初期化(デバッグ用)
 
 				// targetObjectが下に移動中
@@ -95,7 +95,7 @@ namespace _2DActionGame
 							targetObject.isJumping = false;　       // 着地したらJumpできるように
 							targetObject.position.X += this.speed.X;  // これで慣性を再現できるか！？
 
-							if (type == 0) targetObject.friction = .40f;
+							if (type == 0) targetObject.friction = defFriction;
 							else if (type == 1) targetObject.friction = .05f;
 
 							ontop = true;

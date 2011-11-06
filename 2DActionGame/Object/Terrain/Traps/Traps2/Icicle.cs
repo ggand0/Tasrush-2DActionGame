@@ -54,7 +54,7 @@ namespace _2DActionGame
 			base.Initialize();
 			hasFalled = false;
 			isFallingDown = false;
-			hasPlayedSE = false;
+			hasPlayedSoundEffect = false;
 		}
         public override void Update()
         {
@@ -70,9 +70,9 @@ namespace _2DActionGame
 
             //if (!isFallingDown) hasFalled = false;
             if (isFallingDown) {
-                if(!hasPlayedSE) {
+                if(!hasPlayedSoundEffect) {
                     if (!game.isMuted) dropSound.Play(SoundControl.volumeAll, 0f, 0f);
-                    hasPlayedSE = true;
+                    hasPlayedSoundEffect = true;
                 }
                 UpdateNumbers();// ここでもcounter++されてる
                 if (position.Y > 640 + 64) hasFalled = true;// 10/1:ここまで来てない：実際に落ちてない

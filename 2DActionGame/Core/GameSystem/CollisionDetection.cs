@@ -80,7 +80,7 @@ namespace _2DActionGame
 		// RectangleCrossDetailed
 		private static Vector2[] locusVectors = new Vector2[5];
 		private static int locusDegree;
-		private static int[] locusDegrees = new int[17];
+		private static int[] locusDegrees = new int[33];
 
 		// RightTriangle
 		public static int sideNum;
@@ -487,7 +487,7 @@ namespace _2DActionGame
 				// 下端付近での当たり判定
 			else if (criterionVector.X < myObject.position.X && targetObject.position.X + targetObject.width > myObject.position.X) {
 				targetObject.position.Y = myObject.position.Y + myObject.height - targetObject.height; // これだと上るときに引っかかる。斜面の高さに合わせる
-				//targetObject.Gravity = 0;
+				//targetObject.gravity = 0;
 				//adjustDistance = targetObject.position.X + targetObject.width - myObject.position.X;
 				//targetObject.position.Y = (myObject.position.Y + myObject.height /*- adjustDistance*/) - targetObject.height;
 			}
@@ -712,7 +712,7 @@ namespace _2DActionGame
 					xFromDown = targetObject.position.X + targetObject.width / 2 - myObject.position.X;//kokoda
 					targetObject.position.Y = myObject.position.Y + myObject.height - xFromDown;
 					targetObject.position.Y -= targetObject.height - 1;
-					targetObject.speed.Y = (float)-targetObject.Gravity - 1;// 振動☆
+					targetObject.speed.Y = (float)-targetObject.gravity - 1;// 振動☆
 				}
 			}
 			/*if(isCrossSide[0]) {
@@ -936,9 +936,9 @@ namespace _2DActionGame
 		{
 			targetObject.isDamaged = false;
 
-			if (targetObject.isFirstTimeInAFrame) {
+			if (targetObject.firstTimeInAFrame) {
 				targetObject.isHit = false;
-				targetObject.isFirstTimeInAFrame = false;
+				targetObject.firstTimeInAFrame = false;
 			}
 			//targetObject.isHit = false;
 			if (Result[0] * Result[1] < 0 && Result[2] * Result[3] < 0) {
@@ -970,9 +970,9 @@ namespace _2DActionGame
 		/// <param name="myDegree"></param>
 		/// <param name="targetDegree"></param>
 		/// <param name="isHostile">(重要) myObjがtargetObjに対してhostileかどうか。もしそうならtargetにダメージを与える</param>
-		public static void RectangleCrossDetailed(Object myObject, Object targetObject, float myDegree, float targetDegree)//, bool isHostile)
+		public static void RectangleCrossDetailed(Object myObject, Object targetObject, float myDegree, float targetDegree, int detail)//, bool isHostile)
 		{
-			DivideLocus(myObject, 16);
+			DivideLocus(myObject, detail);//16
 			// 交差判定　参考http://www5d.biglobe.ne.jp/~tomoya03/shtml/algorithm/Intersection.htm
 			/*foreach(Vector2 locus in locusVectors) {
 				CalculatePointDetailed(myObject, targetObject, -myDegree,locus);// 相手は回転しない簡易ver

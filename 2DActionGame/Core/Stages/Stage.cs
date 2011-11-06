@@ -229,6 +229,9 @@ namespace _2DActionGame
 		public string[,] input_last;
 		#endregion
 		protected bool isHighLvl;
+		public Stage()
+		{
+		}
 		public Stage(Scene privousScene, bool isHighLvl)
 			: base(privousScene)
 		{
@@ -292,10 +295,10 @@ namespace _2DActionGame
 		/// 指定のテキストファイルからステージのマップデータを読み込む。
 		/// </summary>
 		/// <param name="stageNumber"></param>
-		/// <param name="FileName"></param>
+		/// <param name="fileName"></param>
 		/// <param name="x"></param>
 		/// <param name="y"></param>
-		protected void LoadMapData(int stageNumber, string FileName, float x, float y)
+		protected void LoadMapData(int stageNumber, string fileName, float x, float y)
 		{
 			objects.Clear();                                                                                                    // Stage内の全てのListを初期化：
 			backGrounds.Clear();
@@ -305,8 +308,8 @@ namespace _2DActionGame
 			weapons.Clear();
 			bullets.Clear();
 
-			mapDatas.Add(new MapData(FileName));                                                                                // inicialize
-			StreamReader sr = new StreamReader(FileName);                                                                       // テキストファイルの読み込み
+			mapDatas.Add(new MapData(fileName));                                                                                // inicialize
+			StreamReader sr = new StreamReader(fileName);                                                                       // テキストファイルの読み込み
 			mapDatas[mapDatas.Count - 1].original = sr.ReadToEnd();                                                             // とりあえず最後まで文字列に放り込む
 			mapDatas[mapDatas.Count - 1].devided1 = mapDatas[mapDatas.Count - 1].original.Replace("\r\n", "\n").Split('\n');    // "\r\n"を'\n'に置き換えた後(Spritはchar型しか受け取らない)に、まず１行ずつに分割　
 
@@ -596,6 +599,14 @@ namespace _2DActionGame
 			this.endOfTheStage = max;
 			return max;
 		}
+		protected string[] LoadParameters(string fileName)
+		{
+			StreamReader sr = new StreamReader(fileName);
+			string tmpString = sr.ReadToEnd();
+
+			return tmpString.Split(new char[] { ',' }); 
+
+		}
 		public override void Load()
 		{
 			#region Terrain
@@ -620,8 +631,9 @@ namespace _2DActionGame
 			foreach (Terrain terrain in staticTerrains) {
 				if (terrain is Block && !(terrain is DamageBlock) && !terrain.loadManually) {
 					if (terrain.type == 0) {
-						if (terrain.isOn && !terrain.isUnder) terrain.Load(content, "Object\\Terrain\\Block" + (game.stageNum - 1).ToString() + "1");
-						else terrain.Load(content, "Object\\Terrain\\Block" + (game.stageNum - 1).ToString() + "2");
+						if (terrain.isOn && !terrain.isUnder && !(terrain as Block).isUnderSlope) {// 草ブロックにする条件
+							terrain.Load(content, "Object\\Terrain\\Block" + (game.stageNum - 1).ToString() + "1");
+						} else terrain.Load(content, "Object\\Terrain\\Block" + (game.stageNum - 1).ToString() + "2");
 					} else if (terrain.type == 1) terrain.Load(content, "Object\\Terrain\\FrozenBlock");
 					else if (terrain.type == 2) terrain.Load(content, "Object\\Terrain\\BlockV");
 				} /**/ // 静的な地形に関しては今のところここでもう1回読み込む必要あり：GetDirectionの位置の関係
@@ -874,7 +886,7 @@ namespace _2DActionGame
 				if (weapon.isBeingUsed || (weapon is Turret && (weapon as Turret).isVisible))
 					activeWeapons.Add(weapon);
 			foreach (Object obj in objects) {
-				obj.isFirstTimeInAFrame = true;
+				obj.firstTimeInAFrame = true;
 				obj.isFirstTimevsCB = true;
 			}
 			/*foreach (Bullet bul in bullets)
@@ -946,8 +958,11 @@ namespace _2DActionGame
 				foreach (Character character in activeCharacters) {
 					if (!character.isAlive) continue;
 					if ((weapon.user != character))
-						if (weapon is Sword) CollisionDetection.RectangleCrossDetailed(weapon, character, weapon.degree, character.degree);
-						else CollisionDetection.RectangleCross(weapon, character, weapon.degree, character.degree);
+						if (weapon is Sword) {
+							CollisionDetection.RectangleCrossDetailed(weapon, character, weapon.degree, character.degree, 16);
+						} else {
+							CollisionDetection.RectangleCross(weapon, character, weapon.degree, character.degree);
+						}
 
 					if (weapon is Sword && character is Fuujin && character.isDamaged) { }
 					// Fuujin.damageFromAttacking == trueで剣での攻撃が"damageControlに感知されないまま"isDamaged状態が続いて毎フレHPが減るｗ
@@ -989,9 +1004,9 @@ namespace _2DActionGame
 					if ((weaponD.isDamaged || weapon.isDamaged) && (weaponD is Sword && weapon is Sword) && weapon != weaponD) {
 						//Cue cue = game.soundBank.GetCue("katana");
 						//if (gameTime % 5 == 0) cue.Play(SoundControl.volumeAll, 0f, 0f);
-						/*if(!hasPlayedSE) { 
+						/*if(!hasPlayedSoundEffect) { 
 							cue.Play(SoundControl.volumeAll, 0f, 0f);
-							hasPlayedSE = true;
+							hasPlayedSoundEffect = true;
 						}*/
 						if (weapon.user is Player) {
 							(weapon.user as Player).SwordReflection(weaponD.user);
@@ -1007,7 +1022,7 @@ namespace _2DActionGame
 				if (weapon is Sword) {
 					foreach (Bullet bullet in activeBullets)
 						if (!(bullet is Beam) && !(bullet is Thunder) && bullet.isShot && weapon.isBeingUsed) {
-							CollisionDetection.RectangleCrossDetailed(weapon, bullet, weapon.degree, bullet.degree);
+							CollisionDetection.RectangleCrossDetailed(weapon, bullet, weapon.degree, bullet.degree, 16);
 							if (bullet.isDamaged) {
 								adObjects.Add(new Object2(weapon.user != null ? weapon.user as Object : weapon, bullet));
 								bullet.damageFromTouching = true;
@@ -1170,6 +1185,11 @@ namespace _2DActionGame
 							if (staticTerrains[i].position.Y == staticTerrains[j].position.Y && staticTerrains[i].position.X - staticTerrains[j].width == staticTerrains[j].position.X) {
 								staticTerrains[i].isRight = true;	// 左方向の当たり判定をしない
 								//if (staticTerrains[i] is Water && staticTerrains[j] is Water) (staticTerrains[i] as Water).neighborWater = staticTerrains[j] as Water; waterはsTじゃなかった....
+							}
+							// 草
+							if (staticTerrains[j] is Slope && staticTerrains[i].position.Y == staticTerrains[j].position.Y + staticTerrains[j].height
+								&& staticTerrains[i].position.X >= staticTerrains[j].position.X && staticTerrains[i].position.X + staticTerrains[i].width <= staticTerrains[j].position.X + staticTerrains[j].width) {
+								(staticTerrains[i] as Block).isUnderSlope = true;
 							}
 
 							// Block等がSlopeとの継ぎ目に位置する場合、端の判定を変えるためにフラグを立てる

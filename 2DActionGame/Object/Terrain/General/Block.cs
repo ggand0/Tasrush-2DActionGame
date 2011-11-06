@@ -13,8 +13,11 @@ namespace _2DActionGame
 		/// <summary>
 		/// 天井か地面か。天井用のBLockは反転させて描画する
 		/// </summary>
-        public bool onCeiling { get; set; }
-
+        public bool onCeiling { get; private set; }
+		/// <summary>
+		/// Slopeの下か（草ブロックにするかどうかに使う）
+		/// </summary>
+		public bool isUnderSlope { get; set; }
         /// <summary>
 		/// PlayerがBlockのどこに接しているか(デバッグ用)
         /// </summary>
@@ -96,7 +99,7 @@ namespace _2DActionGame
             this.textureType = textureType;
 			switch (type) {
 				case 0:
-					this.friction = .40f; break;
+					this.friction = defFriction; break;
 				case 1:
 					this.friction = .18f; break;
 
@@ -212,7 +215,7 @@ namespace _2DActionGame
                             targetObject.isJumping = false;　// 着地したらJumpできるように
                             targetObject.position.X += this.speed.X;  // これで慣性を再現できるか！？
 
-                            if (type == 0) targetObject.friction = .40f;
+                            if (type == 0) targetObject.friction = defFriction;
                             else if (type == 1) targetObject.friction = .05f;
                             targetObject.isOnSomething = true;
                             ontop = true;
@@ -248,9 +251,9 @@ namespace _2DActionGame
         }
         public void IsHit(Object targetObject, Vector2 vec)
         {
-            if(targetObject.isFirstTimeInAFrame) {
+            if(targetObject.firstTimeInAFrame) {
                 isHit = false;
-                targetObject.isFirstTimeInAFrame = false;
+                targetObject.firstTimeInAFrame = false;
                 isHitCB = false;
                 targetObject.isOnSomething = false;
             }
@@ -262,7 +265,7 @@ namespace _2DActionGame
 				Vector2 criterionVector = vec + new Vector2(targetObject.width / 2, targetObject.height);
 				isHit = true;
 				targetObject.isHit = true;
-				isFirstTimeInAFrame = false;
+				firstTimeInAFrame = false;
 				ontop = false; onleft = false; onright = false;
 				if (targetObject.speed.Y > 0 && !isUnder) {
 					if ((!isRightSlope && !isLeftSlope && vec.X + targetObject.width > position.X && vec.X < position.X + width)
@@ -276,7 +279,7 @@ namespace _2DActionGame
 							targetObject.jumpCount = 0;
 							targetObject.isJumping = false;
 							targetObject.position.X += this.speed.X;
-							if (type == 0) targetObject.friction = .40f;
+							if (type == 0) targetObject.friction = defFriction;
 							else if (type == 1) targetObject.friction = .05f;
 							targetObject.isOnSomething = true;
 							ontop = true;
