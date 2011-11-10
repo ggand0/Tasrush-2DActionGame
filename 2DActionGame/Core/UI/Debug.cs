@@ -132,10 +132,13 @@ namespace _2DActionGame
 								spriteBatch.DrawString(game.Arial2, "player.prevVector[1]:" + stage.player.locus[1].ToString(), new Vector2(0, 150), fontColor[1]);
 							spriteBatch.DrawString(game.Arial2, "player.hasAttacked:" + stage.player.hasAttacked.ToString(), new Vector2(0, 160), fontColor[1]);
 							spriteBatch.DrawString(game.Arial2, "game.score:" + game.score.ToString(), new Vector2(0, 170), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "boss.syurikenTurret:" + (stage.boss as Rival).syuriken.isBeingUsed.ToString(), new Vector2(0, 180), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "boss.syurikenTurret.bullets[0]:" + (stage.boss as Rival).syuriken.bullets[0].position.ToString(), new Vector2(0, 190), fontColor[1]);
-							for (int i = 0; i < stage.boss.attackList.Count; i++)
+							if (stage.boss != null) {
+								spriteBatch.DrawString(game.Arial2, "boss.syurikenTurret:" + (stage.boss as Rival).syuriken.isBeingUsed.ToString(), new Vector2(0, 180), fontColor[1]);
+								spriteBatch.DrawString(game.Arial2, "boss.syurikenTurret.bullets[0]:" + (stage.boss as Rival).syuriken.bullets[0].position.ToString(), new Vector2(0, 190), fontColor[1]);
+							}
+							for (int i = 0; i < stage.boss.attackList.Count; i++) {
 								spriteBatch.DrawString(game.Arial2, "boss.attackList:" + stage.boss.attackList[i].ToString(), new Vector2(0, 200 + i * 10), fontColor[1]);
+							}
 						}
 						break;
 					#endregion

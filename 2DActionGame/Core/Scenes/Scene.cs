@@ -47,7 +47,7 @@ namespace _2DActionGame
 		/// ゲームに新たなシーンを追加し、即座にシーンを変更する。
 		/// シーンが終了状態であれば、自動的に開始状態にする。
 		/// </summary>
-		/// <param name="s">追加するシーン</param>
+		/// <param name="scene">追加するシーン</param>
 		public static void PushScene(Scene scene)
 		{
 			game.PushScene(scene);

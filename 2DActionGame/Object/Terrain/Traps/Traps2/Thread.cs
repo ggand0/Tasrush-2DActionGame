@@ -11,15 +11,25 @@ using Microsoft.Xna.Framework.Audio;
 namespace _2DActionGame
 {
     /// <summary>
-    /// ObjectやTerrainで代用してもいいが、触れたときに切れる仕様や動きを考えてオブジェクト化。
+    /// 糸クラス。ObjectやTerrainで代用してもいいが、
+	/// 触れたときに切れる仕様や動きを考えてクラス化
     /// </summary>
     public class Thread : Terrain
     {
-        public bool isDivided { get; set; }
-        private Vector2 startingPoint;
-        private float length;                       // "糸"だから.
-        float Phi, PhiSpeed, PhiNew, PhiSpeedNew;
-        internal Vector2 weightVector;              // おもりの位置
+		private Vector2 startingPoint;
+		/// <summary>
+		/// 位置の計算に使う。
+		/// </summary>
+		private float Phi, PhiSpeed, PhiNew, PhiSpeedNew;
+		private float length;
+		/// <summary>
+		/// (Playerが触れて)糸が切れたかどうか
+		/// </summary>
+        public bool isDivided { get; private set; }
+		/// <summary>
+		/// おもりの位置
+		/// </summary>
+        internal Vector2 weightVector;
 
         public Thread(Stage stage, float x, float y, int width, int height)
             : this(stage, x, y, width, height, 0, 40)
@@ -32,9 +42,9 @@ namespace _2DActionGame
             canBeDestroyed = true;
             startingPoint = new Vector2(x, y);
             Phi = startingDegree;
-            
             //PhiSpeed = 5;
             //Create(210);
+
 			Load();
         }
 		protected override void Load()
@@ -49,31 +59,32 @@ namespace _2DActionGame
             base.Update();
         }
         /// <summary>
-        /// 角度の指定範囲で回転.　ソース：忘れた
+        /// 角度の指定範囲で回転させるメソッド。ソース：忘れた
+		/// EulerMethodで単振り子の動きを再現する。
         /// </summary>
-        private void MovementUpdate(/*float defaultDegree, float degreeDistance*/)
-        {
-            // EulerMethodで単振り子の動きの再現を目指す.それがだめならハードコーディングで.
-            if(length == 0)length = 100.0f;
-            //float vθ = 0;
-            //float Phi, PhiSpeed, PhiNew, PhiSpeedNew;
+		private void MovementUpdate(/*float defaultDegree, float degreeDistance*/)
+		{
+			if (length == 0) length = 100.0f;
+			//float vθ = 0;
+			//float Phi, PhiSpeed, PhiNew, PhiSpeedNew;
 
-            //EulerMethod(1,Phi,PhiNew,PhiSpeed,PhiSpeedNew);
-            EulerMethod(1, Phi, PhiSpeed);
-            Phi = PhiNew;
-            PhiSpeed = PhiSpeedNew;
+			//EulerMethod(1,Phi,PhiNew,PhiSpeed,PhiSpeedNew);
+			EulerMethod(1, Phi, PhiSpeed);
+			Phi = PhiNew;
+			PhiSpeed = PhiSpeedNew;
 
-            /*position.X = -length * (float)Math.Sin(MathHelper.ToRadians(Phi));
-            position.Y = -length * (float)Math.Cos(MathHelper.ToRadians(Phi));
-            position.Y *= -1;
-            //position += startingPoint;*/
-            // おもりの位置の計算
-            weightVector.X = -length * (float)Math.Sin(MathHelper.ToRadians(Phi));
-            weightVector.Y = -length * (float)Math.Cos(MathHelper.ToRadians(Phi));
-            weightVector.Y *= -1;
-            weightVector.X *= -1;
+			/*position.X = -length * (float)Math.Sin(MathHelper.ToRadians(Phi));
+			position.Y = -length * (float)Math.Cos(MathHelper.ToRadians(Phi));
+			position.Y *= -1;
+			//position += startingPoint;*/
 
-        }
+			// 錘の位置の計算
+			weightVector.X = -length * (float)Math.Sin(MathHelper.ToRadians(Phi));
+			weightVector.Y = -length * (float)Math.Cos(MathHelper.ToRadians(Phi));
+			weightVector.Y *= -1;
+			weightVector.X *= -1;
+
+		}
         private void Inicialize(float defaultDegree)
         {
             position.X = -length * (float)Math.Sin(MathHelper.ToRadians(defaultDegree));
@@ -97,21 +108,23 @@ namespace _2DActionGame
             if (isDamaged) isDivided = true;
         }
         /// <summary>
-        /// Playerに引っかかるので何もしない
+        /// Playerに引っかかるので何もしない(切れる仕様にするなら追加する)
         /// </summary>
-        /// <param name="targetObject"></param>
         public override void IsHit(Object targetObject)
         {
             //base.IsHit(targetObject);
         }
 
-        public override void Draw(SpriteBatch sprite)
+		/// <summary>
+		/// 垂れ下がっている状態からの角度分を傾けて描画する
+		/// </summary>
+		/// <param name="spriteBatch"></param>
+        public override void Draw(SpriteBatch spriteBatch)
         {
-            if (isActive) {// 垂れ下がっている状態からの角度分を傾けて描画する
-                sprite.Draw(texture, drawPos,new Rectangle(0,0,width,height), Color.White, MathHelper.ToRadians(-0-Phi), new Vector2(0, 0)/*originVector*/, new Vector2(1, 1), SpriteEffects.None, 0);
-                //-degreeで引数に持たせると普通の座標系で使う感覚で使える
+            if (IsActive()) {
+				//-degreeで引数に持たせると普通の座標系で使う感覚で使える
+                spriteBatch.Draw(texture, drawPos,new Rectangle(0,0,width,height), Color.White, MathHelper.ToRadians(-0 - Phi), Vector2.Zero, 1, SpriteEffects.None, 0);
             }
-            //base.DrawEffect(spriteBatch);
         }
     }
 }

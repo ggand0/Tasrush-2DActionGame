@@ -58,27 +58,29 @@ namespace _2DActionGame
 		}
         public override void Update()
         {
-            distance = Math.Abs(this.position.X - stage.player.position.X);
-			if (user == null) {// || (user != null && isBeingUsed)) {
-				if (distance < distanceToFallDown)
+			if (IsActive() && IsBeingUsed()) {
+				distance = Math.Abs(this.position.X - stage.player.position.X);
+				if (user == null) {// || (user != null && isBeingUsed)) {
+					if (distance < distanceToFallDown)
+						isFallingDown = true;
+				} else if (isBeingUsed) {
 					isFallingDown = true;
-			} else if (isBeingUsed) {
-				isFallingDown = true;
-			} else {
-				if (counter > 120) isFallingDown = true;
+				} else {
+					if (counter > 120) isFallingDown = true;
+				}
+
+				//if (!isFallingDown) hasFalled = false;
+				if (isFallingDown) {
+					if (!hasPlayedSoundEffect) {
+						if (!game.isMuted) dropSound.Play(SoundControl.volumeAll, 0f, 0f);
+						hasPlayedSoundEffect = true;
+					}
+					UpdateNumbers();// ここでもcounter++されてる
+					if (position.Y > 640 + 64) hasFalled = true;// 10/1:ここまで来てない：実際に落ちてない
+				}
+
+				counter++;
 			}
-
-            //if (!isFallingDown) hasFalled = false;
-            if (isFallingDown) {
-                if(!hasPlayedSoundEffect) {
-                    if (!game.isMuted) dropSound.Play(SoundControl.volumeAll, 0f, 0f);
-                    hasPlayedSoundEffect = true;
-                }
-                UpdateNumbers();// ここでもcounter++されてる
-                if (position.Y > 640 + 64) hasFalled = true;// 10/1:ここまで来てない：実際に落ちてない
-            }
-
-            counter++;
         }
 
 

@@ -33,15 +33,15 @@ namespace _2DActionGame
 		/// </summary>
 		protected Vector2 attackPosition;
 		/// <summary>
-		/// 1つの攻撃の中でのカウンター
+		/// 1つの攻撃の中でのカウンタ
 		/// </summary>
 		protected int attackCounter;
 		/// <summary>
-		/// obstacleを操作するときに使うカウンター
+		/// obstacleを操作するときに使うカウンタ
 		/// </summary>
 		protected int obsCounter;
 		/// <summary>
-		/// wait状態の時に使うカウンター
+		/// wait状態の時に使うカウンタ
 		/// </summary>
 		protected int waitCounter;
 
@@ -93,9 +93,13 @@ namespace _2DActionGame
 		/// 攻撃パターンのリスト。管理しやすいように二次元構造にした。
 		/// </summary>
 		protected List<int[]> attackPatternNumList = new List<int[]>();
+		// Raijinのせいで無駄に増えているので要修正
 		protected Action attackMethodType0;
 		protected Action<float> attackMethodType1;
 		protected Action<int> attackMethodType2;
+		protected Action<float, Vector2[]> attackMethodType3;
+		protected Action<Vector2, Vector2, Vector2, bool> attackMethodType4;
+		protected Action<Vector2[]> attackMethodType5;
 		/// <summary>
 		/// 攻撃時に使うメソッドへの参照をまとめているリスト。デリゲートというより関数ポインタ的に使っている。
 		/// </summary>
@@ -104,8 +108,9 @@ namespace _2DActionGame
 		/// デリゲートに渡す引数のリスト。indexが同じattaackMethodsの要素（メソッド）に渡される。
 		/// attackMethodsの、引数が無い関数のindexと同じindexの要素はnullにする。
 		/// 引数を動的に変えたい場合は該当変数への参照を追加するようにすれば良い。
+		/// 11/9 引数の数が２つ以上のメソッドに対応させるために二次元に拡張。いよいよクラス化したくなってきた
 		/// </summary>
-		protected List<object> attackMethodsArgs = new List<object>();
+		protected List<object[]> attackMethodsArgs = new List<object[]>();
 
 
 		/// <summary>
@@ -113,7 +118,7 @@ namespace _2DActionGame
 		/// </summary>
 		/// <param name="moveSpeed">移動速度[pixel/frame]</param>
 		/// <param name="wayPoints">ウェイポイントのリスト</param>
-		protected override void Move(float moveSpeed, params Vector2[] wayPoints)
+		protected override void Move(float moveSpeed, Vector2[] wayPoints)//params 
 		{
 			if (isStartingAttack) {
 				speedVectors.Clear();
@@ -125,7 +130,7 @@ namespace _2DActionGame
 					//isReachedPoints.Add(false);
 				}
 				speedVectors.Add(Vector2.Normalize(wayPoints[0] - wayPoints[wayPoints.Length - 1]) * new Vector2(moveSpeed));
-				isStartingAttack = false;
+				isStartingAttack = hasMoved = false;
 				isAttacking = true;
 				curLoc = 0;
 			} else if (isAttacking) {
@@ -151,7 +156,10 @@ namespace _2DActionGame
 				if (isReached) {
 					curLoc++;
 					isReached = false;
-					if (curLoc == wayPoints.Length) isWaiting = true;// + 1
+					if (curLoc == wayPoints.Length) {
+						//isWaiting = true;// + 1
+						hasMoved = true;
+					}
 				}
 			}
 		}
@@ -195,7 +203,19 @@ namespace _2DActionGame
 				if (attackMethodsArgs[attackList[i]] == null) {
 					attackMethods[attackList[i]].DynamicInvoke();
 				} else {
-					attackMethods[attackList[i]].DynamicInvoke(attackMethodsArgs[attackList[i]]);
+					// params object[]！すごい勘違いしやすい仕様だ　なんとか２個以上渡すようにしたいのだが...
+					
+					/*if (attackList[i] == 5) 
+						attackMethods[5].DynamicInvoke(new object[] { new Vector2(defaultPosition.X - 350, defaultPosition.Y - 150)
+								, new Vector2(defaultPosition.X - 200, defaultPosition.Y - 100)
+								, defaultPosition
+								, true });*/	// 通る
+					/*object[] debug = new object[] { new Vector2(defaultPosition.X - 350, defaultPosition.Y - 150)
+								, new Vector2(defaultPosition.X - 200, defaultPosition.Y - 100)
+								, defaultPosition
+								, true };*/
+					//attackMethods[attackList[i]].DynamicInvoke(debug);//attackMethodsArgs[attackList[i]]);	// 通る
+					attackMethods[attackList[i]].DynamicInvoke(attackMethodsArgs[attackList[i]]);			// 通らない
 				}
 				if (isEnds[attackList[i]]) {
 					isEnds[attackList[i]] = false;

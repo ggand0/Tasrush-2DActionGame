@@ -36,7 +36,7 @@ namespace _2DActionGame
         public JumpingEnemy(Stage stage, float x, float y, int width, int height, int HP, Character user)
 			: base(stage, x, y, width, height, HP, user)
         {
-			LoadXML("JumpingEnemy");
+			LoadXML("JumpingEnemy", "Xml\\Objects_Enemy_Stage1.xml");
             isMovingAround = true;
             moveDistance = 80;
             speed.X = defSpeed;
@@ -45,7 +45,7 @@ namespace _2DActionGame
 				isMovingRight = true;
 				turnsRight = true;
 			}
-            delayTime = motionDelayTime + 1;
+            //delayTime = motionDelayTime + 1;
 
 			Load();
         }
@@ -59,8 +59,8 @@ namespace _2DActionGame
 
         public override void Update()
         {
-			if (isMovingAround && isAlive && isActive) {
-				MovementUpdate(jumpSpeed, 40, 2);
+			if (isMovingAround && IsActive()) {
+				MovementUpdate(jumpSpeed, 40, defSpeed);
 			}
             base.Update();
         }
@@ -85,7 +85,8 @@ namespace _2DActionGame
         public virtual void MovementUpdate(float jumpSpeed, int jumpTime, float roundTriipMoveSpeed)
         {
 			switch (movePattern) {
-				case 0:// ←に移動するだけ　
+				case 0:// ←に移動するだけ
+					speed.X = defSpeed;
 					break;
 				case 1:// 往復移動
 					//RoundTripMotion(defPos, moveDistance, roundTriipMoveSpeed);

@@ -48,6 +48,8 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <PlatformTarget>x86</PlatformTarget>
     <XnaCompressContent>false</XnaCompressContent>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>pdbonly</DebugType>
@@ -119,8 +121,6 @@
     <Compile Include="Core\UI\UIObject\UI_EnemyHP.cs" />
     <Compile Include="Core\UI\UIObject\UI_HP.cs" />
     <Compile Include="Core\Vector.cs" />
-    <Compile Include="Drawing・Sound\ScrollingTASEffect.cs" />
-    <Compile Include="Drawing・Sound\SoundControl.cs" />
     <Compile Include="Input\DirectInput.cs" />
     <Compile Include="Core\Scenes\MainMenu.cs" />
     <Compile Include="Core\Scenes\GameOver.cs" />
@@ -131,22 +131,26 @@
     <Compile Include="Core\Scenes\PauseMenu.cs" />
     <Compile Include="Core\UI\UIObject\UI_TAS.cs" />
     <Compile Include="Core\UI\UserInterface.cs" />
-    <Compile Include="Drawing・Sound\Animation.cs" />
     <Compile Include="Core\Stages\Stage0.cs" />
     <Compile Include="Core\Stages\Stage1.cs" />
     <Compile Include="Core\Stages\Stage2.cs" />
     <Compile Include="Core\Stages\Stage3.cs" />
     <Compile Include="Input\KeyInput.cs" />
+    <Compile Include="Media\Animation.cs" />
+    <Compile Include="Media\Effect.cs" />
+    <Compile Include="Media\ScrollingBackground.cs" />
+    <Compile Include="Media\ScrollingTASEffect.cs" />
+    <Compile Include="Media\SoundControl.cs" />
     <Compile Include="Object\BackGround.cs" />
     <Compile Include="Core\UI\Debug.cs" />
     <Compile Include="Core\UI\UIObject\UIObject.cs" />
-    <Compile Include="Drawing・Sound\Effect.cs" />
     <None Include="2DActionGame_TemporaryKey.pfx" />
     <None Include="ClassDiagram.cd" />
     <None Include="Input\LoadMapData.cs" />
     <Compile Include="Object\Bullet\Beam.cs" />
     <Compile Include="Object\Bullet\Bullet.cs" />
     <Compile Include="Object\Character\Enemy\Boss\Attack.cs" />
+    <Compile Include="Object\Character\Enemy\Boss\Attacktest.cs" />
     <Compile Include="Object\Character\Enemy\Boss\Boss.cs" />
     <Compile Include="Object\Character\Enemy\Boss\Fuujin.cs" />
     <Compile Include="Object\Character\Enemy\Boss\Raijin.cs" />
@@ -198,7 +202,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Core\Game1.cs" />
     <Compile Include="Core\GameSystem\Reverse.cs" />
-    <Compile Include="Drawing・Sound\ScrollingBackground.cs" />
     <Compile Include="Core\Stages\Stage.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

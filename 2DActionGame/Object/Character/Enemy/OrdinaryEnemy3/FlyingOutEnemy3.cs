@@ -9,18 +9,27 @@ using Microsoft.Xna.Framework.Input;
 namespace _2DActionGame
 {
     /// <summary>
-    /// Stgae3 ネジのような敵。埋まっているときは無敵（頭の一部が見える状態）、RushingOutEnemyのように一度飛び出した後も死ぬまでは繰り返す
-    /// 飛び出し時に射撃する
+    /// ネジのような敵。埋まっているときは無敵（頭の一部が見える状態）、
+	/// RushingOutEnemyのように一度飛び出した後も死ぬまでは繰り返す。
+    /// 飛び出し時に射撃する。
     /// </summary>
     public class FlyingOutEnemy3 : FlyingOutEnemy
     {
+		protected new readonly float defFlyingOutDistance = 300;
+		protected new readonly float defFlyingOutSpeed = -12;
+
         // 戻る時に地形に引っかかるので当たり判定から外そうか
-        //private Turret turret;
+		/// <summary>
+		/// 頂点に達したかどうか
+		/// </summary>
         private bool hasReached;
+
         public FlyingOutEnemy3(Stage stage,  float x, float y, int width, int height, int HP)
             : base(stage, x, y, width, height, HP)
         {
-			//Load();
+			LoadXML("FlyingOutEnemy3", "Xml\\Objects_Enemy_Stage3.xml");
+			flyingOutDistance = defFlyingOutDistance;
+			flyingOutSpeed = defFlyingOutSpeed;
         }
 		protected override void Load()
 		{
@@ -35,32 +44,35 @@ namespace _2DActionGame
         public override void MovementUpdate()
         {
             distance = Math.Abs(this.position.X - stage.player.position.X);
-            if (!hasFlownOut) {
-                isOnSomething = false;
-                gravity = 0;
-            }
-            if(distance < flyingOutDistance && !hasFlownOut) {
-                if(counter==0) {
-                    hasFlownOut=true;
-                    speed.Y = flyingOutspeed;
-                }
-                counter++;
-            }
-            if (hasFlownOut) gravity = defGravity;
-            if(hasFlownOut && Math.Abs(speed.Y) < 5) // 頂点付近
-                hasReached = true;
 
-            // 元の位置に戻って初期化する.
-            if(hasFlownOut && Vector2.Distance(position,defaultPosition) <= 5 && hasReached) {//counter > 5/*5*/) {
-                hasFlownOut = false;
-                hasReached = false;
-                isOnSomething = false;
-                gravity = 0;
-                speed = Vector2.Zero;//new Vector2(0, 0);
-                position = defaultPosition;
-                counter = 0;
-            }
+			if (!hasFlownOut) {
+				isOnSomething = false;
+				gravity = 0;
 
+				if (distance < flyingOutDistance) {
+					if (counter == 0) {
+						hasFlownOut = true;
+						speed.Y = flyingOutSpeed;
+					}
+					counter++;
+				}
+			} else if (hasFlownOut) {
+				gravity = defGravity;
+				if (Math.Abs(speed.Y) < 5) {// 頂点付近
+					hasReached = true;
+				}
+
+				// 元の位置に戻って初期化する
+				if (Vector2.Distance(position, defPos) <= 5 && hasReached) {
+					hasFlownOut = false;
+					hasReached = false;
+					isOnSomething = false;
+					gravity = 0;
+					speed = Vector2.Zero;
+					position = defPos;
+					counter = 0;
+				}
+			}
         }
             
     }

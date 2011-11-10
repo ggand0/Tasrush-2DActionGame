@@ -38,17 +38,23 @@ namespace _2DActionGame
         {
 			base.ButtonUpdate();
 
-            if (button[0].isSelected && Controller.IsOnKeyDown(3)) {			// KeyConfig
+            if (button[0].isSelected && Controller.IsOnKeyDown(3)) {						// KeyConfig
                 if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
             }
-			if (button[1].isSelected && Controller.IsOnKeyDown(3)) {			// FullScreen / Window
+			if (button[1].isSelected && Controller.IsOnKeyDown(3)) {						// FullScreen / Window
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 				game.graphics.ToggleFullScreen();
             }
-			if (button[2].isSelected && Controller.IsOnKeyDown(3)) {			// Back To Menu
+			if (button[2].isSelected && Controller.KEY(3) && counter % 10 == 0) {			// Volume Control
+				game.wholeVolume = SoundControl.volumeAll += .05f;
+				if (SoundControl.volumeAll > 1.0f) 
+					game.wholeVolume = SoundControl.volumeAll = 0;
+            }
+			if (button[3].isSelected && Controller.IsOnKeyDown(3)) {						// Back To Menu
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 				isEndScene = true;
-            }
+			}
+
         }
 
         public override void Draw(SpriteBatch spriteBatch) 
@@ -57,7 +63,9 @@ namespace _2DActionGame
             spriteBatch.DrawString(game.Arial, "Option", new Vector2(250, 100), Color.Orange);
             spriteBatch.DrawString(game.Arial, "KeyConfig(making)", new Vector2(200, 150), button[0].color);
 			spriteBatch.DrawString(game.Arial, "Full Screen / Window", new Vector2(200, 200), button[1].color);
-			spriteBatch.DrawString(game.Arial, "Back", new Vector2(200, 300), button[2].color);
+			spriteBatch.DrawString(game.Arial, "BGMVolume", new Vector2(200, 250), button[2].color);
+			spriteBatch.DrawString(game.Arial, "volume : " + SoundControl.volumeAll.ToString(), new Vector2(200, 300), button[2].color);
+			spriteBatch.DrawString(game.Arial, "Back", new Vector2(200, 400), button[3].color);
         }
     }
 }

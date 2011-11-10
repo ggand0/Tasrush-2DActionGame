@@ -29,7 +29,7 @@ namespace _2DActionGame
 		/// 往復移動する仕様のときに使っていたもの
 		/// </summary>
 		public float moveDistance = 80;//20
-		protected int delayTime = 120;
+		protected int delayTime = 120;// = 120の意味ないよね→地味にあった
 		public byte movePattern { get; protected set; }
 		/// <summary>
 		/// 移動するかどうか
@@ -56,7 +56,7 @@ namespace _2DActionGame
 		public Enemy(Stage stage, float x, float y, int width, int height, int HP, Character user)
 			: base(stage, x, y, width, height, user)
 		{
-			LoadXML("Enemy");
+			LoadXML("Enemy", "Xml\\Objects_Base.xml");
 			this.HP = HP;
 			defPos = new Vector2(x, y);
 
@@ -92,7 +92,7 @@ namespace _2DActionGame
 				comboCount = 0;
 				//hasPlayedSoundEffect = false;
 			}
-			if (!stage.player.isThrusting && isDamaged) MotionUpdate();// !いるよな...
+			if (!stage.player.isThrusting && isDamaged) MotionUpdate();
 			MotionDelay();
 
 			time++;
@@ -186,15 +186,15 @@ namespace _2DActionGame
 			if (isMovingRight && defPos.X - moveDistance <= position.X && position.X < defPos.X + moveDistance) {
 				//turnsRight = true;
 				//position.X += speed * timeCoef;
-				this.speed.X = speed * timeCoef;
+				this.speed.X = speed > 0 ? speed : -speed * timeCoef;
 			} else if (position.X >= defPos.X + moveDistance) {
-				isMovingRight = false;
-				this.speed.X = -speed * timeCoef;
+				//isMovingRight = false;
+				this.speed.X = speed > 0 ? -speed : speed * timeCoef;
 			} else if (!isMovingRight && defPos.X - moveDistance <= position.X && position.X <= defPos.X + moveDistance) {
-				this.speed.X = -speed * timeCoef;
+				this.speed.X =  speed > 0 ? -speed :speed * timeCoef;
 			} else if (position.X <= defPos.X - moveDistance) {
-				isMovingRight = true;
-				this.speed.X = speed * timeCoef;
+				//isMovingRight = true;
+				this.speed.X =  speed > 0 ? speed : -speed * timeCoef;
 			}
 		}
 		protected virtual void BlownAwayMotionUp(float speed, int degree)

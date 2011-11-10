@@ -14,19 +14,8 @@ namespace _2DActionGame
 	/// </summary>
 	public class Raijin : Boss
 	{
-		#region Numbers
-		/*private int attackNum; // 攻撃の種類:現在の
-        private Vector2 defaultPosition;
-        private Vector2 attackPosition;// 移動しながら攻撃するパターンの場合は使用しない
-        private int attackCounter;
-        private int obsCounter;
-        private int waitCounter;
+		#region Member vriable
 
-        //public bool hasEnded = true;//{ get; set; }// 終わった瞬間
-        public bool isWaiting = true;//{ get; set; }// 待機中
-        public bool isStartingAttack { get; set; }// 攻撃開始のモーションとかなんとか
-        public bool isEndingAttack { get; set; }  // 攻撃終了してから元の位置に戻るときなど
-        */
 		private float distanceD, distanceT, distanceA;
 		private Vector2 tmpPosition;
 		public bool isUsingTurret { get; set; }
@@ -34,22 +23,39 @@ namespace _2DActionGame
 		// Weapons
 		private Weapon singleLightning;
 		private DivisionWeapon dividingLightning;
-		private Turret ballTurret;                      // 稲妻で地面に向けて攻撃する子機 
-		private Turret thunderTurret, thunderTurret2;                   // 自機狙いthunder用
-		private Turret beamTurret;                      // 真下に否妻
+		/// <summary>
+		/// 稲妻で地面に向けて攻撃する子機 
+		/// </summary>
+		private Turret ballTurret;
+		/// <summary>
+		/// 自機狙いthunder用
+		/// </summary>
+		private Turret thunderTurret, thunderTurret2;
+		/// <summary>
+		/// 真下に否妻
+		/// </summary>
+		private Turret beamTurret;
 		private JumpingEnemy jumpingEnemy;
 
 		private Obstacle obstacle;
 		private List<Obstacle> obstacles = new List<Obstacle>();
-		private int obstacleNum;                        // 一度の攻撃で出現させる障害地形の数.種類とかについては後で決めよう
-		#endregion
-		private bool hasPlayedSE2;
-		private bool /*hasPut,*/ hasMoved;
+		/// <summary>
+		/// 一度の攻撃で出現させる障害地形の数.種類とかについては後で決めよう
+		/// </summary>
+		private int obstacleNum;
+
+		private bool hasPlayedSoundEffectSub;
+		//private bool /*hasPut,*/ hasMoved;
 		private Turret thunderTurret3;
 		private Turret thunderTurret8Way;
 		private List<Turret> thunderTurrets3Way = new List<Turret>();
 		private List<Turret> thunderTurrets = new List<Turret>();
 		private SoundEffect thunderSoundBig, thunderSoundSmall, spawnSound;
+
+		
+		#endregion
+		private int[] attackPattern0 = { 0, 2, 3, 4, 5};// XML化予定
+		private int[] attackPattern1 = { 7, 8, 4, 9, 1 };
 
 		public Raijin(Stage stage, float x, float y, int width, int height, int HP)
 			: base(stage, x, y, width, height, HP)
@@ -107,9 +113,9 @@ namespace _2DActionGame
 
 			jumpingEnemy = new JumpingEnemy(stage, position.X, position.Y, 32, 32, 2, this);
 			stage.characters.Add(jumpingEnemy);
-			attackNum = 2;
+			//attackNum = 2;
 
-			Load();
+			Initialize();
 		}
 		protected override void Load()
 		{
@@ -120,10 +126,61 @@ namespace _2DActionGame
 			thunderSoundSmall = content.Load<SoundEffect>("Audio\\SE\\thunder_small");
 			spawnSound = content.Load<SoundEffect>("Audio\\SE\\zako_tama");
 		}
+		protected override void Initialize()
+		{
+			base.Initialize();
+
+			isWaiting = true;
+			attackList = new List<int>();
+			for (int i = 0; i < 12; i++) isEnds.Add(false);
+			attackPatternNumList.Add(attackPattern0);
+			attackPatternNumList.Add(attackPattern1);
+			if (!game.isHighLvl) attackPatternNum = 0;
+			else attackPatternNum = 1;
+			//attackList.Add(attackPatternNumList[attackPatternNum][0]);
+
+			attackMethods.Add(attackMethodType0 = SpawnEnemy);
+			attackMethods.Add(attackMethodType0 = AttackWithThunder);
+			attackMethods.Add(attackMethodType0 = AttackWithThunder2);
+			attackMethods.Add(attackMethodType3 = this.Move);
+			attackMethods.Add(attackMethodType0 = Division);
+			attackMethods.Add(attackMethodType4 = MoveLite);//5
+			attackMethods.Add(attackMethodType0 = SpawnATurret);
+			attackMethods.Add(attackMethodType0 = UseTurrets);//7
+			attackMethods.Add(attackMethodType4 = AttackPattern1A);//8
+			//attackMethods.Add(attackMethodType0 = Division);
+			attackMethods.Add(attackMethodType5 = PutTurrets);
+			//attackMethods.Add(attackMethodType0 = DropIciclesInTurn);
+
+			attackMethodsArgs.Add(null);
+			attackMethodsArgs.Add(null);
+			attackMethodsArgs.Add(null);
+			attackMethodsArgs.Add(new object[] { 5,  new Vector2[] { defaultPosition
+							, new Vector2(defaultPosition.X, defaultPosition.Y + 100)
+							, new Vector2(defaultPosition.X - 240, defaultPosition.Y - 150)
+							, new Vector2(defaultPosition.X - 480, defaultPosition.Y - 150)}});//defaultPosition
+			attackMethodsArgs.Add(null);
+			attackMethodsArgs.Add(new object[] { new Vector2(defaultPosition.X - 350, defaultPosition.Y - 150)
+								, new Vector2(defaultPosition.X - 200, defaultPosition.Y - 100)
+								, defaultPosition
+								, true });
+			attackMethodsArgs.Add(null);
+			attackMethodsArgs.Add(null);
+			attackMethodsArgs.Add(new object[] { defaultPosition
+								 , new Vector2(defaultPosition.X, defaultPosition.Y + 100)
+								 , new Vector2(defaultPosition.X - 480, defaultPosition.Y - 150)
+								 , false });
+			//attackMethodsArgs.Add(null);
+			attackMethodsArgs.Add(new object[] { new Vector2[] {
+                                new Vector2(defaultPosition.X - 350, defaultPosition.Y - 50)
+                                , new Vector2(defaultPosition.X - 200, defaultPosition.Y - 0)
+                                , new Vector2(defaultPosition.X - 100, defaultPosition.Y + 50)} });
+			//attackMethodsArgs.Add(null);
+		}
 
 		public override void Update()
 		{
-			if (isAlive && stage.inBossBattle) {
+			if (IsActive()) {//&& stage.inBossBattle
 				Attack(30);
 				base.Update();
 			}
@@ -141,101 +198,19 @@ namespace _2DActionGame
 			if (isWaiting) {
 				if (waitCounter > waitTime) {
 					isWaiting = false;
-					waitCounter = attackCounter = 0;//
-					attackNum++;
-					if (game.isHighLvl)
-						if (attackNum >= 6)
-							attackNum = 1;
-					if (!game.isHighLvl)
-						if (attackNum >= 5) attackNum = 1;
+					isStartingAttack = true;
+					isAttacking = isEndingAttack = false;
+					waitCounter = attackCounter = counter = 0;
 
-					//if (!game.isHighLvl && attackNum == 3) attackNum = 4;
+					attackList.Add(attackPatternNumList[attackPatternNum][attackNum]);
+					attackNum++;
+					if (attackNum == attackPatternNumList[attackPatternNum].Length) attackNum = 0;
 				}
 				waitCounter++;
 			} else {
-				if (attackCounter == 0) {
-					isStartingAttack = true;
-					attackCounter++;
-					counter = 0;
-				}
-				if (!game.isHighLvl) {
-					#region old
-					/*switch (attackNum) {
-                        case 0: SpawnEnemy(); break;
-                        case 1: AttackPattern1A(defaultPosition, tmpPosition, attackPosition, true); break;
-                        case 2: AttackDivision(); break;
-                        case 3: UseObstacle(); break;
-                        case 4: AttackWithThunder(); break;
-                        case 5: SpawnATurret(); break;
-                    }*/
-					#endregion
-					switch (attackNum) {
-						case 0:
-							AttackWithThunder();
-							break;
-						case 1:
-							AttackWithThunder2();
-							break;
-						case 2: /*AttackPattern1A(
-								defaultPosition
-								, new Vector2(defaultPosition.X, defaultPosition.Y + 100)
-								, new Vector2(defaultPosition.X - 480, defaultPosition.Y - 150)
-								, false
-								);*/
-							Move(5, defaultPosition
-							, new Vector2(defaultPosition.X, defaultPosition.Y + 100)
-							, new Vector2(defaultPosition.X - 480, defaultPosition.Y - 150));
-							break;//AttackPattern1A(defaultPosition, tmpPosition, attackPosition, true);
-						case 3:
-							Division();
-							break;//AttackDivision();
-						case 4:
-							MoveLite(
-								new Vector2(defaultPosition.X - 350, defaultPosition.Y - 150)
-								, new Vector2(defaultPosition.X - 200, defaultPosition.Y - 100)
-								, defaultPosition
-								, true
-							);
-							break;//isWaiting = true;
-						case 5:
-							SpawnATurret();
-							break;
-					}
-				} else {
-					switch (attackNum) {
-						case 1:
-							UseTurrets();
-							break;
-						case 2:
-							AttackPattern1A(
-								defaultPosition
-								, new Vector2(defaultPosition.X, defaultPosition.Y + 100)
-								, new Vector2(defaultPosition.X - 480, defaultPosition.Y - 150)
-								, false
-								);
-							break;
-						case 3:
-							Division();
-							break;
-						case 4:
-							PutTurrets(new Vector2[] {
-                                new Vector2(defaultPosition.X - 350, defaultPosition.Y - 50)
-                                , new Vector2(defaultPosition.X - 200, defaultPosition.Y - 0)
-                                , new Vector2(defaultPosition.X - 100, defaultPosition.Y + 50)}
-								);
-							break;
-						case 5:
-							/*PutTurrets(
-								new Vector2(defaultPosition.X - 350, defaultPosition.Y - 150)
-								, new Vector2(defaultPosition.X - 200, defaultPosition.Y - 100)
-								, new Vector2(defaultPosition.X - 100, defaultPosition.Y - 100)
-								);*/
-							isWaiting = true;
-							break;
-						case 6:
-							break;
-					}
-				}
+				UpdateAttacking();
+				attackCounter++;
+
 				if (isUsingTurret) ControlTurret(ballTurret, 0, 3);
 			}
 		}
@@ -286,6 +261,8 @@ namespace _2DActionGame
 					isWaiting = true;
 					attackCounter = 0;
 					counter = 0;
+
+					isEnds[5] = true;
 				}
 			}
 			counter++;
@@ -331,7 +308,6 @@ namespace _2DActionGame
 				//beamTurret.Update();
 			}
 			if (isStartingAttack || isAttacking || isEndingAttack) {
-				if (isEndingAttack) { }
 				if (!hasPlayedSoundEffect) {
 					if (counter % 8 == 0) {
 						if (!game.isMuted) thunderSoundBig.Play(SoundControl.volumeAll, 0f, 0f);
@@ -349,7 +325,7 @@ namespace _2DActionGame
 				if (isEndingAttack) speed = baseVector;
 
 				//if (isEndingAttack && distanceD < 5) isEndingAttack = false;
-				attackCounter++;
+				//attackCounter++;
 				if (isEndingAttack && distanceD < 5) {
 					speed.X = 0; speed.Y = 0;
 					beamTurret.isBeingUsed = false;
@@ -370,14 +346,17 @@ namespace _2DActionGame
 					hasPlayedSoundEffect = false;
 					attackCounter = 0;
 					counter = 0;
+
+					isEnds[8] = true;
 				}
 
 			counter++;
 		}
+		/// <summary>
+		/// マルクのアレみたいな攻撃
+		/// </summary>
 		private void AttackDivision()
 		{
-			// マルクのアレみたいな攻撃
-
 			// 攻撃終了地点からデフォルト位置へベクトルを引く
 			Vector2 returnVector = defaultPosition - position; ;
 			Vector2 baseVectorD = Vector2.Normalize(returnVector);
@@ -411,9 +390,9 @@ namespace _2DActionGame
 			if (isAttacking) {
 				dividingLightning.MovePattern1();
 				speed = Vector2.Zero;// 書かないと落ちる
-				if (!hasPlayedSE2) {
+				if (!hasPlayedSoundEffectSub) {
 					if (!game.isMuted) thunderSoundSmall.Play(SoundControl.volumeAll, 0f, 0f);
-					hasPlayedSE2 = true;
+					hasPlayedSoundEffectSub = true;
 				}
 
 			}
@@ -455,9 +434,9 @@ namespace _2DActionGame
 			if (isAttacking) {
 				dividingLightning.MovePattern1();
 				speed = Vector2.Zero;// 書かないと落ちる
-				if (!hasPlayedSE2) {
-					thunderSoundSmall.Play(SoundControl.volumeAll, 0f, 0f);
-					hasPlayedSE2 = true;
+				if (!hasPlayedSoundEffectSub) {
+					if (!game.isMuted) thunderSoundSmall.Play(SoundControl.volumeAll, 0f, 0f);
+					hasPlayedSoundEffectSub = true;
 				}
 			}
 			if (isAttacking && dividingLightning.isEnd) {
@@ -467,6 +446,7 @@ namespace _2DActionGame
 			}
 
 			counter++;
+
 			if (isEndingAttack) {
 				speed = Vector2.Zero;
 				isStartingAttack = false;
@@ -476,6 +456,8 @@ namespace _2DActionGame
 				isWaiting = true;
 				attackCounter = 0;
 				counter = 0;
+
+				isEnds[4] = true;
 			}
 
 		}
@@ -484,7 +466,7 @@ namespace _2DActionGame
 			// lightningBall的な何かturretに任せる
 			UpdateTurrets(-1);
 		}
-		private void AttackWithThunder()//Turret[] turs, Vector2[] shootPos)
+		private void AttackWithThunder()
 		{
 			// Kirby2のダークマターが出すアレのイメージ、直線的なもの.(稲妻の演出はEffectやアニメーションでやる)
 			if (isStartingAttack) {
@@ -511,6 +493,8 @@ namespace _2DActionGame
 				isWaiting = true;
 				attackCounter = 0;
 				counter = 0;
+
+				isEnds[1] = true;
 			}
 			counter++;
 		}
@@ -529,12 +513,24 @@ namespace _2DActionGame
 				isWaiting = true;
 				attackCounter = 0;
 				counter = 0;
+
+				isEnds[2] = true;
 			}
 			counter++;
+		}
+		protected override void Move(float moveSpeed, Vector2[] wayPoints)//params 
+		{
+			base.Move(moveSpeed, wayPoints);
+
+			if (hasMoved) {
+				isEnds[3] = true;
+				isWaiting = true;
+			}
 		}
 		protected virtual void SpawnEnemy()
 		{
 			this.jumpingEnemy.isBeingUsed = true;
+
 			if (!jumpingEnemy.isAlive) {
 				// 蘇生☆
 				jumpingEnemy.HP = 2;
@@ -542,11 +538,11 @@ namespace _2DActionGame
 				jumpingEnemy.isActive = true;
 				jumpingEnemy.position = this.position;
 			}
-			spawnSound.Play(SoundControl.volumeAll, 0f, 0f);
-			//isEndingAttack = 
+			if (!game.isMuted) spawnSound.Play(SoundControl.volumeAll, 0f, 0f);
 			attackCounter = 0;
 			isWaiting = true;
-			//jumpingEnemy.speed.X = -5;
+
+			isEnds[0] = true;
 		}
 		protected virtual void UseObstacle()
 		{
@@ -611,6 +607,8 @@ namespace _2DActionGame
 				isAttacking = false;
 				isWaiting = true;
 				attackCounter = 0;
+
+				isEnds[6] = true;
 				//counter = 0;
 			}
 			counter++;
@@ -661,6 +659,7 @@ namespace _2DActionGame
 				foreach (Turret tur in thunderTurrets)
 					tur.isVisible = false;
 				isStartingAttack = false;
+				attackCounter++;
 			}
 
 			for (int i = 0; i < thunderTurrets.Count; i++)
@@ -675,7 +674,8 @@ namespace _2DActionGame
 			if (attackCounter > 480)
 				isEndingAttack = true;
 
-			attackCounter++;
+			//attackCounter++;
+
 			if (isEndingAttack) {
 				foreach (Turret tur in thunderTurrets) {
 					tur.isVisible = false;
@@ -687,10 +687,12 @@ namespace _2DActionGame
 				isAttacking = false;
 				isWaiting = true;
 				attackCounter = 0;
+
+				isEnds[7] = true;
 			}
 		}
 		private bool hasInicialized;
-		private void PutTurrets(Vector2[] vecs)//Vector2 t1, Vector2 t2, Vector2 t3)
+		private void PutTurrets(Vector2[] vecs)
 		{
 			if (isStartingAttack)
 				foreach (Turret tur in thunderTurrets3Way) {
@@ -746,6 +748,8 @@ namespace _2DActionGame
 				isEndingAttack = false;
 				isAttacking = false;
 				hasInicialized = false;
+
+				isEnds[9] = true;
 			}
 			attackCounter++;
 		}

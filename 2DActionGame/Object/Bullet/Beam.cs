@@ -93,6 +93,8 @@ namespace _2DActionGame
 					counter = 0;
 					movedDistance = 0;
 				}
+
+				UpdateNumbers();
 			}
 		}
 		public override void UpdateAnimation()

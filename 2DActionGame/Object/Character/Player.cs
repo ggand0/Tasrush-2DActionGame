@@ -138,7 +138,7 @@ namespace _2DActionGame
 		public Player(Stage stage, float x, float y, int width, int height, int HP)
 			: base(stage, x, y, width, height)
 		{
-			LoadXML("Player");
+			LoadXML("Player", "Xml\\Objects_Base.xml");
 			this.TASpower = initialTAS;
 			this.HP = HP;
 			sword = new Sword(stage, 200, 100, 64, 8, this);

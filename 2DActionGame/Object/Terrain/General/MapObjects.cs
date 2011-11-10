@@ -82,8 +82,9 @@ namespace _2DActionGame
 					break;
 			}
 
+			
             //foreach (Terrain terrain in mapObjects) stage.dynamicTerrains.Add(terrain);
-			isActive = true;// 本当はCameraで何とかするべき。つまりこのオブジェクトの座標をmapObjectsに合わせて動かすべき
+			//isActive = true;// 本当はCameraで何とかするべき。つまりこのオブジェクトの座標をmapObjectsに合わせて動かすべき
         }
 		/// <summary>
 		/// デバッグ時に調整しやすいように分化
@@ -116,29 +117,32 @@ namespace _2DActionGame
 
         public override void Update()
         {
-			foreach (Terrain terrain in mapObjects) {
-				if (terrain is Icicle) { }
-
-				terrain.Update();
-				/*if (this.isActive) {// ここの気持ち悪さを考えると、SCorollUpdateでisAcitveを何とかした方がいいような
-					terrain.isActive = true;
-					terrain.isBeingUsed = true;
-				}*/
-
-				/*if (this.isBeingUsed && type != 1) terrain.isBeingUsed = true;// HC
-				else if (!this.isBeingUsed) {
+			if (IsActive()) {
+				foreach (Terrain terrain in mapObjects) {
 					if (terrain is Icicle) { }
-					terrain.isBeingUsed = false;
-				}*/
+
+					terrain.Update();
+					/*if (this.isActive) {// ここの気持ち悪さを考えると、SCorollUpdateでisAcitveを何とかした方がいいような
+						terrain.isActive = true;
+						terrain.isBeingUsed = true;
+					}*/
+
+					/*if (this.isBeingUsed && type != 1) terrain.isBeingUsed = true;// HC
+					else if (!this.isBeingUsed) {
+						if (terrain is Icicle) { }
+						terrain.isBeingUsed = false;
+					}*/
+				}
+				this.position = mapObjects[0].position;
+
+				base.Update();
+
+				if (!hasPlayedSoundEffect && (type == 3 || type == 4)) {
+					if (!game.isMuted) tornadeSound.Play(SoundControl.volumeAll, 0f, 0f);	// 3ボスでなぜかnullになる
+					hasPlayedSoundEffect = true;
+				}
 			}
-			this.position = mapObjects[0].position;
-
-            base.Update();
-
-            if (!hasPlayedSoundEffect) {
-                if(!game.isMuted) tornadeSound.Play(SoundControl.volumeAll, 0f, 0f);	// 3ボスでなぜかnullになる
-                hasPlayedSoundEffect = true;
-            }
+			UpdateG();
         }
 		/// <summary>
 		/// 管理クラスなので、一括してScrollUpdate()を呼ぶ。
@@ -153,6 +157,17 @@ namespace _2DActionGame
 				if (terrain.distanceToCamara < terrain.activeDistance) terrain.isActive = true;
 				else terrain.isActive = false;
 			}
+			base.ScrollUpdate(criteriaPosition, autoScroll);
+		}
+		private void UpdateG()
+		{
+			float sumX = 0, sumY = 0;
+			foreach (Terrain terrain in mapObjects) {
+				//Vector2 sum += terrain.position;
+				sumX += terrain.position.X;
+				sumY += terrain.position.Y;
+			}
+			this.position = new Vector2(sumX, sumY) / (float)mapObjects.Count;
 		}
 		public override void UpdateTimeCoef()
 		{
@@ -224,7 +239,7 @@ namespace _2DActionGame
 							if (mapObjects[spawnIndex[i]] is Icicle && (mapObjects[spawnIndex[i]] as Icicle).hasFalled) {
 								(mapObjects[spawnIndex[i]] as Icicle).hasFalled = false;
 								(mapObjects[spawnIndex[i]] as Icicle).isFallingDown = false;
-								mapObjects[spawnIndex[i]].hasPlayedSoundEffect = false;
+								//mapObjects[spawnIndex[i]].hasPlayedSoundEffect = false;
 								mapObjects[spawnIndex[i]].speed = Vector2.Zero;
 								mapObjects[spawnIndex[i]].position = startPosition + mapObjects[spawnIndex[i]].localPosition;
 								mapObjects[spawnIndex[i]].isBeingUsed = true;

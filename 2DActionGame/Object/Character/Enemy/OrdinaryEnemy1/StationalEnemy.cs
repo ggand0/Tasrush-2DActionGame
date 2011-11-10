@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Content;
 namespace _2DActionGame
 {
     /// <summary>
-    /// Stage1 動かない敵。Enemyでもいいかも
+    /// 全く動かない敵
     /// </summary>
     public class StationalEnemy : Enemy
     {

@@ -50,6 +50,7 @@ namespace _2DActionGame
         
         // Game
         public double score { get; set; }
+		public float wholeVolume { get; set; }
         public int avilityNum { get; set; }
 		public int stageNum { get; set; }
 
@@ -59,10 +60,13 @@ namespace _2DActionGame
 		public bool inDebugMode { get; set; }
 		public bool visibleSword { get; set; }
 		public bool visibleScore { get; set; }
+		public bool hasReachedCheckPoint { get; set; }
 
-		public void PushScene(Scene s)
+		
+
+		public void PushScene(Scene scene)
 		{
-			scenes.Push(s);
+			scenes.Push(scene);
 		}
 
         public Game1()
@@ -73,7 +77,6 @@ namespace _2DActionGame
             Content.RootDirectory = "Content";
 
 			random = new Random();
-			
 			//isMuted = true;
 			//noEnemy = true;
         }
@@ -125,7 +128,7 @@ namespace _2DActionGame
             this.isHighLvl = isHighLvl;
             score = 0;
 
-			scenes.Pop();		// クリアしたStageもしくは失敗したStageをPop。
+			scenes.Pop();// クリアしたStageもしくは失敗したStageをPop。
 			switch (stageNum) {
 				case 1:
 					Scene.PushScene(new Stage1(scenes.Peek(), isHighLvl));

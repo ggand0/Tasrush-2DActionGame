@@ -625,16 +625,16 @@ namespace _2DActionGame
 			//object o = null;
 			//object[] x = null;
 			attackMethodsArgs.Add(null);//(Object)null
-			attackMethodsArgs.Add(5);
-			attackMethodsArgs.Add(2);
+			attackMethodsArgs.Add(new object[] {5});
+			attackMethodsArgs.Add(new object[] {2});
 			attackMethodsArgs.Add(null);//typeof(void) new object[] { null }
 			attackMethodsArgs.Add(null);//new object[] { }
-			attackMethodsArgs.Add(0);
-			attackMethodsArgs.Add(1);
+			attackMethodsArgs.Add(new object[] {0});
+			attackMethodsArgs.Add(new object[] {1});
 			attackMethodsArgs.Add(null);
 			attackMethodsArgs.Add(null);
 			attackMethodsArgs.Add(null);
-			attackMethodsArgs.Add(5);
+			attackMethodsArgs.Add(new object[] {5});
 			attackMethodsArgs.Add(null);
 		}
 		public override void Update()
@@ -779,7 +779,7 @@ namespace _2DActionGame
 		public override void Draw(SpriteBatch spriteBatch)
 		{
 			if (base.IsBeingUsed()) {//isAlive && isActive
-				//spriteBatch.Draw(texture2, drawPos, animation2.rect, Color.White);     // 判定用の矩形の描画
+				if (game.visibleSword) spriteBatch.Draw(texture2, drawPos, animation2.rect, Color.White);     // 判定用の矩形の描画
 				spriteBatch.Draw(texture, drawPos, animation.rect, Color.White);
 				DrawComboCount(spriteBatch);
 			}

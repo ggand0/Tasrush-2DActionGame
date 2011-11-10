@@ -49,6 +49,7 @@ namespace _2DActionGame
 
 			// Scoreをcastして確定
 			this.scoreToDisplay = (int)game.score;
+			game.hasReachedCheckPoint = false;
         }
 		public override void Update(double dt)
 		{

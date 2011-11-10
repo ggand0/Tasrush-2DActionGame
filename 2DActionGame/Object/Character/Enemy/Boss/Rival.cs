@@ -24,7 +24,7 @@ namespace _2DActionGame
 		/// </summary>
 		public readonly double second_jumpSpeed = -10.0;
 		/// <summary>
-		/// 40;// 20frame≒1/3[s]
+		/// 40;// 20frame≒1/3[scene]
 		/// </summary>
 		private readonly int normalFirstComboTime = 60;
 		private readonly int normalSecondComboTime = 50;
@@ -890,7 +890,7 @@ namespace _2DActionGame
 
 			if (!isShootingThunder && attackCounter > 60) {
 				//windType = 1;// 値だから参照もｋｓも無かったｗｗｗ
-				attackMethodsArgs[5] = 1;// なんというHCでしょう！
+				attackMethodsArgs[5] = new object[] {1};// なんというHCでしょう！
 				attackList.Add(5);
 				shootRightSide = targetInRightSide;
 				obstacleWindLarge.isBeingUsed = true;// これもAWWに含めるべき
@@ -1153,12 +1153,12 @@ namespace _2DActionGame
 			attackMethodsArgs.Add(null);
 			attackMethodsArgs.Add(null);
 			attackMethodsArgs.Add(null);		// 2
-			attackMethodsArgs.Add(0);
+			attackMethodsArgs.Add(new object[] {0});
 			attackMethodsArgs.Add(null);
-			attackMethodsArgs.Add(windType);			// 5
+			attackMethodsArgs.Add(new object[] {windType});			// 5
 			attackMethodsArgs.Add(null);	//	6
 			attackMethodsArgs.Add(null);		//	7
-			attackMethodsArgs.Add(3);	//	8
+			attackMethodsArgs.Add(new object[] {3});	//	8
 			attackMethodsArgs.Add(null);
 		}
 		public override void Update()

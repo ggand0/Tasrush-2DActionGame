@@ -15,14 +15,16 @@ namespace _2DActionGame
 	/// </summary>
 	public class FlyingEnemy : Enemy
 	{
-		private SoundEffect flappingSound;
-		private SoundEffectInstance flappingSoundInstance;
-
-		private float jumpNum;
 		/// <summary>
 		/// 動きのタイプ（弾を出すか、など）
 		/// </summary>
-		private int motionType;
+		private readonly int attackType;		//1
+		private readonly float shootDistance;	//100
+		protected readonly float defSpeed;		//2
+
+		private SoundEffect flappingSound;
+		private SoundEffectInstance flappingSoundInstance;
+		private float jumpNum;
 		protected Turret turret;
 		protected Vector2 shootPosition;
 
@@ -33,18 +35,20 @@ namespace _2DActionGame
 			: this(stage, x, y, width, height, HP, 1)
 		{
 		}
-		public FlyingEnemy(Stage stage, float x, float y, int width, int height, int HP, int motionType)
+		public FlyingEnemy(Stage stage, float x, float y, int width, int height, int HP, int attackType)
 			: base(stage, x, y, width, height, HP)
 		{
-			this.motionType = motionType;
+			LoadXML("FlyingEnemy", "Xml\\Objects_Enemy_Stage1.xml");
+			this.attackType = attackType;
 
 			// 動き回る仕様
 			isMovingAround = true;
 			delayTime = motionDelayTime + 1;
+			flappingSoundInstance.Volume = 1.0f;
 
 			// 弾を射撃するか否か
-			if (motionType == 1) {
-				shootPosition = new Vector2(5, 5);
+			if (attackType == 1) {
+				shootPosition = new Vector2(5);
 				turret = new Turret(stage, this, shootPosition, 32, 32, 0, 1, 1, false, true, false, 3, 0, 1, 6);
 				stage.weapons.Add(turret);
 			}
@@ -68,13 +72,15 @@ namespace _2DActionGame
 				else turret.isBeingUsed = true;
 
 				distance = Vector2.Distance(stage.player.position, position);
-				if (distance < 100) turret.isBeingUsed = false;
+				if (distance < shootDistance) turret.isBeingUsed = false;
+
 				distance = stage.player.position.X - position.X;
-				if (distance > 200) turret.isBeingUsed = false;
+				if (distance > shootDistance * 2) turret.isBeingUsed = false;
+				// Playerのいる方向を向く
 				if (distance > 0) turnsRight = true;
 				else turnsRight = false;
 			} else {
-				turret.isBeingUsed = false;
+				turret.isBeingUsed = false;// 死んだらそもそもUpdate呼ばれないから意味内気が
 			}
 
 			base.Update();
@@ -92,7 +98,7 @@ namespace _2DActionGame
 			}
 			if (position.Y > 300) speed.Y = -9;
 
-			RoundTripMotion(defPos, moveDistance, 2);
+			RoundTripMotion(defPos, moveDistance, defSpeed);
 
 			if (flappingSoundInstance.State == SoundState.Stopped) {
 				if (!game.isMuted) { flappingSoundInstance.Volume = SoundControl.volumeAll; flappingSoundInstance.Play(); }

@@ -132,6 +132,10 @@ namespace _2DActionGame
 		/// Moveメソッドで使用。
 		/// </summary>
 		protected bool isStartingMove;
+		/// <summary>
+		/// WayPointsの最後の要素の位置まで到達したらtrue
+		/// </summary>
+		protected bool hasMoved;
 		internal bool hasPlayedSoundEffect;
 		public bool isEffected { get; set; }
 		public bool damageEffected { get; set; }
@@ -175,7 +179,7 @@ namespace _2DActionGame
 		}
 		public Object(Stage stage, float x, float y, int width, int height)
 		{
-			LoadXML("Object");
+			LoadXML("Object", "Xml\\Objects_Base.xml");//"Objects_Base"
 			this.stage = stage;
 			this.width = width;
 			this.height = height;
@@ -210,38 +214,30 @@ namespace _2DActionGame
 			texture = content.Load<Texture2D>(texture_name);
 			texture2 = content.Load<Texture2D>(texture_name2);
 		}
+		protected virtual void Initialize()
+		{
+		}
 
 		/// <summary>
 		/// XMLファイルからパラメータ値を読み込む。
 		/// </summary>
 		/// <see cref="http://www.kisoplus.com/file/xml2.html"/>
 		/// <seealso cref="http://note.phyllo.net/?eid=540726"/>
-		protected void LoadXML(string objectName)
+		protected void LoadXML(string objectName, string fileName)
 		{
-			XmlReader xmlReader = XmlReader.Create("parameters_Player_test.xml");
-			bool hasSetValue;
+			XmlReader xmlReader = XmlReader.Create(fileName);
 
-			while (xmlReader.Read()) {												// XMLファイルを１ノードずつ読み込む
+			while (xmlReader.Read()) {// XMLファイルを１ノードずつ読み込む
 				xmlReader.MoveToContent();
 
-				/*if (xmlReader.NodeType == XmlNodeType.Element) {					// ノード要素にデータがある場合
-					if (xmlReader.LocalName.Equals("obj")) {						// ノード要素がある場合 localname : "objects"→"obj" 順に進む
-						str = xmlReader.ReadString();// \nしか読み込まれなかった。確かにタグ間に値は入れてなかった
-					}
-				}*/
-
-				if (xmlReader.NodeType == XmlNodeType.Element) {// && xmlReader.HasAttributes) {
+				if (xmlReader.NodeType == XmlNodeType.Element) {
 					if (xmlReader.Name == "obj") {
 						xmlReader.MoveToAttribute(0);
 						//xmlReader.GetAttribute(0);
-						if (xmlReader.Name == "Name" && xmlReader.Value == objectName) {//"Player") { これだと"Camera"とかになっちゃうのでObjectは設定されない...！
-							//str = xmlReader.Value;									// 属性データを取得
+						if (xmlReader.Name == "Name" && xmlReader.Value == objectName) {
 							// 以下、各パラメータを読み込む処理
 							while (!(xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name == "obj")) {//xmlReader.NodeType == XmlNodeType.Element &&
 								xmlReader.Read();
-								/*if (xmlReader.Name == "MAXTAS") {
-									this.MAXTAS = Int32.Parse(xmlReader.ReadString());// ktkr
-								}*/
 
 								Type type = this.GetType();
 								xmlReader.MoveToFirstAttribute();
@@ -258,15 +254,13 @@ namespace _2DActionGame
 											xmlReader.MoveToContent();
 											// http://dobon.net/vb/dotnet/programing/typeinvokemember.html ↓
 											FieldInfo fInfo = type.GetField(xmlReader.Name, BindingFlags.Public | BindingFlags.NonPublic |
-												BindingFlags.Instance | BindingFlags.Static);// デフォだとpublicフィールドしか検索されない...だと...!?
+												BindingFlags.Instance | BindingFlags.Static);// defaultでpublicフィールドしか検索されない...だと...!?
 											if (fInfo != null) {
 												SetField(xmlReader, fInfo);
 											}
 											break;
 									}
 								}
-
-								// readonlyのプロパティのときはスルーされてnullになった　厳密にコンストラクタ内じゃないとダメらしい
 							}
 						}
 					}
@@ -279,6 +273,9 @@ namespace _2DActionGame
 			string str = "";
 
 			switch (pInfo.PropertyType.Name) {
+				case "Byte":
+					pInfo.SetValue(this, Byte.Parse(xmlReader.ReadString()), null);
+					break;
 				case "Int32":
 					pInfo.SetValue(this, Int32.Parse(xmlReader.ReadString()), null);
 					break;
@@ -346,6 +343,7 @@ namespace _2DActionGame
 			}*/
 			/*if (isOnSomething) scalarSpeed *= friction;
 			else scalarSpeed *= frinctionAir;*/
+			isMovingRight = speed.X > 0;
 
 			speed.Y += (float)gravity * timeCoef;
 			if (speed.X > 0) {
@@ -467,10 +465,10 @@ namespace _2DActionGame
 		/// </summary>
 		/// <param name="moveSpeed">移動速度[pixel/frame]</param>
 		/// <param name="wayPoints">ウェイポイント配列</param>
-		protected virtual void Move(float moveSpeed, params Vector2[] wayPoints)
+		protected virtual void Move(float moveSpeed, Vector2[] wayPoints)
 		{
 			if (isStartingMove) {
-				isStartingMove = false;
+				isStartingMove = hasMoved = false;
 				isMoving = true;
 				curLoc = 0;
 			} else if (isMoving) {
@@ -483,7 +481,10 @@ namespace _2DActionGame
 				if (isReached) {
 					curLoc++;
 					isReached = false;
-					if (curLoc == wayPoints.Length) curLoc = 0;
+					if (curLoc == wayPoints.Length) {
+						curLoc = 0;
+						//hasMoved = true;
+					}
 				}
 			}
 		}
