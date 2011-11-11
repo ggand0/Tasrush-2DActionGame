@@ -56,14 +56,15 @@ namespace _2DActionGame
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
             }
         }
-        public override void Draw(SpriteBatch sprite)
+        public override void Draw(SpriteBatch spriteBatch)
         {
-            for(int i = 0; i < buttonNum; i++)
-                if (i == 3 && button[3].isSelected) {
-                    sprite.Draw(backGround, Vector2.Zero, Color.White);
-                    sprite.DrawString(game.pumpDemi, button[3].name, new Vector2(200, 150), button[3].color);
-                }
-                else if (button[i].isSelected) sprite.Draw(button[i].texture, Vector2.Zero, Color.White);
+			for (int i = 0; i < buttonNum; i++) {
+				if (i == 3 && button[3].isSelected) {
+					spriteBatch.Draw(backGround, Vector2.Zero, Color.White);
+					spriteBatch.DrawString(game.pumpDemi, button[3].name, new Vector2(200, 150), button[3].color);
+				} else if (button[i].isSelected)
+					spriteBatch.Draw(button[i].texture, Vector2.Zero, Color.White);
+			}
         }
     }
 }

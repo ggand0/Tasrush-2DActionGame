@@ -336,8 +336,7 @@ namespace _2DActionGame
 					attackCounter = 0;
 					counter = 0;
 				}
-			} else
-				if (isEndingAttack) {
+			} else if (isEndingAttack) {
 					speed.X = 0; speed.Y = 0;
 					beamTurret.isBeingUsed = false;
 					isEndingAttack = false;
@@ -358,7 +357,7 @@ namespace _2DActionGame
 		private void AttackDivision()
 		{
 			// 攻撃終了地点からデフォルト位置へベクトルを引く
-			Vector2 returnVector = defaultPosition - position; ;
+			Vector2 returnVector = defaultPosition - position;
 			Vector2 baseVectorD = Vector2.Normalize(returnVector);
 			//Vector2.Multiply(baseVectorD, 16);
 			baseVectorD *= new Vector2(3, 3);
@@ -402,10 +401,9 @@ namespace _2DActionGame
 				dividingLightning.isBeingUsed = false;
 				isEndingAttack = true;
 			}
-			if (isEndingAttack && distanceD > 5)
+			if (isEndingAttack && distanceD > 5) {
 				speed = baseVectorD;
-
-			else if (isEndingAttack && distanceD < 5) {
+			} else if (isEndingAttack && distanceD < 5) {
 				speed = Vector2.Zero;
 				isEndingAttack = false;
 				isAttacking = false;
@@ -459,7 +457,6 @@ namespace _2DActionGame
 
 				isEnds[4] = true;
 			}
-
 		}
 		private void AttackPattern3()
 		{
@@ -598,10 +595,9 @@ namespace _2DActionGame
 				isAttacking = false;
 				isEndingAttack = true;
 			}
-			if (isEndingAttack && distanceD > 5)
+			if (isEndingAttack && distanceD > 5) {
 				speed = baseVectorD;
-
-			else if (isEndingAttack && distanceD < 5) {
+			} else if (isEndingAttack && distanceD < 5) {
 				speed = Vector2.Zero;
 				isEndingAttack = false;
 				isAttacking = false;
@@ -640,16 +636,20 @@ namespace _2DActionGame
 		protected virtual void ControlObstacles(List<Obstacle> obstacles, int spwanInterval)
 		{
 			obsCounter++;
-			for (int i = 0; i < obstacles.Count; i++)
+
+			for (int i = 0; i < obstacles.Count; i++) {
 				if (obsCounter % (spwanInterval * (i + 1)) == 0)
 					obstacles[i].isBeingUsed = true;
-			foreach (Obstacle obs in obstacles)
-				if (obs.isBeingUsed)
+			}
+			foreach (Obstacle obs in obstacles) {
+				if (obs.isBeingUsed) {
 					obs.MovePattern1(obstacle.trapSet
 						, new Vector2(defaultPosition.X - 32, stage.CheckGroundHeight(defaultPosition.X) + obs.height)
 						, new Vector2(defaultPosition.X - 32, stage.CheckGroundHeight(defaultPosition.X) - obs.height)
 						, new Vector2(defaultPosition.X - 800, stage.CheckGroundHeight(defaultPosition.X) - obs.height)
 						, new Vector2(0, -12), new Vector2(-2.5f, 0));
+				}
+			}
 		}
 		#endregion
 		#region New_Hard
@@ -720,8 +720,6 @@ namespace _2DActionGame
 				}
 			}
 
-			//if (hasMoved) Fire = true;
-
 			if (!hasInicialized && hasMoved && !thunderTurret.isEnd) {
 				foreach (Turret tur in thunderTurrets3Way) {
 					tur.isBeingUsed = true;
@@ -733,7 +731,7 @@ namespace _2DActionGame
 				hasInicialized = true;
 			}
 
-			if (thunderTurret.isEnd /**/|| attackCounter > 720) {
+			if (thunderTurret.isEnd || attackCounter > 720) {
 				foreach (Turret tur in thunderTurrets3Way) {
 					tur.isBeingUsed = false;
 					tur.isVisible = false;

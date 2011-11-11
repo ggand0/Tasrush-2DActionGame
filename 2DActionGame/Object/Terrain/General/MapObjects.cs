@@ -78,7 +78,7 @@ namespace _2DActionGame
 					tornadeSound = content.Load<SoundEffect>("Audio\\SE\\tornado");
 					break;
 				case 5:
-					mapObjects.Add(new SnowBall(stage, x, y, width, height, 0, this, Vector2.Zero));
+					//mapObjects.Add(new SnowBall(stage, x, y, width, height, 0, this, Vector2.Zero));
 					break;
 			}
 

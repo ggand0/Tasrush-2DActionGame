@@ -100,8 +100,6 @@ namespace _2DActionGame
 		public Vector2 bulletSpeed { get; set; }
 		public float bulletSpeed1D { get; private set; }
 
-		// Enemy Attribute
-		private int comboTime, comboCount, delayTime, totalHits;
 		/// <summary>
 		/// １つの射撃パターンのみを使って射撃する通常モードなのか、それらの組み合わせて使うモードなのかどうか
 		/// </summary>
@@ -416,28 +414,6 @@ namespace _2DActionGame
 				UpdateNumbers();
 				UpdateAnimation();
 				base.Update();
-
-				if (canBeDestroyed) {
-					if (hasPlayedSoundEffect) hasPlayedSoundEffect = false;
-					//base.Update();
-
-					if (HP <= 0 && time > comboTime) {
-						if (!hasPlayedSoundEffect) {
-							if (!game.isMuted) damageSound.Play(SoundControl.volumeAll, 0f, 0f);
-							hasPlayedSoundEffect = true;
-						}
-						isAlive = false;
-					}
-					if (!isAlive && counter == 0) {
-						isEffected = deathEffected = true;
-						counter++;
-					}
-					if (time > comboTime) comboCount = 0;
-					if (stage.player.isThrusting && isDamaged) MotionUpdate();
-					MotionDelay();
-					time++;
-					delayTime++;
-				}
 			}
 		}
 		public override void Draw(SpriteBatch spriteBatch)
@@ -576,14 +552,6 @@ namespace _2DActionGame
 				bullets[i].speed.Y = (float)Math.Sin(rotation) * speed;
 			}
 		}
-		#endregion
-		#region MovePatterns
-		private void MovePattern0(Vector2 defaultPosition)
-		{
-			speed.X = -5;
-			if (position.X < defaultPosition.X - 200) isBeingUsed = false;
-		}
-		
 		#endregion
 		/// <summary>
 		/// 与えられたBulletに初期化が必要かどうか判定するメソッド
@@ -868,58 +836,6 @@ namespace _2DActionGame
 			if ((bullets[bullets.Count - 1] is Thunder) && (bullets[bullets.Count - 1] as Thunder).isEnd) isEnd = true;
 		}
 
-		// 補助メソッド(普通のObjectとしての振る舞い関係)
-		public override void MotionUpdate()
-		{
-			float distance = position.X - stage.player.position.X;
-
-			if (isDamaged && isAlive) {
-				if (stage.player.isAttacking3) {
-					if (distance > 0) speed.X += 5;
-					else speed.X += -5;
-					speed.Y -= 5;
-					HP--;
-				} else if (stage.player.isThrusting && time % 3 == 0) {
-					if (distance > 0) speed.X += 1;
-					else speed.X += -1;
-					speed.Y -= 1;
-				} else if (!stage.player.isThrusting) {
-					if (distance > 0) speed.X += 1.5f;
-					else speed.X += -1.5f;
-				}
-				
-				if (!game.isMuted) hitSound.Play(SoundControl.volumeAll, 0f, 0f);
-
-				HP--;
-				totalHits += 1;
-				time = 0;
-				delayTime = 0;
-				isEffected = true;
-				damageEffected = true;
-				if (time < comboTime) comboCount++;
-				time++;
-
-				int adj = 0;
-				adj = stage.gameStatus.maxComboCount;
-				game.score += stage.inComboObjects.Count + (1 + stage.gameStatus.maxComboCount * .01f);//10 * stage.inComboObjects.Count * stage.maxComboCount;
-			}
-		}
-		internal virtual void MotionDelay()
-		{
-			if (delayTime < motionDelayTime) {
-				gravity = defGravity;
-				if (stage.player.normalComboCount < 3) {
-					speed.Y = 0;
-					gravity = 0;
-				}
-				//isInDamageMotion = true;
-				//isWinced = true;
-			} else {
-				//isInDamageMotion = false;
-				gravity = defGravity;
-				//isWinced = false;
-			}
-		}
 		protected override void UpdateNumbers()
 		{
 			if (user != null && isSubsidiary) {

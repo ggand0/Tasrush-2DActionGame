@@ -66,7 +66,15 @@ namespace _2DActionGame
 
 		public void PushScene(Scene scene)
 		{
-			scenes.Push(scene);
+			scenes.Push(scene);//this.Window.
+		}
+		private void graphics_DeviceResetting(object sender, EventArgs e)
+		{
+			// ウィンドウのフォーカスが失われるバグ(?)対策
+			System.Windows.Forms.Form form = (System.Windows.Forms.Form) System.Windows.Forms.Form.FromHandle(Window.Handle);
+			form.BringToFront();
+
+			
 		}
 
         public Game1()
@@ -75,6 +83,10 @@ namespace _2DActionGame
             graphics.PreferredBackBufferWidth = Width;
             graphics.PreferredBackBufferHeight = Height;
             Content.RootDirectory = "Content";
+
+			System.Windows.Forms.Form MyForm = (System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(this.Window.Handle);
+			MyForm.MaximizeBox = false;
+			MyForm.MinimizeBox = false; 
 
 			random = new Random();
 			//isMuted = true;

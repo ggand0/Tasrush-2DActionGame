@@ -191,6 +191,7 @@ Content\Audio\BGM\boss_nomal.xnb
 Content\Audio\BGM\cave.xnb
 Content\Audio\BGM\clear.xnb
 Content\Audio\BGM\ending_medley_newnew.xnb
+Content\Audio\BGM\forest.xnb
 Content\Audio\BGM\forest_old.xnb
 Content\Audio\BGM\gameover.xnb
 Content\Audio\BGM\hard_last.xnb
@@ -236,5 +237,4 @@ Content\Audio\SE\zangeki2.xnb
 Content\Audio\SE\zangeki3.xnb
 Content\Audio\SE\zimen.xnb
 Content\Audio\SE\zangeki.xnb
-Content\Audio\BGM\forest.xnb
 Content\General\Pump_Demi_Bold.spritefont

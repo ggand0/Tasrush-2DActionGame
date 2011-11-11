@@ -30,26 +30,33 @@ namespace _2DActionGame
 		public static readonly int normaSecondComboTime = 40;
 
 		private readonly float timeCoefPlayer = 0.5f;
-		public readonly float firstJumpSpeed;//= -13.0f;
-		public readonly float secondJumpSpeed;//= -10.0f;
-		public readonly int MAXTAS;
-		public readonly int initialTAS;
+		public readonly float firstJumpSpeed = -13.0f;
+		public readonly float secondJumpSpeed = -10.0f;
+		public readonly int MAXTAS = 1800;
+		public readonly int initialTAS = 900;
 		
 		// Basis
 		private SoundEffect footstep, jumpSound, landingSound, tasSound, damageSound;
 		public Sword sword { get; private set; }
 		private bool isInJumpAnim, inDmgMotion;
 		private bool inCombo1, inCombo2, inCombo3, inCombo4, inCombo5, inCombo6, inCombo7;// 配列にしたい　いや、リストか...
+		private bool[] inCombos = new bool[7];
 		private int animCounter, animCounter2;
 		public int TASpower { get; set; }					// protected化：reverseの修正
 
 		// Input
 		private int workKeyNum, workButtonNum, workStickNum;
+		/// <summary>
+		/// ゲームパッドのスティックを倒す方向（もしくは）
+		/// </summary>
 		private Direction[] stickNum = new Direction[5] { Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN, Direction.NEWTRAL };
 		/// <summary>
 		/// キーコードの配列
 		/// </summary>
 		private Keys[] keyNum = new Keys[6] { Keys.Left, Keys.Right, Keys.Up, Keys.Down, Keys.LeftShift, Keys.C };
+		/// <summary>
+		/// ゲームパッドのボタン（もしくは対応するキー）配列
+		/// </summary>
 		private int[] buttonNum = new int[8] { 0, 1, 2, 3, 4, 5, 6, 7 };
 
 		// Attacking
@@ -124,6 +131,12 @@ namespace _2DActionGame
 		public bool spawnEnemy { get; private set; }
 		public int jumpTime { get; private set; }
 		public int damageTime { get; private set; }
+
+		public bool inAirReflection { get; private set; }
+		private int airReflectCount;
+		private int airReflectLimit = 30;
+		private bool disableMovingInput;
+		private Vector2 reflectSpeed;
 		
 		#endregion
 
@@ -940,7 +953,9 @@ namespace _2DActionGame
 				if (!isInCombo) {
 					speed.X += -(.60f * friction) * timeCoef;//accel
 					if (/*!isInCombo */ speed.X < 0) speed.X = 0;
-				} else speed.X *= .90f;
+				} else {
+					speed.X *= .90f;
+				}
 			}
 			if (speed.X < 0) {
 				//speed.X += (.60f * friction);
@@ -1283,11 +1298,6 @@ namespace _2DActionGame
 			if (inAirReflection && airReflectCount > airReflectLimit) inAirReflection = disableMovingInput = false;
 		}
 		#endregion
-		public bool inAirReflection { get; private set; }
-		private int airReflectCount;
-		private int airReflectLimit = 30;
-		private bool disableMovingInput;
-		private Vector2 reflectSpeed;
 
 		public override void Draw(SpriteBatch spriteBatch)
 		{

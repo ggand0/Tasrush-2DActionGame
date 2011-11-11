@@ -154,6 +154,7 @@
     <Compile Include="Object\Character\Enemy\Boss\Boss.cs" />
     <Compile Include="Object\Character\Enemy\Boss\Fuujin.cs" />
     <Compile Include="Object\Character\Enemy\Boss\Raijin.cs" />
+    <Compile Include="Object\Character\Enemy\Boss\WindTurret.cs" />
     <Compile Include="Object\Character\Enemy\Enemy.cs" />
     <Compile Include="Object\Character\Enemy\OrdinaryEnemy1\FlyingEnemy.cs" />
     <Compile Include="Object\Character\Enemy\OrdinaryEnemy1\FlyingOutEnemy.cs" />

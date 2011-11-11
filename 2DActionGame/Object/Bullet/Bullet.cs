@@ -237,14 +237,20 @@ namespace _2DActionGame
 		public override bool IsBeingUsed()
 		{
 			// turret.isBeingUsedの時に画面内のBulletが消えるのはきもい
-			return isAlive && isActive/**/ && isShot;//&& (turret != null && turret.isBeingUsed);// + isShot
+			return isAlive && isActive && isShot;
 		}
 
-		// あーMotionUpdate(Obj)にしないと統一できん...
+		// MotionUpdate(Obj)にしないと統一できん...
 		public void isCollideWith(_2DActionGame.Object obj)
 		{
 			if (obj is Weapon && obj.user is Player) isHostile = false;
-			else if (obj is Weapon && obj.user is Enemy) isHostile = true;
+			else if (obj is Weapon && obj.user is Enemy) {
+				if (!isHostile) {
+					isEffected = true;
+					damageEffected = true;
+				}
+				isHostile = true;
+			}
 
 			if (obj is Enemy || obj is Player) speed = Vector2.Zero;
 		}

@@ -17,22 +17,21 @@ namespace _2DActionGame
 	/// アクションボタンとか
     /// </summary>
 	public enum config
-	{// XBOX    //index |  PS2 | ELECOMのPad
-		A ,     //  0   |  1△  |   4(□)
-		B ,     //  1   |  3○  |   1(△)
-		key3 ,  //  2   |  2×  |   3(×)
-		X ,     //  3   |  0□  |   2(○)
-		Y ,     //  4   |  7L2  |   7(L1)
-		key6 ,  //  5   |  6R2  |   8(R1)
-		MENU ,  //  6   |  4L1  |   5(L2)
-		LOCK ,  //  7   |  5R1  |   6(R2)
-        START , //  8   | start| 
+	{// XBOX    //index |  PS2		| ELECOM_Pad
+		A ,     //  0   |  1:tr		|   4(□)
+		B ,     //  1   |  3:cir	|   1(△)
+		key3 ,  //  2   |  2:crs	|   3(×)
+		X ,     //  3   |  0:sqr	|   2(○)
+		Y ,     //  4   |  7:L2		|   7(L1)
+		key6 ,  //  5   |  6:R2		|   8(R1)
+		MENU ,  //  6   |  4:L1		|   5(L2)
+		LOCK ,  //  7   |  5:R1		|   6(R2)
+        START , //  8   |  8:start	| 
 		NUM_KEY 
-       
 	}
     public enum configPS2
     {
-        X,A,key3,B,MENU,LOCK,Y,key6,START,NUM_KEY
+        X, A, key3, B, MENU, LOCK, Y, key6, START, NUM_KEY
     }
     public enum Direction
     {
@@ -96,32 +95,60 @@ namespace _2DActionGame
 
         public static void Update(double dt)
         {
-            if (hasaJoystick)
-                JoustickUpdate(0,dt);//TODO:複数のジョイパッドに対応するならここをなんとかしないと。
-            else KeyboardUpdate(dt);
+			if (hasaJoystick) {
+				JoustickUpdate(0, dt);//TODO:複数のジョイパッドに対応するならここをなんとかしないと。
+			} else {
+				KeyboardUpdate(dt);
+			}
         }
 
 
-        //プロパティ=========================================
-        private static Vector2 V;//方向キーもしくは方向パッド
+        /// <summary>
+		/// 方向キーもしくは方向パッド
+        /// </summary>
+        private static Vector2 V;
         public static Vector2 Vector { get { return V; } }
-        public static Direction stickDirection { get; private set; }//上下左右ニュートラル、の順に0～4の数値が返される。
-        public static double stickTime { get; private set; }//その方向を押し続けている時間
-        public static bool onStickDirectionChanged { get; private set; }//方向が変わった瞬間か
+		/// <summary>
+		/// 上下左右ニュートラル、の順に0～4の数値が返される。
+		/// </summary>
+        public static Direction stickDirection { get; private set; }
+		/// <summary>
+		/// その方向を押し続けている時間
+		/// </summary>
+        public static double stickTime { get; private set; }
+		/// <summary>
+		/// 方向が変わった瞬間か
+		/// </summary>
+        public static bool onStickDirectionChanged { get; private set; }
 
-        static bool[] Key = new bool[(int)config.NUM_KEY];//キーが押されているか
+		/// <summary>
+		/// キーが押されているか
+		/// </summary>
+        static bool[] Key = new bool[(int)config.NUM_KEY];
         public static bool KEY(int index) { return Key[KeyMap(index)]; }
 
-        static bool[] onKeyDown = new bool[(int)config.NUM_KEY];//キーが押された瞬間か
+		/// <summary>
+		/// キーが押された瞬間か
+		/// </summary>
+        static bool[] onKeyDown = new bool[(int)config.NUM_KEY];
         public static bool IsOnKeyDown(int index) { return onKeyDown[KeyMap(index)]; }
 
-        static bool[] onKeyUp = new bool[(int)config.NUM_KEY];//キーが離された瞬間か
+		/// <summary>
+		/// キーが離された瞬間か
+		/// </summary>
+        static bool[] onKeyUp = new bool[(int)config.NUM_KEY];
         public static bool IsOnKeyUp(int index) { return onKeyUp[KeyMap(index)]; }
 
-        static double[] keyTime = new double[(int)config.NUM_KEY];//キーを押している時間
+		/// <summary>
+		/// キーを押している時間
+		/// </summary>
+        static double[] keyTime = new double[(int)config.NUM_KEY];
         public static double KeyTime(int index) { return keyTime[KeyMap(index)]; }
 
-        public static bool hasaJoystick { get; private set; }//ジョイスティックコントローラがあるか
+		/// <summary>
+		/// ジョイスティックコントローラがあるか
+		/// </summary>
+        public static bool hasaJoystick { get; private set; }
 
 
 

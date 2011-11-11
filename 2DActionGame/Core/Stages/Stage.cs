@@ -229,6 +229,10 @@ namespace _2DActionGame
 		public string[,] input_last;
 		#endregion
 		protected bool isHighLvl;
+		/// <summary>
+		/// 最小化復帰時にBackGroundを再ロードするためのフラグ
+		/// </summary>
+		private bool reloadScreen;
 		public Stage()
 		{
 		}
@@ -430,10 +434,10 @@ namespace _2DActionGame
 						dynamicTerrains.Add(new Icicle(this, float.Parse(mapData.devided2[i, 1]) + x, float.Parse(mapData.devided2[i, 2]) + y,
 							int.Parse(mapData.devided2[i, 3]), int.Parse(mapData.devided2[i, 4])));
 						break;
-					case ("SnowBall"):
+					/*case ("SnowBall"):
 						dynamicTerrains.Add(new SnowBall(this, float.Parse(mapData.devided2[i, 1]) + x, float.Parse(mapData.devided2[i, 2]) + y,
 							int.Parse(mapData.devided2[i, 3]), int.Parse(mapData.devided2[i, 4])));
-						break;
+						break;*/
 					case ("ConveyorBelt"):
 						dynamicTerrains.Add(new ConveyorBelt(this, float.Parse(mapData.devided2[i, 1]) + x, float.Parse(mapData.devided2[i, 2]) + y,
 							int.Parse(mapData.devided2[i, 3]), int.Parse(mapData.devided2[i, 4])));
@@ -530,6 +534,10 @@ namespace _2DActionGame
 					case ("RushingOutEnemy"):
 						characters.Add(new RushingOutEnemy(this, float.Parse(mapData.devided2[i, 1]) + x, float.Parse(mapData.devided2[i, 2]) + y,
 							int.Parse(mapData.devided2[i, 3]), int.Parse(mapData.devided2[i, 4]), 0, defHP));
+						break;
+					case ("SnowBall") :
+						characters.Add(new SnowBall(this, float.Parse(mapData.devided2[i, 1]) + x, float.Parse(mapData.devided2[i, 2]) + y,
+							int.Parse(mapData.devided2[i, 3]), int.Parse(mapData.devided2[i, 4])));
 						break;
 
 					// Stage3:
@@ -698,6 +706,11 @@ namespace _2DActionGame
 		public override void Update(double dt)
 		{
 			gameStatus.time += dt;
+			/*if (game.Deactivated) {
+				reloadScreen = true;
+			} else if (game.Activated && reloadScreen) {
+
+			}*/
 
 			if (isAccelerated) {
 				player.TASpower += -1;
@@ -902,13 +915,14 @@ namespace _2DActionGame
 				if (terrain is MapObjects) continue;
 
 				foreach (Terrain terrainD in activeDynamicTerrains1)                           // blockでもuserがいればactiveDynamicTsに入れるようにしよう.
-					if (!(terrainD is SnowBall)) terrain.IsHit(terrainD);
-					else terrain.IsHit((terrainD as SnowBall).block);
+					//if (!(terrainD is SnowBall)) 
+						terrain.IsHit(terrainD);
+					//else terrain.IsHit((terrainD as SnowBall).block);
 
 				foreach (Character character in activeCharacters)
 					if (!(character is FlyingOutEnemy3)) {
 						if (terrain is Slope) (terrain as Slope).IsHitLite(character);
-						else if (terrain is SnowBall) CollisionDetection.RectangleCross(terrain, character, terrain.degree, character.degree);
+						//else if (terrain is SnowBall) CollisionDetection.RectangleCross(terrain, character, terrain.degree, character.degree);
 						else {
 							/*if (terrain is Block) (terrain as Block).IsHitTwice(character, 3);
 							else terrain.IsHit(character);*/
@@ -983,14 +997,14 @@ namespace _2DActionGame
 					}
 				}
 				// activeDynamicTerrainとも.とりあえずBallだけ 2/20
-				foreach (Terrain terrain in activeDynamicTerrains)
+				/*foreach (Terrain terrain in activeDynamicTerrains)
 					if (terrain is SnowBall) {
 						if (!terrain.isAlive || terrain.user == weapon || weapon is Obstacle) continue;
 						CollisionDetection.RectangleCross(weapon, (terrain as SnowBall).block, weapon.degree, terrain.degree);
 						if ((terrain as SnowBall).block.isDamaged) terrain.isDamaged = true;
 						if (terrain.isDamaged) adObjects.Add(new Object2(weapon, terrain));
 						terrain.damageFromAttacking = true;
-					}
+					}*/
 
 				foreach (Weapon weaponD in activeWeapons) {
 					if ((weaponD.canBeDestroyed && weapon != weaponD)
@@ -1030,7 +1044,6 @@ namespace _2DActionGame
 							if (bullet.isDamaged) {
 								adObjects.Add(new Object2(weapon.user != null ? weapon.user as Object : weapon, bullet));
 								bullet.damageFromTouching = true;
-
 								bullet.isCollideWith(weapon);
 							}
 						}

@@ -778,7 +778,7 @@ namespace _2DActionGame
 		}
 		public override void Draw(SpriteBatch spriteBatch)
 		{
-			if (base.IsBeingUsed()) {//isAlive && isActive
+			if (base.IsBeingUsed() && IsActive()) {//isAlive && isActive
 				if (game.visibleSword) spriteBatch.Draw(texture2, drawPos, animation2.rect, Color.White);     // 判定用の矩形の描画
 				spriteBatch.Draw(texture, drawPos, animation.rect, Color.White);
 				DrawComboCount(spriteBatch);
