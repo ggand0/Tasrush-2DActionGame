@@ -66,7 +66,7 @@ namespace _2DActionGame
 						adObject.object2.isDamaged = true;
 						adObject.object2.MotionUpdate();
 
-						if (!(adObject.object2 is Player))stage.inComboObjects.Add(adObject.object2);
+						if (!(adObject.object2 is Player)) stage.inComboObjects.Add(adObject.object2);
 					}
 
 					adObject.object2.isDamaged = false;                                             // 決まったフレームでのみtrueにする.それ以外ではfalse
@@ -83,6 +83,30 @@ namespace _2DActionGame
 					} else {
 						adObject.object2.damageFromAttacking = false;
 						adObject.object2.damageFromTouching = false;
+						adObject.object2.damageFromThrusting = false;
+					}
+					damageCounter = 0;
+
+					stage.inComboObjects.Remove(adObject.object2);
+				}
+			} else if (adObject.object2.damageFromThrusting) {
+				if (adObject.object1.isAttacking || (adObject.object1 is Weapon && (adObject.object1 as Weapon).user.isAttacking) || (adObject.object1 is Bullet && (adObject.object1 as Bullet).isShot)) {
+					if (damageCounter == damageFrame || damageCounter <= Player.thrustingTime && damageCounter % 5 == 0) {
+						adObject.object2.isDamaged = true;
+						adObject.object2.MotionUpdate();
+						if (!(adObject.object2 is Player)) stage.inComboObjects.Add(adObject.object2);
+					}
+					adObject.object2.isDamaged = false;
+					if (adObject.object1 is Bullet) (adObject.object1 as Bullet).isShot = false;
+					damageCounter++;
+				} else if (damageCounter > Player.thrustingTime) {
+					hasDamaged = true;
+					adObject.object2.isDamaged = false;
+					if (stage.damageControl.damages.Any((x) => !x.Equals(this) && x.adObject.object2.Equals(this.adObject.object2))) {
+					} else {
+						adObject.object2.damageFromAttacking = false;
+						adObject.object2.damageFromTouching = false;
+						adObject.object2.damageFromThrusting = false;
 					}
 					damageCounter = 0;
 
@@ -104,6 +128,7 @@ namespace _2DActionGame
 					} else {
 						adObject.object2.damageFromAttacking = false;
 						adObject.object2.damageFromTouching = false;
+						adObject.object2.damageFromThrusting = false;
 					}
 					damageCounter = 0;
 

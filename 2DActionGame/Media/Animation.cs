@@ -23,7 +23,7 @@ namespace _2DActionGame
 		
 		// リバーさんのコードを参考
 		/// <summary>
-		/// テクスチャー（大きな1枚絵）
+		/// テクスチャ（大きな1枚絵）
 		/// </summary>
 		public Texture2D texture { get; set; }
 		/// <summary>

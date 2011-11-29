@@ -24,7 +24,7 @@ namespace _2DActionGame
             : base(stage, x, y, width, height, HP)
         {
 			LoadXML("ShootingEnemy", "Xml\\Objects_Enemy_Stage1.xml");
-            turret = new Turret(stage, this, shootPosition, 32, 32, 0, 1 ,1, false, true, false, 3, 0, 0, 4);
+            turret = new Turret(stage, this, shootPosition, 32, 32, 0, 1 ,1, false, true, 0, 0, 4);
             stage.weapons.Add(turret);
 
 			Load();

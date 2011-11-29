@@ -6,7 +6,7 @@ using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Content;  
 using Microsoft.Xna.Framework.Audio;
 
 
@@ -28,6 +28,8 @@ namespace _2DActionGame
 		/// </summary>
 		public static readonly int normaFirstComboTime = 40;
 		public static readonly int normaSecondComboTime = 40;
+		public static readonly int thrustingTime = 40;
+        private static readonly int thrustPowerConsumption = 800;
 
 		private readonly float timeCoefPlayer = 0.5f;
 		public readonly float firstJumpSpeed = -13.0f;
@@ -131,9 +133,10 @@ namespace _2DActionGame
 		public bool spawnEnemy { get; private set; }
 		public int jumpTime { get; private set; }
 		public int damageTime { get; private set; }
+		private int thrustCount = thrustingTime;
 
 		public bool inAirReflection { get; private set; }
-		private int airReflectCount;
+		private int airReflectCount, airReflectTime;
 		private int airReflectLimit = 30;
 		private bool disableMovingInput;
 		private Vector2 reflectSpeed;
@@ -446,9 +449,9 @@ namespace _2DActionGame
 			}
 			#endregion
 			#region rect
-			if (/*KeyInput.IsOnKeyDown(Keys.Right) || */Controller.IsOnKeyDown(0)) {
+			if (TASpower >= thrustPowerConsumption && /*KeyInput.IsOnKeyDown(Keys.Right) || */Controller.IsOnKeyDown(0) && thrustCount >= thrustingTime) {
 				//BackStep();
-				if (normalComboCount == 0) {  // テスト
+				if (normalComboCount == 0 || normalComboCount == 2 || normalComboCount == 3) {  // テスト
 					hasAttacked = true;     // 12/11:ここか...?
 					isAttacking = true; sword.isBeingUsed = true;
 					isThrusting = true;
@@ -458,7 +461,9 @@ namespace _2DActionGame
 					normalComboCount = 3;
 					inCombo1 = true;
 					sword.degreeCounter = 0;//そうだ、stage.がおかしい.参照渡ししているからメンバ変数のほうでいい
-				}
+					thrustCount = 0;
+					TASpower -= thrustPowerConsumption;
+				}/**/
 			}
 			#endregion
 			#region circle
@@ -737,7 +742,7 @@ namespace _2DActionGame
 			#endregion
 
 			time++;    // 攻撃開始時に初期化、次の入力までの時間を計る
-
+			thrustCount++;
 			UpdateAttackProcess();
 			#region EndProcess
 			// Comboの終了処理
@@ -978,8 +983,9 @@ namespace _2DActionGame
 			if (stage.slowmotion.isSlow) {
 				position.X += speed.X * timeCoef;
 				position.Y += speed.Y * timeCoef;
-			} else
+			} else {
 				position += speed * timeCoef;
+			}
 
 			// 端
 			if (position.Y < 0) position.Y = 0;
@@ -1016,10 +1022,11 @@ namespace _2DActionGame
 		/// </summary>
 		public override void UpdateTimeCoef()
 		{
-			if (stage.slowmotion.isSlow)
-				timeCoef = timeCoefPlayer;
-			else
-				timeCoef = 1.0f;
+            if (stage.slowmotion.isSlow) {
+                timeCoef = timeCoefPlayer;
+            } else {
+                timeCoef = 1.0f;
+            }
 		}
 		public override void MotionUpdate()
 		{
@@ -1284,7 +1291,11 @@ namespace _2DActionGame
 		}
 		private void AdjustReflect(Vector2 reflectSpeed)
 		{
-			this.reflectSpeed = reflectSpeed;
+			if (airReflectTime != 0)
+				this.reflectSpeed = reflectSpeed * 1 / (float)airReflectTime;// 回数補正
+			else
+				this.reflectSpeed = reflectSpeed;
+
 			if (turnsRight) speed.X = -reflectSpeed.X;//speed.X > 0
 			else speed.X = reflectSpeed.X;
 
@@ -1295,7 +1306,11 @@ namespace _2DActionGame
 			airReflectCount++;
 			airReflectLimit = 15;
 			if (inAirReflection && airReflectCount == 1) AdjustReflect(reflectSpeed);
-			if (inAirReflection && airReflectCount > airReflectLimit) inAirReflection = disableMovingInput = false;
+			if (inAirReflection && airReflectCount > airReflectLimit) {
+				inAirReflection = disableMovingInput = false;
+				//airReflectTime++;
+			}
+			if (isOnSomething) airReflectTime = 0;
 		}
 		#endregion
 

@@ -565,9 +565,9 @@ namespace _2DActionGame
 			obstacleTornadeSmall = new Obstacle(stage, this, x, y, 32, 32, 2, 3);
 			obstacleTornadeLarge = new Obstacle(stage, this, x, y, 32, 32, 2, 4);
 
-			cutterTurret5Way = new Turret(stage, this, new Vector2(150, 100), 32, 32, 0, 5, 5, false, true, false, 3, 0, 4);
-			cutterTurret1WayBurst = new Turret(stage, this, new Vector2(150, 100), 32, 32, 0, 1, 10, false, true, false, 3, 0, 4, 10, 320, 10);
-			cutterTurretAlternate = new Turret(stage, this, new Vector2(150, 100), 32, 32, 0, 5, 2, false, true, false, 3, 0, 4, 5, 60, 10, Vector2.Zero, false, true, new int[] { 5, 1 });
+			cutterTurret5Way = new Turret(stage, this, new Vector2(150, 100), 32, 32, 0, 5, 5, false, true, 0, 4);
+			cutterTurret1WayBurst = new Turret(stage, this, new Vector2(150, 100), 32, 32, 0, 1, 10, false, true, 0, 4, 10, 320, 10);
+			cutterTurretAlternate = new Turret(stage, this, new Vector2(150, 100), 32, 32, 0, 5, 2, false, true, 0, 4, 5, 60, 10, Vector2.Zero, false, true, new int[] { 5, 1 });
 			// shootInterval == 120だと、連発した時にPlayerを最初しか上手く追尾しない?
 
 			obstacles.Add(obstacleMeteor);
@@ -745,7 +745,6 @@ namespace _2DActionGame
 		{
 			//foreach (int i in attackList) {
 			for (int i = attackList.Count - 1; i >= 0; i--) {// ++だとremoveした時に前の要素がスルーされちゃう
-
 				// 綺麗(?)に記述したかっただけで、実際やっていることは下のswitch文と同じ
 				// nullも1つの引数扱いになるので一行で書くのは無理
 				//attackMethods[attackList[i]].DynamicInvoke(attackMethodsArgs[attackList[i]]);
@@ -753,7 +752,7 @@ namespace _2DActionGame
 					attackMethods[attackList[i]].DynamicInvoke(); 
 				} else {
 					attackMethods[attackList[i]].DynamicInvoke(attackMethodsArgs[attackList[i]]);
-				}/**/
+				}
 				/*switch (attackList[i]) {
 					case 0: SpawnEnemy(); break;
 					case 1: Tackle(5); break;

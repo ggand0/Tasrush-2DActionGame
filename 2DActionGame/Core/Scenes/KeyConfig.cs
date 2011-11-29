@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml;
+using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,6 +15,8 @@ namespace _2DActionGame
 	/// </summary>
 	public class KeyConfig : SelectScene
 	{
+		private bool waitingInput;
+
 		public KeyConfig(Scene previousScene)
 			: base(previousScene)
 		{
@@ -28,26 +32,105 @@ namespace _2DActionGame
 		{
 			base.Load();
 
-			for (int i = 0; i < buttonNum; i++)	// 最後がデバッグ用なので-1
-				button[i].texture = content.Load<Texture2D>("General\\Menu\\MenuButton" + i);
-			button[0].name = "cross";
-			button[1].name = "leftButton";
+			//for (int i = 0; i < buttonNum; i++)	// 最後がデバッグ用なので-1
+				//button[i].texture = content.Load<Texture2D>("General\\Menu\\MenuButton" + i);
+			button[0].name = "Jump";
+			button[1].name = "TAS";
+			button[2].name = "Back";
 		}
+		/// <summary>
+		/// 決定/戻るボタンの設定はそのまま、
+		/// 各項目を設定する状態に入った後の入力をゲーム中のそれぞれの操作に割り当てる
+		/// </summary>
 		protected override void ButtonUpdate()
 		{
 			base.ButtonUpdate();
 
-			if (button[0].isSelected && Controller.IsOnKeyDown(3)) {
-				// crossのconfig処理
-				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
+			if (!waitingInput) {
+				if (button[0].isSelected && Controller.IsOnKeyDown(3)) {
+					// crossのconfig処理
+					waitingInput = true;
+					if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
+				}
+				if (button[1].isSelected && Controller.IsOnKeyDown(3)) {
+					// leftButtonのconfig処理
+					if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
+				}
+				if (button[2].isSelected && Controller.IsOnKeyDown(3)) {
+					isEndScene = true;
+					if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
+				}
+			} else {
+				if (Controller.curButtons.Count > 0) {
+					if (button[0].isSelected) {
+						Controller.keyMap[2] = Controller.curButtons[0];
+						waitingInput = false;
+					} else if (button[1].isSelected) {
+						Controller.keyMap[5] = Controller.curButtons[0];
+						waitingInput = false;
+					}
+				}
 			}
-			if (button[1].isSelected && Controller.IsOnKeyDown(3)) {
-				// leftButtonのconfig処理
-				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
-			}
-			if (button[2].isSelected && Controller.IsOnKeyDown(3)) {
-				isEndScene = true;
-				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
+		}
+
+		public static void LoadXML(string objectName, string fileName)
+		{
+			XmlReader xmlReader = XmlReader.Create(fileName);
+
+			while (xmlReader.Read()) {// XMLファイルを１ノードずつ読み込む
+				xmlReader.MoveToContent();
+
+				if (xmlReader.NodeType == XmlNodeType.Element) {
+					if (xmlReader.Name == "obj") {
+						xmlReader.MoveToAttribute(0);
+						if (xmlReader.Name == "Name" && xmlReader.Value == objectName) {
+							// 以下、各パラメータを読み込む処理
+							while (!(xmlReader.NodeType == XmlNodeType.EndElement && xmlReader.Name == "obj")) {
+								xmlReader.Read();
+
+								//Type type = this.GetType();
+								xmlReader.MoveToFirstAttribute();
+								if (xmlReader.Name == "type") {
+									if (xmlReader.Value == "key") {
+										xmlReader.MoveToContent();
+										
+										switch (xmlReader.Name) {
+											case "sword_lite" :
+												Controller.keyMap[0] = Int32.Parse(xmlReader.ReadString());
+												break;
+											case "sword_strong":
+												Controller.keyMap[1] = Int32.Parse(xmlReader.ReadString());
+												break;
+											case "jump":
+												Controller.keyMap[2] = Int32.Parse(xmlReader.ReadString());
+												break;
+											case "nothing0":
+												Controller.keyMap[3] = Int32.Parse(xmlReader.ReadString());
+												break;
+											case "dash":
+												Controller.keyMap[4] = Int32.Parse(xmlReader.ReadString());
+												break;
+											case "TAS":
+												Controller.keyMap[5] = Int32.Parse(xmlReader.ReadString());
+												break;
+											case "nothing1":
+												Controller.keyMap[6] = Int32.Parse(xmlReader.ReadString());
+												break;
+											case "nothing2":
+												Controller.keyMap[7] = Int32.Parse(xmlReader.ReadString());
+												break;
+											case "PAUSE":
+												Controller.keyMap[8] = Int32.Parse(xmlReader.ReadString());
+												break;
+										}
+									}
+									
+								}
+							}
+						}
+					}
+				}
+
 			}
 		}
 
@@ -56,8 +139,10 @@ namespace _2DActionGame
 			spriteBatch.Draw(backGround, Vector2.Zero, Color.White);
 
 			for (int i = 0; i < buttonNum; i++) {
-				if (button[i].isSelected) spriteBatch.Draw(button[i].texture, Vector2.Zero, Color.White);
+				if (button[i].isSelected) //spriteBatch.Draw(button[i].texture, Vector2.Zero, Color.White);
+					spriteBatch.DrawString(game.Arial2, button[i].name, new Vector2(100, i * 20), Color.White);
 			}
+			if (waitingInput) spriteBatch.DrawString(game.Arial2, "waiting Input", new Vector2(200, 20), Color.White);
 		}
 	}
 }

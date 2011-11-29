@@ -28,16 +28,16 @@ namespace _2DActionGame
 		
 		#region Member variable
 		// Const
-		protected readonly double defGravity;			//.60
-		protected readonly float accel;					//.40f
-		protected readonly float maxSpeed;				// 32f
-		protected readonly float defFriction;			//.40f
+		protected readonly double defGravity = .60;
+		protected readonly float accel = .40f;
+		protected readonly float maxSpeed = 32f;
+		protected readonly float defFriction = .40f;
 		/// <summary>
 		/// めり込み許容範囲
 		/// </summary>
 		public readonly float maxLength = 32;
-		public readonly float defActiveDistance = 640;	
-		public readonly int defHitPoint;				// 3
+		public readonly float defActiveDistance = 640;
+		public readonly int defHitPoint = 3;
 		public float timeCoefObject { get; protected set; }//readonly 0.3f
 
 		// Basis
@@ -64,16 +64,16 @@ namespace _2DActionGame
 		protected float degreeSpeed;
 		public int width { get; protected set; }
 		public int height { get; protected set; }
-		public float degree;							//プロパティ化：class Turret, Bulletの修正
-		public float radius;							//プロパティ化：class CDの修正
-		public float timeCoef { get; internal set; }	//protected化：class MapObjectの修正(ﾑﾘ)	
+		public float degree;										//プロパティ化：class Turret, Bulletの修正
+		public float radius;										//プロパティ化：class CDの修正
+		public float timeCoef { get; internal set; }				//protected化：class MapObjectの修正(ﾑﾘ)	
 		public double gravity { get; internal set; }
 		public float friction { get; internal set; }
 		public int HP { get; internal set; }
 		/// <summary>
 		/// 既に当たり判定がtrueになっているObjectを重複して判定させないためのフラグ
 		/// </summary>
-		internal bool firstTimeInAFrame, isFirstTimevsCB, isHitCB;// 名前改良したい
+		internal bool firstTimeInAFrame, isFirstTimevsCB, isHitCB;	// 名前改良したい
 
 		// Behavior
 		/// <summary>
@@ -91,6 +91,10 @@ namespace _2DActionGame
 		public bool hasDashed { get; internal set; }
 		public bool isDamaged { get; set; }
 		public bool damageFromAttacking { get; set; }
+		/// <summary>
+		/// 完全にハードコーディング的なフラグなので可能ならDamageを抽象化して必要ない形に修正したい
+		/// </summary>
+		public bool damageFromThrusting { get; set; }
 		public bool damageFromTouching { get; set; }
 		/// <summary>
 		/// 他の何かのObjectに当たっているか
@@ -202,9 +206,6 @@ namespace _2DActionGame
 		/// <summary>
 		/// Stageからtextureを読み込ませていた時に使っていたメソッド
 		/// </summary>
-		public virtual void Load(ContentManager content)
-		{
-		}
 		public virtual void Load(ContentManager content, string texture_name)
 		{
 			texture = content.Load<Texture2D>(texture_name);
@@ -382,7 +383,7 @@ namespace _2DActionGame
 		/// 自身のスクリーン座標を、基準となる位置に合わせて更新するメソッド。
 		/// </summary>
 		/// <param name="criteriaPosition">基準となる位置</param>
-		public virtual void ScrollUpdate(Vector2 criteriaPosition, bool autoScroll)// cameraPosの方がいいか...
+		public virtual void ScrollUpdate(Vector2 criteriaPosition, bool autoScroll)
 		{
 			drawPos.Y = position.Y;
 
@@ -542,10 +543,10 @@ namespace _2DActionGame
 		/// Bulletなど、完全に見えなくなってから破棄したいオブジェクトで用いる。
 		/// </summary>
 		/// <returns></returns>
-		protected bool IsOutside()
+		protected virtual bool IsOutside()
 		{
-			return position.X <= -width || Game1.Width  <= position.X
-				   || position.Y <= -height|| Game1.Height <= position.Y;
+			return drawPos.X <= -width || Game1.Width <= drawPos.X
+				   || drawPos.Y <= -height || Game1.Height <= drawPos.Y;
 		}
 	}
 

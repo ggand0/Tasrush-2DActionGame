@@ -29,7 +29,7 @@ namespace _2DActionGame
 		/// </summary>
 		private readonly int deathEffectDelayTime = 47;
 		private readonly int deathEffectMaxSize = 71;
-		private readonly int bossExplosionEffectTime = 180;
+		private readonly int bossExplosionEffectTime = 360;//180;
 		private readonly int dashEffectTime = 25;
 		private readonly int stageScreenEffectTime = 41;
 
@@ -46,7 +46,7 @@ namespace _2DActionGame
 		private int counter;
 		private int time;
 		private bool fadeOut;
-		private bool hasPlayedSE;
+		private bool hasPlayedSoundEffect;
 
 		private Texture2D[] textures = new Texture2D[10];
 		public Object targetObject { get; private set; }
@@ -81,7 +81,6 @@ namespace _2DActionGame
 				case 1: { degree = -135; originVector += new Vector2(48, 32); } break;
 				case 2: { degree = -215; originVector += new Vector2(16, 32); } break;
 				case 3: { degree = -45; originVector += new Vector2(32, -8); } break;
-				default: { } break;// } break;
 			}
 			counter = -1;
 		}
@@ -216,7 +215,7 @@ namespace _2DActionGame
 					deathEffects[i].position += deathEffects[i].speed;
 					deathEffects[i].drawPos.X = deathEffects[i].position.X - stage.camera.position.X;
 					deathEffects[i].drawPos.Y = deathEffects[i].position.Y;
-					deathEffects[i].animation.Update(4, 0, 25, 25, 6, 1);
+					deathEffects[i].animation.Update(4, 0, 25, 25, 12, 1);
 
 					//deathEffects[i].Draw(spriteBatch);
 					spriteBatch.Draw(deathEffects[i].texture, deathEffects[i].drawPos, deathEffects[i].animation.rect, Color.White, 0, Vector2.Zero, new Vector2(size), SpriteEffects.None, 0);
@@ -280,8 +279,8 @@ namespace _2DActionGame
 				stage.hasEffectedWarning = true;
 				time = 0;
 			}
-			time++;
 
+			time++;
 		}
 		/// <summary>
 		/// ボス死亡時の爆発エフェクト。適当なので後で直したい
@@ -290,25 +289,27 @@ namespace _2DActionGame
 		public void DrawBossDeathEffect(SpriteBatch spriteBatch, Boss targetBoss)
 		{
 			Load(game.Content, "Effect\\DeathEffect2", ref textures[0]);// 値渡し?←関数の引数は基本値渡し！
-			/*Load(game.content, "Effect\\DeathEffect2", ref textures[1]);
-			Load(game.content, "Effect\\DeathEffect2", ref textures[2]);
-			Load(game.content, "Effect\\DeathEffect2", ref textures[3]);*/
-			Update(3, 0, 64, 64, 3, 5);
+			Update(3, 0, 64, 64, 12, 1);//9
+			//bossExplosionEffectTime = 360;
 
-			if (!hasPlayedSE) {
+			if (!hasPlayedSoundEffect) {
 				if (!game.isMuted) lastExplosion.Play(SoundControl.volumeAll, 0f, 0f);
-				hasPlayedSE = true;
+				hasPlayedSoundEffect = true;
 			} else {
-				spriteBatch.Draw(textures[0], targetBoss.drawPos, rect, Color.White);
+				/*spriteBatch.Draw(textures[0], targetBoss.drawPos, rect, Color.White);
 				spriteBatch.Draw(textures[0], targetBoss.drawPos + new Vector2(targetBoss.width / 2, targetBoss.height / 2), rect, Color.White);
 				spriteBatch.Draw(textures[0], targetBoss.drawPos + new Vector2(targetBoss.width / 2 - 50, targetBoss.height / 2 + 50), rect, Color.White);
 				spriteBatch.Draw(textures[0], targetBoss.drawPos + new Vector2(targetBoss.width / 2, targetBoss.height / 2 - 30), rect, Color.White);
-				spriteBatch.Draw(textures[0], targetBoss.drawPos + new Vector2(targetBoss.width, targetBoss.height + 50), rect, Color.White);
+				spriteBatch.Draw(textures[0], targetBoss.drawPos + new Vector2(targetBoss.width, targetBoss.height + 50), rect, Color.White);*/
+				for (int i = 0; i < 10; i++) {
+					if (time > i * 10)
+					spriteBatch.Draw(textures[0], targetBoss.drawPos + new Vector2(targetBoss.width / 2, targetBoss.height / 2) + new Vector2(game.random.Next(targetBoss.width / 2) * 3f, game.random.Next(targetBoss.height / 2) * 3f), rect, Color.White);
+				}
 			}
 			if (time > bossExplosionEffectTime) {
 				stage.hasEffectedBossExplosion = true;
 				time = 0;
-				hasPlayedSE = false;
+				hasPlayedSoundEffect = false;
 			}
 			time++;
 		}

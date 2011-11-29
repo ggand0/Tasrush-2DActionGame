@@ -321,9 +321,11 @@ namespace _2DActionGame
 				for (int i = 0; i < mapDatas[mapDatas.Count - 1].devided1.Length; i++) {                                               // ファイルの末尾に改行コードがあるとエラーを吐くので注意
 					for (int j = 0; j < 7; j++) {
 						string[] input_tmp = new string[7];
-						if (mapDatas[mapDatas.Count - 1].devided1[i].Contains("Segment"))
+						if (mapDatas[mapDatas.Count - 1].devided1[i].Contains("Segment")) {
 							input_tmp = mapDatas[mapDatas.Count - 1].devided1[i].Split(new char[] { ',' }, 7);                     // countは区切り文字の数ではなく分けるブロックの数らしい
-						else input_tmp = mapDatas[mapDatas.Count - 1].devided1[i].Split(new char[] { ',' });
+						} else { 
+							input_tmp = mapDatas[mapDatas.Count - 1].devided1[i].Split(new char[] { ',' });
+						}
 						mapDatas[mapDatas.Count - 1].devided2[i, j] = input_tmp[j];                                              // 次にカンマで分割：一時的な配列に入れた後に二次元配列の列へ代入
 					}
 				}
@@ -766,7 +768,8 @@ namespace _2DActionGame
 			Collide();											// CollisionDetection(Terrain、Weapon等)
 			ScrollUpdate();										// スクロール時の座標変換(画面上のすべてのオブジェクトについて)
 			PlayBGM();											// BGM管理
-			if (!player.isThrusting) damageControl.Update2();	// WeaponとEnemyのダメージ判定の調整
+			//if (!player.isThrusting)
+				damageControl.Update2();	// WeaponとEnemyのダメージ判定の調整
 
 			// maxCombo
 			/*for (int i = 0; i < inComboObjects.Count; i++) {  // 列要素を比較
@@ -840,7 +843,8 @@ namespace _2DActionGame
 			// CollisionDetection(Terrain、Weapon等)
 			Collide();
 
-			if (!player.isThrusting) damageControl.Update2();                //sword.DamageUpdate();　 // WeaponとEnemyのダメージ判定の調整
+			//if (!player.isThrusting)
+				damageControl.Update2();                //sword.DamageUpdate();　 // WeaponとEnemyのダメージ判定の調整
 			// スクロール時の座標変換(画面上のすべてのオブジェクトについて)
 			ScrollUpdate();
 
@@ -983,15 +987,21 @@ namespace _2DActionGame
 					if (weapon is Sword && character is Fuujin && character.isDamaged) { }
 					if (weapon is Sword && character is ShootingEnemy && character.isDamaged) { }// ここには到達するのでshootingEnemyでもFuujinと同じことが起きているようだ...
 					// Fuujin.damageFromAttacking == trueで剣での攻撃が"damageControlに感知されないまま"isDamaged状態が続いて毎フレHPが減るｗ
-					if (character.isDamaged && !character.damageFromAttacking && !character.damageFromTouching) {
+					if (character.isDamaged && !character.damageFromAttacking && !character.damageFromTouching && !character.damageFromThrusting) {
 						// character==weapon.userなら無視 12/27:別の場所でisDamaged=trueになったため当たり判定せずにListに追加しちゃってる状況らしい.(雪玉に当たった)
 						if (character == weapon.user) continue;
 						else {
-							if (weapon is Sword) { }
-							if (weapon is Sword && weapon.user is Player) player.AirSlashReflection(new Vector2(8, -8));
+							if (weapon is Sword && weapon.user is Player) player.AirSlashReflection(new Vector2(4, -6));//8, -8
+							
 							attackedObjects.Add(weapon.user != null ? weapon.user as Object : weapon);
 							damagedObjects.Add(character);
-							character.damageFromAttacking = true;
+							if (!player.isThrusting) {
+								character.damageFromAttacking = true;
+								character.damageFromThrusting = false;
+							} else {
+								character.damageFromAttacking = false;
+								character.damageFromThrusting = true;
+							}
 							adObjects.Add(new Object2(weapon.user != null ? weapon.user as Object : weapon, character));
 						}
 					}

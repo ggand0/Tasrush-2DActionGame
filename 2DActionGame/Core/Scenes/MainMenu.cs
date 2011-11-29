@@ -16,7 +16,7 @@ namespace _2DActionGame
 		public MainMenu(Scene privousScene)
 			: base(privousScene)
 		{
-			buttonNum = 4;
+			buttonNum = 5;
 			button = new Button[buttonNum];
             for(int i = 0; i < buttonNum; i++)
                 button[i].color = Color.Blue;
@@ -28,11 +28,13 @@ namespace _2DActionGame
         {
 			base.Load();
 
-			for (int i = 0; i < buttonNum - 1; i++)	// 最後がデバッグ用なので-1
+			for (int i = 0; i < buttonNum - 2; i++)	// 最後がデバッグ用なので-1
 				button[i].texture = content.Load<Texture2D>("General\\Menu\\MenuButton" + i);
 			button[3].name = "StageSelect";			// 4debug
+			button[4].name = "Ranking";
 
 			game.stageNum = 1;
+			
         }
 
 		protected override void ButtonUpdate()
@@ -55,13 +57,17 @@ namespace _2DActionGame
 				PushScene(new StageSelect(this));
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
             }
+			if (button[4].isSelected && Controller.IsOnKeyDown(3)) {
+				PushScene(new Ranking(this));
+				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
+			}
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
+			spriteBatch.Draw(backGround, Vector2.Zero, Color.White);
 			for (int i = 0; i < buttonNum; i++) {
-				if (i == 3 && button[3].isSelected) {
-					spriteBatch.Draw(backGround, Vector2.Zero, Color.White);
-					spriteBatch.DrawString(game.pumpDemi, button[3].name, new Vector2(200, 150), button[3].color);
+				if (i >= 3) {
+					if (button[i].isSelected) spriteBatch.DrawString(game.pumpDemi, button[i].name, new Vector2(200, 150 + i * 50), button[i].color);
 				} else if (button[i].isSelected)
 					spriteBatch.Draw(button[i].texture, Vector2.Zero, Color.White);
 			}

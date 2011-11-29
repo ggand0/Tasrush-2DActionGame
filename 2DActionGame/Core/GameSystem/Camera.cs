@@ -14,7 +14,7 @@ namespace _2DActionGame
     {
         public float distanceToPlayer { get; private set; }
         public float distanceToBoss { get; private set; }
-        public bool isScrollingToPlayer;
+		public bool isScrollingToPlayer { get; set; }
 
         public Camera()
         {
@@ -162,7 +162,7 @@ namespace _2DActionGame
 						targetObject.ScrollUpdate(this.position, true);
 					}
 
-					if (targetObject.distanceToCamara < 1800) {
+					if (targetObject.distanceToCamara < 1800) {//1800
 						targetObject.isActive = true;
 						stage.activeObjects.Add(targetObject);
 						if (targetObject is Bullet && !(targetObject is Thunder)) { }

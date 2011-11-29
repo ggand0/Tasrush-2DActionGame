@@ -1076,10 +1076,10 @@ namespace _2DActionGame
 		{
 			bind = new Object(stage, x, y, 16, 16);
 			sword = new Sword(stage, 200, 100, 64, 8, this);
-			thunderTurret = new Turret(stage, this, new Vector2(5), 64, 48, 2, 0, 3, false, true, false, 3, 3, 3);
-			cutterTurret = new Turret(stage, this, this.position, 32, 32, 0, 0, 1, false, true, false, 3, 0, 4);
+			thunderTurret = new Turret(stage, this, new Vector2(5), 64, 48, 2, 0, 3, false, true, 3, 3);
+			cutterTurret = new Turret(stage, this, this.position, 32, 32, 0, 0, 1, false, true, 0, 4);
 			cutterTurret.bulletSpeed = new Vector2(-20, 0);
-			syuriken = new Turret(stage, this, new Vector2(5), 32, 32, 0, 0, 1, false, true, false, 3, 0, 2, 10, 10, 5, new Vector2(-10, 0), false, false);
+			syuriken = new Turret(stage, this, new Vector2(5), 32, 32, 0, 0, 1, false, true, 0, 2, 10, 10, 5, new Vector2(-10, 0), false, false);
 			//syuriken = new Turret(stage, this, this.position, 32, 32, 0, 1, 1, false, true, false, 3, 0, 2, 10, 120, 30, new Vector2(-10, 0), false, false);
 			//syuriken = new Turret(stage, this, this.position, 32, 32, 0, 0, 1, false, true, false, 3, 0, 4);
 			//syuriken.bulletSpeed = new Vector2(-10, 0);

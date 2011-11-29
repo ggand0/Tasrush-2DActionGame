@@ -49,7 +49,7 @@ namespace _2DActionGame
 			// 弾を射撃するか否か
 			if (attackType == 1) {
 				shootPosition = new Vector2(5);
-				turret = new Turret(stage, this, shootPosition, 32, 32, 0, 1, 1, false, true, false, 3, 0, 1, 6);
+				turret = new Turret(stage, this, shootPosition, 32, 32, 0, 1, 1, false, true, 0, 1, 6);
 				stage.weapons.Add(turret);
 			}
 		}

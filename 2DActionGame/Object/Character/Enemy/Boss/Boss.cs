@@ -247,7 +247,7 @@ namespace _2DActionGame
 			// Turrets
 			turrets = new List<Turret>();
 			for (int i = 0; i < shootPosition.Count; i++) {
-				turrets.Add(new Turret(stage, this, shootPosition[i], 32, 32, 5, bulletType, shootType));
+				turrets.Add(new Turret(stage, this, shootPosition[i], 32, 32, bulletType, shootType, 1));
 			}
 			//Load();
 		}

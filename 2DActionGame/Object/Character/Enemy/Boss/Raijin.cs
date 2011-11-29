@@ -66,17 +66,17 @@ namespace _2DActionGame
 			singleLightning = new Weapon(stage, position.X, position.Y, 16, 200, this);                             // アニメーションの関係でWeaponじゃ処理しきれないのでBeamに移行
 			dividingLightning = new DivisionWeapon(stage, position.X, position.Y, 32, 32, this, 1.0f);
 			obstacle = new Obstacle(stage, this, x, y, 32, 64, 0);
-			ballTurret = new Turret(stage, this, position, 32, 32, 0, 0, 1, false, false, true, 3, 0, 1);      // 他目的の雲object生成  , , 0
+			ballTurret = new Turret(stage, this, position, 32, 32, 0, 0, 1, false, false, 0, 1);      // 他目的の雲object生成  , , 0
 			ballTurret.bulletSpeed = new Vector2(0, 8);
 
-			thunderTurret = new Turret(stage, this, this.position, 64, 48, 2, 0, 3, false, false, true, 3, 3, 3, 14, 120, 10);//, , 3...2
-			thunderTurret2 = new Turret(stage, this, this.position, 64, 48, 2, 0, 3, false, false, true, 3, 3, 3, 14, 120, 10);//, , 3...2
-			thunderTurret3 = new Turret(stage, this, this.position, 64, 48, 2, 3, 3, false, false, true, 3, 3, 3, 14, 120, 10);//, , 3...2
+			thunderTurret = new Turret(stage, this, this.position, 64, 48, 2, 0, 3, false, false, 3, 3, 14, 120, 10);//, , 3...2
+			thunderTurret2 = new Turret(stage, this, this.position, 64, 48, 2, 0, 3, false, false, 3, 3, 14, 120, 10);//, , 3...2
+			thunderTurret3 = new Turret(stage, this, this.position, 64, 48, 2, 3, 3, false, false, 3, 3, 14, 120, 10);//, , 3...2
 			beamTurret = new Turret(stage, this, new Vector2(width / 2 + 32, height), 32, 32, 1, 0, 1, true);//, , 2
-			thunderTurret8Way = new Turret(stage, this, this.position, 64, 48, 2, 3, 8, false, false, true, 3, 3, 3, 14, 360, 30);//...3
+			thunderTurret8Way = new Turret(stage, this, this.position, 64, 48, 2, 3, 8, false, false, 3, 3, 14, 360, 30);//...3
 
 			for (int i = 0; i < 10; i++)
-				thunderTurrets.Add(new Turret(stage, this, this.position, 64, 48, 2, 1, 5, false, false, true, 3, 3, 3, 14, 240, 40));//...1
+				thunderTurrets.Add(new Turret(stage, this, this.position, 64, 48, 2, 1, 5, false, false, 3, 3, 14, 240, 40));//...1
 			thunderTurrets3Way.Add(thunderTurret);
 			thunderTurrets3Way.Add(thunderTurret2);
 			thunderTurrets3Way.Add(thunderTurret3);
@@ -113,7 +113,6 @@ namespace _2DActionGame
 
 			jumpingEnemy = new JumpingEnemy(stage, position.X, position.Y, 32, 32, 2, this);
 			stage.characters.Add(jumpingEnemy);
-			//attackNum = 2;
 
 			Initialize();
 		}

@@ -17,6 +17,7 @@ namespace _2DActionGame
     {
 		public readonly float defSpeed;//-2.5f
 		public readonly float jumpSpeed;//-10
+		public new readonly byte defMovePattern = 1;
 
 		private SoundEffect jumpSound;
 		/// <summary>

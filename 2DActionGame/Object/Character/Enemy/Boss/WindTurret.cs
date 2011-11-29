@@ -19,7 +19,7 @@ namespace _2DActionGame
 			: base(stage, x, y, width, height, HP, user)
 		{
 			//LoadXML("Enemy", "Xml\\Objects_Base.xml");
-			if (turret == null) turret = new Turret(stage, this, position, 32, 32, 0, 1, 1, false, true, false, 3, 0, 0, 5);
+			if (turret == null) turret = new Turret(stage, this, position, 32, 32, 0, 1, 1, false, true, 0, 0, 5);
 			Load();
 
 			turret.isBeingUsed = true;
@@ -28,7 +28,7 @@ namespace _2DActionGame
 		{
 			base.Load();
 
-			texture = content.Load<Texture2D>("Object\\Turret&Bullet\\");
+			texture = content.Load<Texture2D>("Object\\Turret&Bullet\\windTurret2");
 		}
 
 		public override void Update()
@@ -40,12 +40,10 @@ namespace _2DActionGame
 			base.Update();
 		}
 
-		#region MovePatterns
 		private void MovePattern0(Vector2 defaultPosition)
 		{
 			speed.X = -5;
 			if (position.X < defaultPosition.X - 200) isBeingUsed = false;
 		}
-		#endregion
 	}
 }

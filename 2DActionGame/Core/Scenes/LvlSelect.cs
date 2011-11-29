@@ -27,8 +27,9 @@ namespace _2DActionGame
         {
 			base.Load();
 
-			for (int i = 0; i < buttonNum; i++)
+			for (int i = 0; i < buttonNum; i++) {
 				button[i].texture = content.Load<Texture2D>("General\\Menu\\LvlSelect" + i);
+			}
         }
         protected override void ButtonUpdate()
         {

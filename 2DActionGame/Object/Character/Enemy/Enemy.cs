@@ -92,7 +92,7 @@ namespace _2DActionGame
 				comboCount = 0;
 				//hasPlayedSoundEffect = false;
 			}
-			if (!stage.player.isThrusting && isDamaged) MotionUpdate();
+			//if (!stage.player.isThrusting && isDamaged) MotionUpdate();
 			MotionDelay();
 
 			time++;
@@ -135,10 +135,10 @@ namespace _2DActionGame
 					else speed.X += -5 * timeCoef;
 					speed.Y += 5 * timeCoef;
 					//HP--;
-				} else if (stage.player.isThrusting && time % 3 == 0) {
-					if (distance > 0) speed.X += 1 * timeCoef;
-					else speed.X += -1 * timeCoef;
-					speed.Y -= 1 * timeCoef;
+				} else if (stage.player.isThrusting && time % 5 == 0) {
+					if (distance > 0) speed.X += .1f * timeCoef;// 1 * timeCoef
+					else speed.X += -.1f * timeCoef;
+					speed.Y -= .1f * timeCoef;
 				} else if (!stage.player.isThrusting) {
 					if (distance > 0) speed.X += 1.5f * timeCoef;
 					else speed.X += -1.5f * timeCoef;

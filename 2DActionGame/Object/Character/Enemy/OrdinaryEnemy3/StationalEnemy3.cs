@@ -27,7 +27,7 @@ namespace _2DActionGame
             : base(stage, x, y, width, height,HP)
         {
 			LoadXML("StationalEnemy3", "Xml\\Objects_Enemy_Stage3.xml");
-            turret = new Turret(stage, this, new Vector2(5), 5, 5, 0, 1, 1, false, true, false, 3);
+            turret = new Turret(stage, this, new Vector2(5), 5, 5, 0, 1, 1, false, true);
 
 			Load();
         }

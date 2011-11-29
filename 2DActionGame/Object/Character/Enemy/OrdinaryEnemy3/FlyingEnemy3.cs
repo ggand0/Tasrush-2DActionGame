@@ -13,6 +13,10 @@ namespace _2DActionGame
     /// </summary>
     public class FlyingEnemy3 : JumpingEnemy
     {
+		protected new readonly float defSpeed = 2;
+		protected new readonly float jumpSpeed = -16;
+		public new readonly byte defMovePattern = 1;
+
         private Turret turret;
 
         public FlyingEnemy3(Stage stage, float x, float y, int width, int height, int HP)
@@ -20,7 +24,7 @@ namespace _2DActionGame
         {
 			LoadXML("FlyingEnemy2", "Xml\\Objects_Enemy_Stage2.xml");
             //turret = new Turret(stage, this, new Vector2(5, 5), 5, 5, 0, 1);// ビームを放つタイプ：実装としてはThunderの方が近いのでそっちで.
-            turret = new Turret(stage, this, new Vector2(5, 5), 5, 5, 0, 0, 1, false, true, false, 3, 0, 0);
+            turret = new Turret(stage, this, new Vector2(5, 5), 5, 5, 0, 0, 1, false, true, 0, 0);
             turret.bulletSpeed = new Vector2(0, 10);
         }
 		protected override void Load()
@@ -42,7 +46,7 @@ namespace _2DActionGame
 
         public override void MovementUpdate(float jumpSpeed, int jumpTime, float roundTripSpeed)
         {
-            base.MovementUpdate(-16, 40, roundTripSpeed);
+            base.MovementUpdate(jumpSpeed, jumpTime, roundTripSpeed);// -16, 40
             turret.position = this.position;
             turret.isBeingUsed = true;
 

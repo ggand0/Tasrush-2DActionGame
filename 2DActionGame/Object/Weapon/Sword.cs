@@ -15,7 +15,7 @@ namespace _2DActionGame
 	/// </summary>
 	public class Sword : Weapon
 	{
-		#region member variable
+		#region Member variable
 
 		private Vector2 criterionVector;
 		private Vector2 originVector;                        // 回転軸を変化させる.基本的に不使用
@@ -33,6 +33,10 @@ namespace _2DActionGame
 		//public int[] damagedWeaponNum = new int[100];
 
 		private int delay;                                   // 2段目攻撃delay用のカウンタ(ローカル変数にしようとしたら何故か上手くいかなかった)
+		/// <summary>
+		/// Thrusting時のアニメーション用カウンタ
+		/// </summary>
+		private byte thrustCount;
 		public int degreeCounter { get; set; }              // 初期化用
 		private int randomDegree { get; set; }
 		private Vector2 deltaSize;
@@ -78,6 +82,7 @@ namespace _2DActionGame
 				effects[1] = content.Load<Texture2D>("Effect\\SlashEffectH");
 				effects[2] = content.Load<Texture2D>("Effect\\SlashEffectUp");
 				effects[3] = content.Load<Texture2D>("Effect\\SwordBeam");
+				effects[4] = content.Load<Texture2D>("Effect\\slash");
 			}
 
 			slashSounds[0] = content.Load<SoundEffect>("Audio\\SE\\syakiiin");
@@ -124,6 +129,10 @@ namespace _2DActionGame
 					animation.Update(3, 0, 64, 96, 4, 5);
 				else if ((user as Player).isCuttingUp)
 					animation.Update(3, 0, 64, 96, 4, 5);
+				else if ((user as Player).isThrusting)
+					animation.Update(5, 0, 64, 64, 3, 1);
+					//animation.Update(1, 0, 64, 16, 3, 0);
+					//animation.Update(3, 0, 64, 96, 1, 1);
 			}
 
 			if (user is Rival) {
@@ -486,7 +495,7 @@ namespace _2DActionGame
 				}
 				//Random rnd1 = new Random();
 				//randomDegree = rnd1.Next(10,60);
-				if (time % 3 == 0) {
+				if (time % 5 == 0) {// % 3
 					if (!game.isMuted) slashSounds[0].Play(SoundControl.volumeAll, 0f, 0f);
 				}
 				// randomDegree;
@@ -562,7 +571,7 @@ namespace _2DActionGame
 						rect.Width = 120;// rect初期化
 						rect.Height = 8;
 						degreeCounter++;// 初期化は1回
-						DamageMethodInicialize();
+						//DamageMethodInicialize();
 						if (!game.isMuted) slashSounds[0].Play(SoundControl.volumeAll, 0f, 0f);
 
 						//counter = 0;
@@ -574,7 +583,7 @@ namespace _2DActionGame
 						//player.hasAttacked = true;
 						//player.isAttacking = false; isBeingUsed=false;
 						degreeCounter = 0;
-						DamageMethodInicialize();
+						//DamageMethodInicialize();
 					}
 				}
 			}
@@ -585,7 +594,7 @@ namespace _2DActionGame
 						rect.Width = 120;// rect初期化
 						rect.Height = 8;
 						degreeCounter++;// 初期化は1回
-						DamageMethodInicialize();
+						//DamageMethodInicialize();
 						if (!game.isMuted) slashSounds[0].Play(SoundControl.volumeAll, 0f, 0f);
 					}
 					if (degree > -35) degree += -20;// 振るスピード(°)
@@ -596,7 +605,7 @@ namespace _2DActionGame
 						player.hasAttacked = true;
 						player.isAttacking = false; isBeingUsed = false;
 						degreeCounter = 0;
-						DamageMethodInicialize();
+						//DamageMethodInicialize();
 					}
 				}
 				beamTurret.Update();
@@ -626,105 +635,27 @@ namespace _2DActionGame
 		}
 		#endregion
 
-		/// <summary> DamageUpdate
-		/// 敵のダメージ判定の管理:9/16 判定の流れ
-		/// 剣と敵が重なる→交差判定→isDamaged=true→!hasAttackedなら→stage.charactersのi番目がダメージ判定されたcharacterの番号を管理する
-		/// damagedEnemyNumの番号と被っていなければ(前フレームまででダメージを与えたEnemyじゃ無ければ)→damagedObjectsに敵を追加(新しく判定する敵)
-		/// →damagedEnemyNumに追加した敵の番号を記録→その敵の判定開始→damagedObjectsのそれぞれのdamageTime++→damagetime==1ならその敵のダメージ判定(1回の攻撃で1つの敵にに対して1回だけ判定)
-		/// →その敵のMotionUpdateでHP減らしたり吹き飛ばしたりなんたら
-		/// </summary>
-		/// 11/10:ListをactiveCharaactersからactiveObjectsに拡張
-		/// 1月現在、Damage管理クラスを作ったのでもはや使っていない
-		public void DamageUpdate()
+
+		private void DrawThrustAnimation(SpriteBatch spriteBatch, bool turnsRight)
 		{
-			// 敵のisDamaged:
-			// 最初の1フレームだけisDamagedをtrueにして、あとは攻撃終了時までfalseにする
-			if (!player.hasAttacked) {
-				// 攻撃終了してない→攻撃中なら(isAttackingで統一してもいい)
-				//damageTime++;// 複数を対象(暫定的)　但し剣の先端が判定されなくなる
-				for (int i = 0; i < stage.activeObjects.Count; i++) {
-					if (stage.activeObjects[i].isDamaged) {// 最初にtrueになったときのみに限定
-						if (stage.activeObjects[i] is Player)
-							player.MotionUpdate();
-						//curDamagedEnemy = stage.characters[i];
-						//if (curDamagedEnemy != prevDamagedEnemy) damageTime = 0;
-
-						/*for(int k=0;k<damagedObjectNum.Length;k++) {// これでは当然ダメ
-							if(i != damagedObjectNum[k])damagedObjects.Add(stage.characters[i]);
-						}*/
-						if (damagedObjectNum.Any((x) => x == i)) {// 11/20:listの番号で同じ敵かどうか判断するのでactiveObjectsでまとめないと変なことに。
-
-							// 変更：iと同じ値の要素を持つならば何もし無い...はずだがそうなっていない
-						} else {
-							damagedObjects.Add(stage.activeObjects[i]);// このクラスのListに追加
-							damagedObjectNum[0 + (damagedObjects.Count - 1)/*counter*/] = i;// 判定済みの敵を記憶
-						}
-
-						for (int l = 0; l < damagedObjects.Count; l++) {// その敵の判定開始 2回(damageC.Count分)damageTimeが判定されてしまう　面倒だ
-							damageTime[l]++;
-						}
-						//damageTime[0 + counter]++;/
-
-						// ↓Lengthじゃ常に10　 D_characters.Countだと毎回　
-						for (int m = 0; m < stage.damagedObjects.Count; m++) {
-							if (damageTime[0 + m] == 1/*(damagedObjects.Count - 1)]==1*/ /*|| damageTime==5暫定！*/) {//このdamageTimeを調整して途中でダメージが1回だけ入る仕様にも変更可。damageTimeは攻撃のたびに初期化する必要あり
-								//stage.characters[i].MotionUpdate();// ここが大事！
-								//for(int i=0;i<stage.damagedObjects.Count;i++) {// ソートしたのに全部判定して重複してた
-								stage.activeObjects[damagedObjectNum[m]].MotionUpdate();// これじゃあ2番目くらいまでしか呼ばれないだろう！当たり前
-								//}
-							}
-						}
-						counter++;// 判定した敵の数
-						stage.activeObjects[i].isDamaged = false;
-
-					}// (解決済)技を連続して出して当たるとisDamagedがfalseのままになるようだ　３段目だけ当てたらMotionUpdateが実行されて上に跳んだ
-				}
-				//prevDamagedEnemy = curDamagedEnemy;
-
-				// Weapons 根本的にlistを統一するかdamagedCharactersとdamagedWeaponsで分けるか、もしくはフレーム毎にdamagedObjectsのCharacterである要素の個数を計算して引くか。
-
-				// (解決済)技を連続して出して当たるとisDamagedがfalseのままになるようだ　３段目だけ当てたらMotionUpdateが実行されて上に跳んだ
-
+			float deg = 0;
+			if (thrustCount > 0 && thrustCount <= 10) {
+				deg = 11;
+			} else if (thrustCount > 10 && thrustCount <= 20) {
+				deg = 3;
+			} else if (thrustCount > 20 && thrustCount <= 30) {
+				deg = 80;
+			} else if (thrustCount > 30 && thrustCount <= 40) {
+				deg = -60;
+			} else if (thrustCount > 40 && thrustCount <= 50) {
+				deg = -25;
+			} else if (thrustCount > 5 && thrustCount <= 60) {
+				deg = 40;
 			}
+			spriteBatch.Draw(effects[3], drawPos + new Vector2(width/2, height/2), animation.rect, Color.White, MathHelper.ToRadians(deg), Vector2.Zero, 1, turnsRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0);
+			
+			if (thrustCount++ > 60) thrustCount = 0;
 		}
-		public void DamageUpdate2()
-		{
-			if (!stage.player.hasAttacked) {
-				for (int i = 1; i < stage.activeCharacters.Count; i++) {
-					if (stage.activeCharacters[i].isDamaged) {                       // 最初にtrueになったときのみに限定
-						if (damagedObjectNum.Any((x) => x == i)) { } else {
-							damagedObjects.Add(stage.activeCharacters[i]);      // Listに追加
-							damagedObjectNum[0 + (damagedObjects.Count - 1)] = i;// 判定済みの敵を記憶
-						}
-						for (int l = 0; l < damagedObjects.Count; l++) damageTime[l]++;
-						for (int m = 0; m < stage.damagedObjects.Count; m++) {
-							if (damageTime[0 + m] == 1) {//このdamageTimeを調整して途中でダメージが1回だけ入る仕様にも変更可。damageTimeは攻撃のたびに初期化する必要あり
-								stage.activeCharacters[damagedObjectNum[m]].MotionUpdate();
-							}
-						}
-						counter++;                   // 判定した敵の数
-						stage.activeCharacters[i].isDamaged = false;
-					}
-				}
-			}
-		}
-		private void DamageMethodInicialize()
-		{
-			// 要改良.ダメージ管理を移行した後は削除予定
-			for (int i = 0; i < damageTime.Length; i++) {
-				damageTime[i] = 0;
-				stage.damageControl.damageTime[i] = 0;
-			}
-			for (int j = 0; j < damagedObjectNum.Length; j++) {
-				damagedObjectNum[j] = 0;
-				stage.damageControl.damagedObjectNum[j] = 0;
-			}
-			counter = 0;
-
-			damagedObjects.Clear();
-			stage.damageControl.damagedObjects.Clear();
-		}
-
 		public override void Draw(SpriteBatch spriteBatch)
 		{
 			if ((user as Character).isAttacking) {
@@ -756,8 +687,16 @@ namespace _2DActionGame
 					}
 
 					if ((user as Player).isThrusting) {
-						if ((user as Character).turnsRight) spriteBatch.Draw(effects[0], drawPos + new Vector2(24, -56), animation.rect, Color.White);
-						else spriteBatch.Draw(effects[0], drawPos + new Vector2(-68, -56), animation.rect, Color.White, 0, Vector2.Zero, 1, SpriteEffects.FlipHorizontally, 0);
+						if ((user as Character).turnsRight) {
+							//if (counter % 5 == 0) spriteBatch.Draw(effects[0], drawPos + new Vector2(24, -56), animation.rect, Color.White);
+							//else if (counter % 3 == 0) spriteBatch.Draw(effects[1], drawPos + new Vector2(24, -56), animation.rect, Color.White);
+							//else if (counter % 2 == 0) spriteBatch.Draw(effects[2], drawPos + new Vector2(24, -56), animation.rect, Color.White);
+							//else spriteBatch.Draw(effects[0], drawPos + new Vector2(24, -56), animation.rect, Color.White);
+							spriteBatch.Draw(effects[4], drawPos + new Vector2(0, -user.height * 3/4), animation.rect, Color.White, MathHelper.ToRadians(-20), Vector2.Zero, new Vector2(1.5f), SpriteEffects.None, 0);
+						} else {
+							spriteBatch.Draw(effects[4], drawPos + new Vector2(-68, -56), animation.rect, Color.White, 0, Vector2.Zero, 1, SpriteEffects.FlipHorizontally, 0);
+						}/**/
+						//DrawThrustAnimation(spriteBatch, user.turnsRight);
 					}
 				}
 

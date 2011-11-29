@@ -105,6 +105,7 @@
     <Compile Include="Core\GameSystem\CollisionDetection.cs" />
     <Compile Include="Core\GameSystem\Damage.cs" />
     <Compile Include="Core\GameSystem\DamageControl.cs" />
+    <Compile Include="Core\GameSystem\DrawFPS.cs" />
     <Compile Include="Core\GameSystem\EffectControl.cs" />
     <Compile Include="Core\GameSystem\FrameTimer.cs" />
     <Compile Include="Core\GameSystem\SlowMotion.cs" />
@@ -188,6 +189,7 @@
     <Compile Include="Object\Weapon\DivisionWeapon.cs" />
     <Compile Include="Object\Bullet\Thunder.cs" />
     <Compile Include="Object\Weapon\Obstacle.cs" />
+    <Compile Include="Object\Weapon\Ranking.cs" />
     <Compile Include="Object\Weapon\Turret.cs" />
     <Compile Include="Object\Terrain\Traps\Traps1\DamageBlock.cs" />
     <Compile Include="Object\Terrain\General\Foothold.cs" />

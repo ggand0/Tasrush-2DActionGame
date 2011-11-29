@@ -33,6 +33,7 @@ namespace _2DActionGame
 		public double dt { get; private set; }
         public GraphicsDeviceManager graphics { get; set; }
 		public SpriteBatch spriteBatch { get; private set; }
+        private DebugMessage dm;
 
         // Scene
 		public Stack<Scene> scenes = new Stack<Scene>();
@@ -89,6 +90,7 @@ namespace _2DActionGame
 			MyForm.MinimizeBox = false; 
 
 			random = new Random();
+            
 			//isMuted = true;
 			//noEnemy = true;
         }
@@ -128,6 +130,8 @@ namespace _2DActionGame
 			Arial = Content.Load<SpriteFont>("General\\Arial32");
 			Arial2 = Content.Load<SpriteFont>("General\\Arial10");
 			pumpDemi = Content.Load<SpriteFont>("General\\Pump_Demi_Bold");
+            dm = new DebugMessage(this, spriteBatch);
+            dm.Initialize();
 
             // Audio
             /*audioEngine = new AudioEngine("Content\\Audio\\Audio.xgs");
@@ -209,6 +213,7 @@ namespace _2DActionGame
             // TODO: Add your drawing code here
 			spriteBatch.Begin();
 			currentScene.Draw(spriteBatch);
+            dm.Draw(gameTime);
 			spriteBatch.End();
             base.Draw(gameTime);
         }

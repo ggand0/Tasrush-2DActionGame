@@ -23,6 +23,10 @@ namespace _2DActionGame
 		private Boss boss;
 		//protected int damageTime;
 		protected int textureType;
+		/// <summary>
+		/// 画面外に出てからBulletが消滅するまでの距離
+		/// </summary>
+		protected readonly float marginalDistance = 120;
 		
 		/// <summary>
 		/// userの座標を基準にしたBUlletの位置。Turret手動に移行した今となっては使用していない。
@@ -76,11 +80,10 @@ namespace _2DActionGame
 		{
 			this.turret = turret;
 			this.shootPosition = turret.position;
-			//this.position.X = shootPosition.X;
-			//this.position.Y = shootPosition.Y;
 			this.position = turret.position;
 			this.textureType = textureType;
 			this.disappearPattern = dissapearType;
+			activeDistance = Game1.Width + 120;
 
 			// Load後にテクスチャのサイズから取得した方がいいよな...?
 			switch (textureType) {
@@ -134,17 +137,17 @@ namespace _2DActionGame
 
 		public override void Update()
 		{
-			if (IsBeingUsed()) {
+			if (IsBeingUsed() && IsActive()) {
 				UpdateAnimation();
 				UpdateFlying(120);// 120 flyingTImeをどのように調整するか？
 			}
 			//if (turret != null && !turret.isBeingUsed) isShot = false;
 
 			// 画面外に出たら消す
-			if (isShot && IsOutside() && !isActive/**/) {
+			if (isShot /*&& !isActive */&& IsOutside()) {
 				isAlive = false;
-				//turret.hasShotBullets.Remove(this);	// 呼ばれてない可能性大
-				//stage.bullets.Remove(this);
+				turret.hasShotBullets.Remove(this);	// 呼ばれてない可能性大
+				stage.bullets.Remove(this);
 			}
 		}
 		public override void UpdateAnimation()
@@ -211,7 +214,7 @@ namespace _2DActionGame
 			// positionを更新
 			if (turret != null) {
 				shootPosition = turret.position;
-			} else if (shootingEnemy != null) {// sEいらねー
+			} else if (shootingEnemy != null) {// sEいらね
 				shootPosition = shootingEnemy.position;
 			}
 
@@ -234,6 +237,15 @@ namespace _2DActionGame
 
 			if (!game.isMuted) reflectSound.Play(SoundControl.volumeAll, 0f, 0f);
 		}
+		/// <summary>
+		/// カメラの位置を中心にすればoverrideする必要もないのだが....
+		/// </summary>
+		/// <returns></returns>
+		protected override bool IsOutside()
+		{
+			return drawPos.X <= -width - marginalDistance || Game1.Width + marginalDistance <= drawPos.X
+				   || drawPos.Y <= -height - marginalDistance || Game1.Height + marginalDistance <= drawPos.Y;
+		}
 		public override bool IsBeingUsed()
 		{
 			// turret.isBeingUsedの時に画面内のBulletが消えるのはきもい
@@ -241,10 +253,11 @@ namespace _2DActionGame
 		}
 
 		// MotionUpdate(Obj)にしないと統一できん...
-		public void isCollideWith(_2DActionGame.Object obj)
+		public void isCollideWith(Object obj)
 		{
-			if (obj is Weapon && obj.user is Player) isHostile = false;
-			else if (obj is Weapon && obj.user is Enemy) {
+			if (obj is Weapon && obj.user is Player) {
+				isHostile = false;
+			} else if (obj is Weapon && obj.user is Enemy) {
 				if (!isHostile) {
 					isEffected = true;
 					damageEffected = true;

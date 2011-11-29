@@ -34,6 +34,7 @@ namespace _2DActionGame
 			//musicInstance.Play(SoundControl.volumeAll, 0f, 0f);
 			
 			SoundControl.IniMusic("Audio\\BGM\\menu_new");
+			KeyConfig.LoadXML("KeyConfig", "Xml\\KeyConfig.xml");
         }
 
 		public override void Update(double dt)

@@ -114,114 +114,9 @@ namespace _2DActionGame
 		private List<int> shootPatternLoop = new List<int>();
 
 		#endregion
-		#region Constructors
-		/*// Basic : userに追従して射撃するだけ																																// ↓参照してるクラス
-        public Turret(Stage stage,  float x, float y, int width, int height)
-            : this(stage, null, new Vector2(0, 0), width, height)
-        {   
-            // time=0は不要 "//shoot()用"
-        }
-        public Turret(Stage stage, Object user,Vector2 shootPosition, int width, int height)
-            : this(stage, user,shootPosition, width, height, 1)
-        {
-        }
-        public Turret(Stage stage, Object user, Vector2 shootPosition, int width, int height, int shootPattern)																	// FE1,FE3
-            : this(stage, user, shootPosition, width, height, shootPattern, 3)
-        {
-        }
-        public Turret(Stage stage, Object user, Vector2 shootPosition, int width, int height, int shootPattern, int bulletNum)													// Boss(4Fuujin),FE,FE2,FE3,SE,SE3,Sword
-            : this(stage, user, shootPosition, width, height, shootPattern, bulletNum, false)
-        {
-        }
-        public Turret(Stage stage, Object user, Vector2 shootPosition, int width, int height, int shootPattern, int bulletNum, bool shootManually)								// Raijin.beamTurret
-            : this(stage, user, shootPosition, width, height, shootPattern, bulletNum, shootManually, true, false, 1)
-        {
-			shootPositions = new List<Vector2>();
-            shootPositions.Add(shootPosition);
-            this.shootPosition = shootPosition;
-        }
-
-        // Variation : 以下では自立して行動するTurretも生成可能
-        public Turret(Stage stage, Object user, Vector2 defPosition, int width, int height, int shootPattern, int bulletNum,
-            bool shootManually, bool isSubsidary, bool canBeDestroyed, int HP)// nothing
-            : this(stage, user, defPosition, width, height, shootPattern, bulletNum, shootManually, isSubsidary, canBeDestroyed, HP, 0, 0)
-        {
-        }
-
-        public Turret(Stage stage, Object user, Vector2 defPosition, int width, int height, int shootPattern, int bulletNum,// 驚きの引数14個
-            bool shootManually, bool isSubsidiary, bool canBeDestroyed, int HP, int textureType, int bulletTextureType)															// Raijin.thnderTurret
-            : this(stage, user, defPosition, width, height, shootPattern, bulletNum, shootManually, isSubsidiary, canBeDestroyed, HP, textureType, bulletTextureType, 14)
-        {
-        }
-
-        public Turret(Stage stage, Object user, Vector2 defPosition, int width, int height, int shootPattern, int bulletNum,// 驚きの引数15個
-            bool shootManually, bool isSubsidiary, bool canBeDestroyed, int HP, int textureType, int bulletTextureType, float bulletSpeed)										// Raijin.thnderTurret
-            : this(stage, user, defPosition, width, height, shootPattern, bulletNum, shootManually, isSubsidiary, canBeDestroyed, HP, textureType, bulletTextureType, bulletSpeed, 0, 180, 20)
-        {
-        }
-
-		/// <summary>
-		/// 一番細かくパラメータを設定できるコンストラクタ。
-		/// </summary>
-		/// <param name="stage"></param>
-		/// <param name="user"></param>
-		/// <param name="defPosition"></param>
-		/// <param name="width"></param>
-		/// <param name="height"></param>
-		/// <param name="shootPattern"></param>
-		/// <param name="bulletNum"></param>
-		/// <param name="shootManually"></param>
-		/// <param name="isSubsidiary"></param>
-		/// <param name="canBeDestroyed"></param>
-		/// <param name="HP"></param>
-		/// <param name="textureType"></param>
-		/// <param name="bulletTextureType"></param>
-		/// <param name="bulletSpeed"></param>
-		/// <param name="shootOption"></param>
-		/// <param name="shootInterval"></param>
-		/// <param name="bulletInterval"></param>
-        public Turret(Stage stage, Object user, Vector2 defPosition, int width, int height, int shootPattern, int bulletNum,
-            bool shootManually, bool isSubsidiary, bool canBeDestroyed, int HP, int textureType, int bulletTextureType
-			, float bulletSpeed, int shootOption, int shootInterval, int bulletInterval)																						// Raijin.thnderTurret
-            : base(stage, defPosition.X, defPosition.Y, width, height, user)
-        {
-			// type0:bullet、type1:beam、type3:else
-            this.shootInterval = shootInterval;
-            this.bulletInterval = bulletInterval;
-            this.defaultPosition = defPosition;
-            this.shootPattern = shootPattern;
-            this.bulletNumber = bulletNum;
-			if (isSubsidiary) {
-				this.position = user.position + defPosition;					// (isSubsidiaryで呼び出すとこの時点でdefPosition = shootPositionである)
-			} else {
-				this.position = defPosition;
-			}
-            this.shootOption = shootOption;
-            this.shootManually = shootManually;
-            this.isSubsidiary = isSubsidiary;
-            this.canBeDestroyed = canBeDestroyed;
-            this.HP = HP;
-            this.textureType = textureType;
-            this.bulletTextureType = bulletTextureType;
-            this.bulletSpeed1D = bulletSpeed;
-
-			bullets = new List<Bullet>();
-            animation = new Animation(width, height);
-            AddBullets();													// 自身のbulletsListに追加
-			foreach (Bullet bullet in bullets) stage.bullets.Add(bullet);	// StageのListに追加
-			Load();
-        }*/
-		// Basic : userに追従して射撃するだけ																																				// ↓参照してるクラス
+		#region Constructors																																				// ↓参照してるクラス
 		public Turret(Stage stage, float x, float y, int width, int height)
-			: this(stage, null, new Vector2(0, 0), width, height)
-		{
-		}
-		public Turret(Stage stage, Object user, Vector2 shootPosition, int width, int height)
-			: this(stage, user, shootPosition, width, height, 0, 1)
-		{
-		}
-		public Turret(Stage stage, Object user, Vector2 shootPosition, int width, int height, int bulletType, int shootPattern)																	// Boss(4Fuujin)
-			: this(stage, user, shootPosition, width, height, bulletType, shootPattern, 3)
+			: this(stage, null, new Vector2(0, 0), width, height, 0, 0, 1)
 		{
 		}
 		public Turret(Stage stage, Object user, Vector2 shootPosition, int width, int height, int bulletType, int shootPattern, int bulletNum)													// FE, FE3, SE, SE3, Sword
@@ -229,92 +124,48 @@ namespace _2DActionGame
 		{
 		}
 		public Turret(Stage stage, Object user, Vector2 shootPosition, int width, int height, int bulletType, int shootPattern, int bulletNum, bool shootManually)								// Raijin.beamTurret
-			: this(stage, user, shootPosition, width, height, bulletType, shootPattern, bulletNum, shootManually, true, false, 1)
+			: this(stage, user, shootPosition, width, height, bulletType, shootPattern, bulletNum, shootManually, true)
 		{
-			shootPositions = new List<Vector2>();
-			shootPositions.Add(shootPosition);
-			this.shootPosition = shootPosition;
 		}
-
-		// Variation : 以下では自立して行動するTurretも生成可能
-		public Turret(Stage stage, Object user, Vector2 defPosition, int width, int height, int bulletType, int shootPattern, int bulletNum,
-			bool shootManually, bool isSubsidary, bool canBeDestroyed, int HP)// nothing
-			: this(stage, user, defPosition, width, height, bulletType, shootPattern, bulletNum, shootManually, isSubsidary, canBeDestroyed, HP, 0, 0)
+		public Turret(Stage stage, Object user, Vector2 shootPosition, int width, int height, int bulletType, int shootPattern, int bulletNum,
+			bool shootManually, bool isSubsidary)// nothing
+			: this(stage, user, shootPosition, width, height, bulletType, shootPattern, bulletNum, shootManually, isSubsidary, 0, 0)
 		{
 		}
 
-		public Turret(Stage stage, Object user, Vector2 defPosition, int width, int height, int bulletType, int shootPattern, int bulletNum,
-			bool shootManually, bool isSubsidiary, bool canBeDestroyed, int HP, int textureType, int bulletTextureType)																			// FE2, Raijin.ballTurret, Fuujin.cutterTurre, Rival.(thunderT, cutterT, syuriken)
-			: this(stage, user, defPosition, width, height, bulletType, shootPattern, bulletNum, shootManually, isSubsidiary, canBeDestroyed, HP, textureType, bulletTextureType, 14)
+		public Turret(Stage stage, Object user, Vector2 shootPosition, int width, int height, int bulletType, int shootPattern, int bulletNum,
+			bool shootManually, bool isSubsidiary, int textureType, int bulletTextureType)																			// FE2, Raijin.ballTurret, Fuujin.cutterTurre, Rival.(thunderT, cutterT, syuriken)
+			: this(stage, user, shootPosition, width, height, bulletType, shootPattern, bulletNum, shootManually, isSubsidiary, textureType, bulletTextureType, 14)
 		{
 		}
 
-		public Turret(Stage stage, Object user, Vector2 defPosition, int width, int height, int bulletType, int shootPattern, int bulletNum,
-			bool shootManually, bool isSubsidiary, bool canBeDestroyed, int HP, int textureType, int bulletTextureType, float bulletSpeed)
-			: this(stage, user, defPosition, width, height, bulletType, shootPattern, bulletNum, shootManually, isSubsidiary, canBeDestroyed, HP, textureType, bulletTextureType, bulletSpeed, 180, 20)
+		public Turret(Stage stage, Object user, Vector2 shootPosition, int width, int height, int bulletType, int shootPattern, int bulletNum,
+			bool shootManually, bool isSubsidiary, int textureType, int bulletTextureType, float bulletSpeed)
+			: this(stage, user, shootPosition, width, height, bulletType, shootPattern, bulletNum, shootManually, isSubsidiary, textureType, bulletTextureType, bulletSpeed, 180, 20)
 		{
 		}
 
 		/// <summary>
 		/// 一番細かくパラメータを設定できるコンストラクタ。
 		/// </summary>
-		/// <param name="stage"></param>
-		/// <param name="user"></param>
-		/// <param name="defPosition"></param>
-		/// <param name="width"></param>
-		/// <param name="height"></param>
-		/// <param name="shootPattern"></param>
-		/// <param name="bulletNum"></param>
-		/// <param name="shootManually"></param>
-		/// <param name="isSubsidiary"></param>
-		/// <param name="canBeDestroyed"></param>
-		/// <param name="HP"></param>
-		/// <param name="textureType"></param>
-		/// <param name="bulletTextureType"></param>
-		/// <param name="bulletSpeed"></param>
-		/// <param name="shootOption"></param>
-		/// <param name="shootInterval"></param>
-		/// <param name="bulletInterval"></param>
 		public Turret(Stage stage, Object user, Vector2 defPosition, int width, int height, int bulletType, int shootPattern, int bulletNum,
-			bool shootManually, bool isSubsidiary, bool canBeDestroyed, int HP, int textureType, int bulletTextureType
-			, float bulletSpeed, int shootInterval, int bulletInterval)																						// Raijin.thnderTurret, Raijin.thnderTurrets, Raijin.thnderTurret8Way
-			: base(stage, defPosition.X, defPosition.Y, width, height, user)
+			bool shootManually, bool isSubsidiary, int textureType, int bulletTextureType, float bulletSpeed, int shootInterval, int bulletInterval)				// Raijin.thnderTurret, Raijin.thnderTurrets, Raijin.thnderTurret8Way
+			: this(stage, user, defPosition, width, height, bulletType, shootPattern, bulletNum, shootManually, isSubsidiary, textureType, bulletTextureType
+			,bulletSpeed, shootInterval, bulletInterval, new Vector2(-bulletSpeed, 0), false, false)
 		{
-			// type0:bullet、type1:beam、type3:else
-			reuseBullets = true;
-			this.shootInterval = shootInterval;
-			this.bulletInterval = bulletInterval;
-			this.defaultPosition = defPosition;
-			this.bulletType = bulletType;
-			this.shootPattern = shootPattern;
-			this.bulletNumber = bulletNum;
-			if (isSubsidiary) {
-				this.position = user.position + defPosition;					// (isSubsidiaryで呼び出すとこの時点でdefPosition = shootPositionである)
-			} else {
-				this.position = defPosition;
-			}
-			this.shootManually = shootManually;
-			this.isSubsidiary = isSubsidiary;
-			this.canBeDestroyed = canBeDestroyed;
-			this.HP = HP;
-			this.textureType = textureType;
-			this.bulletTextureType = bulletTextureType;
-			this.bulletSpeed1D = bulletSpeed;
-
-			bullets = new List<Bullet>();
-			animation = new Animation(width, height);
-			AddBullets();													// 自身のbulletsListに追加
-			//foreach (Bullet bullet in bullets) stage.bullets.Add(bullet);	// StageのListに追加
-			Load();
 		}
 
 		public Turret(Stage stage, Object user, Vector2 defPosition, int width, int height, int bulletType, int shootPattern, int bulletNum,
-			bool shootManually, bool isSubsidiary, bool canBeDestroyed, int HP, int textureType, int bulletTextureType
+			bool shootManually, bool isSubsidiary, int textureType, int bulletTextureType
 			, float bulletSpeed, int shootInterval, int bulletInterval, Vector2 bulletSpeed1D, bool reuseBullet, bool customPattern, params int[] patternIndexes)																						// Raijin.thnderTurret, Raijin.thnderTurrets, Raijin.thnderTurret8Way
 			: base(stage, defPosition.X, defPosition.Y, width, height, user)
 		{
 			// type0:bullet、type1:beam、type3:else
-			reuseBullets = true;
+			shootPositions = new List<Vector2>();
+			shootPositions.Add(shootPosition);
+			//this.shootPosition = shootPosition;
+			isVisible = false;
+			//reuseBullets = true;
 			this.shootInterval = shootInterval;
 			this.bulletInterval = bulletInterval;
 			this.defaultPosition = defPosition;
@@ -418,7 +269,7 @@ namespace _2DActionGame
 		}
 		public override void Draw(SpriteBatch spriteBatch)
 		{
-			if ((isBeingUsed && canBeDestroyed && !isVisible) || (canBeDestroyed && isVisible)) {// 壊れない&&描画したいときもあるだろうが今はこの仕様で。
+			if ((isBeingUsed /*&& canBeDestroyed*/ && isVisible) /*|| (canBeDestroyed && isVisible)*/) {// 壊れない&&描画したいときもあるだろうが今はこの仕様で。
 				spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, MathHelper.ToRadians(-degree), Vector2.Zero, Vector2.One, SpriteEffects.None, 0);
 			}
 		}
