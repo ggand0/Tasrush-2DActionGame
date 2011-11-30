@@ -1496,7 +1496,7 @@ namespace _2DActionGame
 			}
 			if (!hasEffectedPlayerDeath && toGameOver) {
 				effectPlayerDeath.DrawPlayerDeathEffect(spriteBatch, 4
-					, new Vector2(player.position.X + player.width / 2, player.position.Y + player.height / 2), 60 / (float)4, 2, 1, 1);//Effect.deathEffectNum
+					, new Vector2(player.position.X + player.width / 2, player.position.Y + player.height / 2), 360 / (float)4, 2, 1, 1);//Effect.deathEffectNum
 			}
 
 			// debug

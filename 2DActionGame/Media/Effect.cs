@@ -196,17 +196,17 @@ namespace _2DActionGame
 				deathEffects.Add(new Object[deathEffectNum]);
 				
 			}
-			if (time == 1) DrawPlayerDeathEffect(spriteBatch,deathEffectNum , defPos, 360 / (float)(deathEffectNum * 2), speed + 1, maxTime ,time - 1);
+			if (time == 1) DrawPlayerDeathEffect(spriteBatch, deathEffectNum * 2, defPos, 360 / (float)(deathEffectNum * 2), speed + 1, maxTime, time - 1);
 
 			// 等幅で飛ぶようにspeedを与える。
-			float size = count[index] != 0 ? deathEffectMaxSize % counter / (float)deathEffectDelayTime : 0;
+			float size = count[index] != 0 ? deathEffectMaxSize % count[index] / (float)deathEffectDelayTime : 0;
 
 			// 初期化
 			//if (counter == deathEffectMaxSize) { counter = 0; }// counter>dEMだとdEM%cがdEMで止まってしまうのでリセット
 
 
 			if (count[index] % deathEffectMaxSize == 0) {
-				repeatTime++;
+				if (index == 0)	repeatTime++;
 				count[index] = 0;
 				deathEffects.Add(new Object[deathEffectNum]);
 
@@ -217,25 +217,25 @@ namespace _2DActionGame
 				//Object d = new Object();
 				//deathEffects[maxTime - time][i] = d;
 				if (count[index] == -1) {
-					deathEffects[maxTime - time][i] = new Object(stage, defPos.X, defPos.Y, 25, 25);
-					deathEffects[maxTime - time][i].Load(game.Content, "Effect\\playerDeathEffect0");
+					deathEffects[index][i] = new Object(stage, defPos.X, defPos.Y, 25, 25);
+					deathEffects[index][i].Load(game.Content, "Effect\\playerDeathEffect0");
 				} else if (count[index] == 0) {
-					deathEffects[maxTime - time][i].isActive = true;
-					stage.unitToAdd.Add(deathEffects[maxTime - time][i]);
+					deathEffects[index][i].isActive = true;
+					stage.unitToAdd.Add(deathEffects[index][i]);
 
-					deathEffects[maxTime - time][i].speed.X = (float)Math.Cos(MathHelper.ToRadians(direction * i)) * speed;
-					deathEffects[maxTime - time][i].speed.Y = (float)Math.Sin(MathHelper.ToRadians(direction * i)) * speed;
-				} else if (deathEffectMaxSize % counter == 0) {// counter % deathEffectDelayTime == 0
-					foreach (Object obj in deathEffects[maxTime - time]) obj.position = defPos;
+					deathEffects[index][i].speed.X = (float)Math.Cos(MathHelper.ToRadians(direction * i)) * speed;
+					deathEffects[index][i].speed.Y = (float)Math.Sin(MathHelper.ToRadians(direction * i)) * speed;
+				} else if (deathEffectMaxSize % count[index] == 0) {// counter % deathEffectDelayTime == 0
+					foreach (Object obj in deathEffects[index]) obj.position = defPos;
 				} else {
-					deathEffects[maxTime - time][i].position += deathEffects[maxTime - time][i].speed;
+					deathEffects[index][i].position += deathEffects[index][i].speed;
 					//deathEffects[i].drawPos = defPos;
-					deathEffects[maxTime - time][i].drawPos.X = deathEffects[maxTime - time][i].position.X - stage.camera.position.X;// スクロールもさせちゃう
-					deathEffects[maxTime - time][i].drawPos.Y = deathEffects[maxTime - time][i].position.Y;
-					deathEffects[maxTime - time][i].animation.Update(4, 0, 25, 25, 12, 1);
+					deathEffects[index][i].drawPos.X = deathEffects[index][i].position.X - stage.camera.position.X;// スクロールもさせちゃう
+					deathEffects[index][i].drawPos.Y = deathEffects[index][i].position.Y;
+					deathEffects[index][i].animation.Update(4, 0, 25, 25, 12, 1);
 
 					//deathEffects[i].Draw(spriteBatch);
-					spriteBatch.Draw(deathEffects[maxTime - time][i].texture, deathEffects[maxTime - time][i].drawPos, deathEffects[maxTime - time][i].animation.rect, Color.White, 0, Vector2.Zero, new Vector2(size), SpriteEffects.None, 0);
+					spriteBatch.Draw(deathEffects[index][i].texture, deathEffects[index][i].drawPos, deathEffects[index][i].animation.rect, Color.White, 0, Vector2.Zero, new Vector2(size), SpriteEffects.None, 0);
 					// debug : //spriteBatch.DrawString(game.Arial, (deathEffectMaxSize % counter).ToString(), new Vector2(0, 250), Color.Orange);
 				}
 			}
