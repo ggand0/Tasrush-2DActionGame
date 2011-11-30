@@ -159,6 +159,7 @@ namespace _2DActionGame
 			set { this.scrollSpeed = value; }
 		}
 		public Vector2 bossLocation { get; set; }
+		//private Vector2 playerDeathDrawPos { get; private set; }
 		public float surfaceHeightAtBoss { get; set; }
 		private bool hasPlayedSE { get; set; }
 		/// <summary>
@@ -1128,8 +1129,7 @@ namespace _2DActionGame
 			if (isScrolled && (player.position.X <= camera.position.X && player.isHitLeftSide/*&&
 				   activeStaticTerrains.Any((x) => !(x is Slope) && !x.isRightSlope && !x.isLeftSlope && x.isLeft && !x.isRight
 					   && x.position.X < player.position.X + player.width && player.position.Y + player.height > x.position.Y + adj && player.position.Y + adj < x.position.Y + x.height))*/
-																																															)) {
-
+				)) {
 				player.position = new Vector2(camera.position.X + 320, 100);
 				adObjects.Add(new Object2(camera, player));
 				player.isDamaged = true;
@@ -1141,7 +1141,10 @@ namespace _2DActionGame
 
 			/// Game Over処理
 			if (!toGameOver && (player.HP < 1 || player.position.Y > 540)) {// 600 546
-				isScrolled = false;
+				camera.isScrollingToPlayer = true;// スクロールモードの差を取り除く
+				//playerDeathDrawPos = player.drawPos;
+				//player.position += Player.screenPosition;
+				camera.position.X -= Player.screenPosition.X; //player.drawPos == (-8, 199.8); 2430
 				player.isAlive = false;
 				toGameOver = true;
 				hasEffectedPlayerDeath = false;
@@ -1495,10 +1498,11 @@ namespace _2DActionGame
 				effectBoss.DrawBossDeathEffect(spriteBatch, boss);
 			}
 			if (!hasEffectedPlayerDeath && toGameOver) {
+				//camera.position//2965
 				effectPlayerDeath.DrawPlayerDeathEffect(spriteBatch, 4
 					, new Vector2(player.position.X + player.width / 2, player.position.Y + player.height / 2), 360 / (float)4, 2, 1, 1);//Effect.deathEffectNum
-			}
-
+			}//player.drawPos == (200, y) やっぱりずれてた
+			
 			// debug
 			debug.Draw(spriteBatch);
 			//foreach (Terrain t in activeStaticTerrains) if (t is Block && (t as Block).IsInterrupt(player)) spriteBatch.DrawString(game.pumpDemi, "this is it!!", t.drawPos, Color.White);

@@ -19,6 +19,7 @@ namespace _2DActionGame
 	{
 		#region Member variable
 		// Const
+		public new readonly float defActiveDistance = 99999999;// ∞もしくはCamera.ScrollUpdate()内で例外的に処理させるもしくはボス戦中端に壁を設けるなりしていけないようにする
 		/// <summary>
 		/// スクリーン座標：画面上にもってきたい位置：画面スクロール中Playerはずっとこの位置
 		/// </summary>
@@ -159,6 +160,7 @@ namespace _2DActionGame
 			LoadXML("Player", "Xml\\Objects_Base.xml");
 			this.TASpower = initialTAS;
 			this.HP = HP;
+			this.activeDistance = defActiveDistance;
 			sword = new Sword(stage, 200, 100, 64, 8, this);
 			turnsRight = true;
 			animation = new Animation(width, height);
@@ -1010,11 +1012,8 @@ namespace _2DActionGame
 				UpdateAnimation(KeyCheck(), ButtonCheck(), StickCheck());
 				UpdateNumbers();
 
-				//if (!isAlive) foreach (Object obj in deathEffects) obj.position = position + new Vector2(width/2, height/2);
 				counter++;
 				AirReflectUpdate();
-
-			} else {
 			}
 		}
 

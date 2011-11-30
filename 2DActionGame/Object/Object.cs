@@ -183,7 +183,7 @@ namespace _2DActionGame
 		}
 		public Object(Stage stage, float x, float y, int width, int height)
 		{
-			LoadXML("Object", "Xml\\Objects_Base.xml");//"Objects_Base"
+			LoadXML("Object", "Xml\\Objects_Base.xml");
 			this.stage = stage;
 			this.width = width;
 			this.height = height;

@@ -12,6 +12,8 @@ namespace _2DActionGame
     /// </summary>
     public class FlyingOutEnemy2 : FlyingOutEnemy
     {
+		// baseクラスで使われるときはbaseクラスに定義してある同名の定数が使われてしまうので非常に危険な気がしてきた
+		// base.MovementUpdate();とかやると一発アウトな気がしてならない
 		protected new readonly float defSpeed = 2;
 		protected new readonly float defFlyingOutDistance　= 300;
 		protected new readonly float defFlyingOutSpeed= -12;

@@ -181,7 +181,14 @@ namespace _2DActionGame
 		}
 		/// <summary>
 		/// Player死亡時のエフェクトを描画するメソッド。ティウンティウン描画
+		/// 二重以上に描画したいときは再帰させる。今のところ二重のみ
 		/// </summary>
+		/// <param name="deathEffectNum">描画する弾の数</param>
+		/// <param name="direction">角度の間隔</param>
+		/// <param name="defPos">エフェクトを描画する中心の座標</param>
+		/// <param name="maxTime">何重にするか</param>
+		/// <param name="speed">弾の速度</param>
+		/// <param name="time">何重目の描画か。再帰で使う</param>
 		public void DrawPlayerDeathEffect(SpriteBatch spriteBatch, int deathEffectNum
 			, Vector2 defPos , float direction, float speed, int maxTime, int time)
 		{
@@ -192,19 +199,11 @@ namespace _2DActionGame
 			int index = maxTime - time;
 			if (count.Count == index) count.Add(-1);
 			//DrawPlayerDeathEffectOutSide(spriteBatch);
-			if (count[index] == -1) {
-				deathEffects.Add(new Object[deathEffectNum]);
-				
-			}
+			if (count[index] == -1)	deathEffects.Add(new Object[deathEffectNum]);
 			if (time == 1) DrawPlayerDeathEffect(spriteBatch, deathEffectNum * 2, defPos, 360 / (float)(deathEffectNum * 2), speed + 1, maxTime, time - 1);
 
 			// 等幅で飛ぶようにspeedを与える。
 			float size = count[index] != 0 ? deathEffectMaxSize % count[index] / (float)deathEffectDelayTime : 0;
-
-			// 初期化
-			//if (counter == deathEffectMaxSize) { counter = 0; }// counter>dEMだとdEM%cがdEMで止まってしまうのでリセット
-
-
 			if (count[index] % deathEffectMaxSize == 0) {
 				if (index == 0)	repeatTime++;
 				count[index] = 0;
@@ -214,8 +213,6 @@ namespace _2DActionGame
 			}
 
 			for (int i = 0; i < deathEffectNum; i++) {
-				//Object d = new Object();
-				//deathEffects[maxTime - time][i] = d;
 				if (count[index] == -1) {
 					deathEffects[index][i] = new Object(stage, defPos.X, defPos.Y, 25, 25);
 					deathEffects[index][i].Load(game.Content, "Effect\\playerDeathEffect0");
@@ -229,12 +226,10 @@ namespace _2DActionGame
 					foreach (Object obj in deathEffects[index]) obj.position = defPos;
 				} else {
 					deathEffects[index][i].position += deathEffects[index][i].speed;
-					//deathEffects[i].drawPos = defPos;
 					deathEffects[index][i].drawPos.X = deathEffects[index][i].position.X - stage.camera.position.X;// スクロールもさせちゃう
 					deathEffects[index][i].drawPos.Y = deathEffects[index][i].position.Y;
 					deathEffects[index][i].animation.Update(4, 0, 25, 25, 12, 1);
 
-					//deathEffects[i].Draw(spriteBatch);
 					spriteBatch.Draw(deathEffects[index][i].texture, deathEffects[index][i].drawPos, deathEffects[index][i].animation.rect, Color.White, 0, Vector2.Zero, new Vector2(size), SpriteEffects.None, 0);
 					// debug : //spriteBatch.DrawString(game.Arial, (deathEffectMaxSize % counter).ToString(), new Vector2(0, 250), Color.Orange);
 				}
