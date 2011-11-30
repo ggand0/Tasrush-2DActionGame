@@ -40,10 +40,11 @@ namespace _2DActionGame
                 if(weapon is Turret) weapon.Load(game.Content, "Object\\Turret&Bullet" + "\\" + "windTurret2");
             }
 
-			if (!game.isHighLvl)
+			if (!game.isHighLvl) {
 				SoundControl.IniMusic("Audio\\BGM\\machine");
-			else
+			} else {
 				SoundControl.IniMusic("Audio\\BGM\\boss");
+			} SoundControl.musicInstance.IsLooped = true;
 			if (!game.isMuted) SoundControl.Play();
         }
 		public override void Update(double dt)

@@ -13,7 +13,9 @@ namespace _2DActionGame
 	public class Boss : Enemy
 	{
 		private SoundEffect hitSoundSmall;
-		public Object bind;
+		public Object bind { get; protected set; }
+		protected readonly Vector2 bindSize = new Vector2(200, 200);
+		protected readonly Vector2 bindPos = new Vector2(100, 100);
 		//private int turretNum;// turretの数
 
 		/// <summary>
@@ -235,7 +237,10 @@ namespace _2DActionGame
 		{
 			if (attackList == null) attackList = new List<int>();
 
-			bind = new Object(stage, 200, 200);
+			bind = new Object(stage, (int)bindSize.X, (int)bindSize.Y);
+			bind.Load(game.Content, "Debug\\debugBind");
+			//stage.objects.Add(bind);
+
 			isWaiting = true;
 			// Turretの、boss矩形内の配置位置（適当においただけ）
 			shootPosition = new List<Vector2>();
@@ -265,9 +270,16 @@ namespace _2DActionGame
 					weapon.isBeingUsed = false;
 				}
 			}
-			bind.position = this.position + new Vector2(100, 100);
+			bind.position = this.position + bindPos;
+			bind.drawPos = this.drawPos + bindPos;
 
 			base.Update();
+		}
+		public override void Draw(SpriteBatch spriteBatch)
+		{
+			base.Draw(spriteBatch);
+			if (game.inDebugMode) spriteBatch.Draw(bind.texture, new Rectangle((int)bind.drawPos.X, (int)bind.drawPos.Y, (int)bindSize.X, (int)bindSize.Y)
+				, new Rectangle(0, 0, (int)bindSize.X, (int)bindSize.Y), Color.White);
 		}
 		/// <summary>
 		/// 今のところBossは仰け反らない仕様

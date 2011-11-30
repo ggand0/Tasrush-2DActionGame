@@ -16,6 +16,8 @@ namespace _2DActionGame
 		public static Game1 game { get; private set; }
 		public static ContentManager content { get; private set; }
 		public static float volumeAll = defVolume;
+		public static SoundEffect menuMusic, music;
+		public static SoundEffectInstance menuMusicInstance, musicInstance;
 
 		static SoundControl()
 		{
@@ -29,8 +31,7 @@ namespace _2DActionGame
 
 			menuMusicInstance.Volume = defVolume;
 		}
-		public static SoundEffect menuMusic, music;
-		public static SoundEffectInstance menuMusicInstance, musicInstance;
+		
 		public static void IniMusic(string fileName)
 		{
 			music = content.Load<SoundEffect>(fileName);

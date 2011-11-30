@@ -135,11 +135,13 @@ namespace _2DActionGame
 		public int damageTime { get; private set; }
 		private int thrustCount = thrustingTime;
 
+		// 空中斬りの反動関係
 		public bool inAirReflection { get; private set; }
-		private int airReflectCount, airReflectTime;
-		private int airReflectLimit = 30;
 		private bool disableMovingInput;
+		private int airReflectCount, airReflectTime;
+		private static readonly int airReflectLimit = 15;//30		
 		private Vector2 reflectSpeed;
+		public static readonly Vector2 defReflectSpeed = new Vector2(4, -6);
 		
 		#endregion
 
@@ -162,7 +164,6 @@ namespace _2DActionGame
 			animation = new Animation(width, height);
 			syouryuuMode = true;
 
-			
 			Load();
 		}
 		protected override void Load()
@@ -1157,7 +1158,6 @@ namespace _2DActionGame
 		#endregion
 		#region Movement
 		// ジャンプ・特殊移動など
-
 		private void Jump(int jumpPower)
 		{
 			isJumping = true;
@@ -1273,22 +1273,6 @@ namespace _2DActionGame
 			}
 			position.X += speed.X * timeCoef;
 		}
-		public void SwordReflection(Object targetObject)
-		{
-			if (position.X - targetObject.position.X > 0) speed.X = 5;
-			else speed.X = -5;
-			position.X += speed.X * timeCoef;
-		}
-		public void AirSlashReflection(Vector2 reflectSpeeed)
-		{
-			if (isJumping && (isAttacking1 || isAttacking2)) {//!isOnSomething
-				inAirReflection = true;
-				//disableMovingInput = true;
-				airReflectCount = 0;
-
-				AdjustReflect(reflectSpeeed);
-			}
-		}
 		private void AdjustReflect(Vector2 reflectSpeed)
 		{
 			if (airReflectTime != 0)
@@ -1304,13 +1288,28 @@ namespace _2DActionGame
 		private void AirReflectUpdate()
 		{
 			airReflectCount++;
-			airReflectLimit = 15;
 			if (inAirReflection && airReflectCount == 1) AdjustReflect(reflectSpeed);
 			if (inAirReflection && airReflectCount > airReflectLimit) {
 				inAirReflection = disableMovingInput = false;
 				//airReflectTime++;
 			}
 			if (isOnSomething) airReflectTime = 0;
+		}
+		public void SwordReflection(Object targetObject)
+		{
+			if (position.X - targetObject.position.X > 0) speed.X = 5;
+			else speed.X = -5;
+			position.X += speed.X * timeCoef;
+		}
+		public void AirSlashReflection(Vector2 reflectSpeeed)
+		{
+			if (isJumping && (isAttacking1 || isAttacking2)) {//!isOnSomething
+				inAirReflection = true;
+				//disableMovingInput = true;
+				airReflectCount = 0;
+
+				AdjustReflect(reflectSpeeed);
+			}
 		}
 		#endregion
 

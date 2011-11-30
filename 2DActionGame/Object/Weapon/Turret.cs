@@ -164,7 +164,7 @@ namespace _2DActionGame
 			shootPositions = new List<Vector2>();
 			shootPositions.Add(shootPosition);
 			//this.shootPosition = shootPosition;
-			isVisible = false;
+			isVisible = true;//false
 			//reuseBullets = true;
 			this.shootInterval = shootInterval;
 			this.bulletInterval = bulletInterval;

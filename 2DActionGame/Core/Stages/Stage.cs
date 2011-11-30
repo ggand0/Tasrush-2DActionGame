@@ -991,7 +991,7 @@ namespace _2DActionGame
 						// character==weapon.userなら無視 12/27:別の場所でisDamaged=trueになったため当たり判定せずにListに追加しちゃってる状況らしい.(雪玉に当たった)
 						if (character == weapon.user) continue;
 						else {
-							if (weapon is Sword && weapon.user is Player) player.AirSlashReflection(new Vector2(4, -6));//8, -8
+							if (weapon is Sword && weapon.user is Player) player.AirSlashReflection(Player.defReflectSpeed);//8, -8
 							
 							attackedObjects.Add(weapon.user != null ? weapon.user as Object : weapon);
 							damagedObjects.Add(character);
@@ -1094,7 +1094,7 @@ namespace _2DActionGame
 					if (!(character is Player) && character is Enemy && character.isAlive && !(character as Enemy).isWinced) {
 						if (!(character is Boss)) {
 							CollisionDetection.RectangleDetection(character, player, 0);
-						} else {
+						} else {// Bossは判定範囲をbindで指定する
 							CollisionDetection.RectangleDetection((character as Boss).bind, player, 0);//1
 						}
 						if (player.isDamaged) {
@@ -1359,8 +1359,8 @@ namespace _2DActionGame
 					SoundControl.IniMusic("Audio\\BGM\\hard_last");
 				} else {
 					//BGM = game.soundBank.GetCue("boss_nomal");
-					SoundControl.IniMusic("Audio\\BGM\\hard_last");
-				}
+					SoundControl.IniMusic("Audio\\BGM\\boss_nomal");
+				} SoundControl.musicInstance.IsLooped = true;
 
 				if (!game.isMuted) SoundControl.Play();
 				BGMchanged = true;
@@ -1483,18 +1483,21 @@ namespace _2DActionGame
 				scrollingTASEffect.Draw(spriteBatch);
 
 			// Scene Effects
-			if (!hasEffectedBeginning)
+			if (!hasEffectedBeginning && !game.hasReachedCheckPoint) {
 				effectStage.DrawStageScreenEffect(spriteBatch, game.stageNum, 120);
+			}
 			if (!hasEffectedWarning && toBossScene) {
 				//if (BGM != null && !BGM.IsPaused && !BGM.IsStopped) BGM.Pause();
 				effectBoss.DrawBossScreenEffect(spriteBatch, 180);
 				//inBossBattle = true;
 			}
-			if (!hasEffectedBossExplosion && game.stageNum != 0 && !boss.isAlive)
+			if (!hasEffectedBossExplosion && game.stageNum != 0 && !boss.isAlive) {
 				effectBoss.DrawBossDeathEffect(spriteBatch, boss);
-
-			if (!hasEffectedPlayerDeath && toGameOver)
-				effectPlayerDeath.DrawPlayerDeathEffect(spriteBatch);
+			}
+			if (!hasEffectedPlayerDeath && toGameOver) {
+				effectPlayerDeath.DrawPlayerDeathEffect(spriteBatch, 4
+					, new Vector2(player.position.X + player.width / 2, player.position.Y + player.height / 2), 60 / (float)4, 2, 1, 1);//Effect.deathEffectNum
+			}
 
 			// debug
 			debug.Draw(spriteBatch);

@@ -47,6 +47,7 @@ namespace _2DActionGame
             //if (!game.isMuted) BGM.Play(SoundControl.volumeAll, 0f, 0f);
 			SoundControl.Stop();
 			SoundControl.IniMusic("Audio\\BGM\\forest");
+			SoundControl.musicInstance.IsLooped = true;
 			if (!game.isMuted) SoundControl.Play();
         }
 

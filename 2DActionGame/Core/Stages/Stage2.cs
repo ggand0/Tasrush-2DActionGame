@@ -22,8 +22,8 @@ namespace _2DActionGame
 			} else {
 				LoadMapData(1, "Stage2_Hard.txt", 0, 0);
 				SoundControl.IniMusic("Audio\\BGM\\ice");
-			}
-
+			} SoundControl.musicInstance.IsLooped = true;
+			
             player = new Player(this, 100, 100, 48, 48, 10);
             characters.Add(player);
             sword = player.sword;

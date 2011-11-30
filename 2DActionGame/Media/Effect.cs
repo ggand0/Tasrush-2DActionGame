@@ -23,7 +23,8 @@ namespace _2DActionGame
 		/// <summary>
 		/// ティウン時に出す弾エフェクトの数。
 		/// </summary>
-		private const int deathEffectNum = 4;
+		//public const int deathEffectNum = 4;
+		//private const int deathEffectNum = 4;
 		/// <summary>
 		/// プレイヤーのdeathEffect時のパラメータ。素数にする
 		/// </summary>
@@ -39,13 +40,15 @@ namespace _2DActionGame
 		/// <summary>
 		/// プレイヤーのティウン時に撒き散らす弾エフェクト
 		/// </summary>
-		private Object[] deathEffects = new Object[deathEffectNum];
-		private Object[] deathEffectsOutSide = new Object[deathEffectNum * 2];
+		//private Object[] deathEffects;// = new Object[deathEffectNum];
+		private List<Object[]> deathEffects = new List<Object[]>();
+		//private Object[] deathEffectsOutSide = new Object[deathEffectNum * 2];
 
 		private float dColor;
 		private int counter;
 		private int time;
 		private bool fadeOut;
+		private List<int> count = new List<int>();
 		private bool hasPlayedSoundEffect;
 
 		private Texture2D[] textures = new Texture2D[10];
@@ -101,7 +104,6 @@ namespace _2DActionGame
 		/// <summary>
 		/// Update兼Draw
 		/// </summary>
-		/// <param name="spriteBatch"></param>
 		public void DrawObjectEffects(SpriteBatch spriteBatch)
 		{
 			if (targetObject.damageEffected) {
@@ -178,56 +180,71 @@ namespace _2DActionGame
 			}
 		}
 		/// <summary>
-		/// Player死亡時のエフェクトを描画するメソッド。ティウンティウン
+		/// Player死亡時のエフェクトを描画するメソッド。ティウンティウン描画
 		/// </summary>
-		public void DrawPlayerDeathEffect(SpriteBatch spriteBatch)
+		public void DrawPlayerDeathEffect(SpriteBatch spriteBatch, int deathEffectNum
+			, Vector2 defPos , float direction, float speed, int maxTime, int time)
 		{
-			Vector2 defPos = new Vector2(stage.player.position.X + stage.player.width / 2, stage.player.position.Y + stage.player.height / 2);
-			float direction = 360 / (float)deathEffectNum;
-			float speed = 2;
-
-			DrawPlayerDeathEffectOutSide(spriteBatch);
+			// VS2008EE(恐らくC#4.0未対応)だとデフォルト引数が使えない！
+			//Vector2 defPos = new Vector2(stage.player.position.X + stage.player.width / 2, stage.player.position.Y + stage.player.height / 2);
+			//float direction = 360 / (float)deathEffectNum;
+			//float speed = 2;
+			int index = maxTime - time;
+			if (count.Count == index) count.Add(-1);
+			//DrawPlayerDeathEffectOutSide(spriteBatch);
+			if (count[index] == -1) {
+				deathEffects.Add(new Object[deathEffectNum]);
+				
+			}
+			if (time == 1) DrawPlayerDeathEffect(spriteBatch,deathEffectNum , defPos, 360 / (float)(deathEffectNum * 2), speed + 1, maxTime ,time - 1);
 
 			// 等幅で飛ぶようにspeedを与える。
-			float size = counter != 0 ? deathEffectMaxSize % counter / (float)deathEffectDelayTime : 0;
+			float size = count[index] != 0 ? deathEffectMaxSize % counter / (float)deathEffectDelayTime : 0;
 
 			// 初期化
 			//if (counter == deathEffectMaxSize) { counter = 0; }// counter>dEMだとdEM%cがdEMで止まってしまうのでリセット
-			if (counter % deathEffectMaxSize == 0) {
+
+
+			if (count[index] % deathEffectMaxSize == 0) {
 				repeatTime++;
-				counter = 0;
+				count[index] = 0;
+				deathEffects.Add(new Object[deathEffectNum]);
+
 				playerDeath.Play(SoundControl.volumeAll, 0f, 0f);
 			}
 
 			for (int i = 0; i < deathEffectNum; i++) {
-				if (counter == -1) {
-					deathEffects[i] = new Object(stage, defPos.X, defPos.Y, 25, 25);
-					deathEffects[i].Load(game.Content, "Effect\\playerDeathEffect0");
-				} else if (counter == 0) {
-					deathEffects[i].isActive = true;
-					stage.unitToAdd.Add(deathEffects[i]);
+				//Object d = new Object();
+				//deathEffects[maxTime - time][i] = d;
+				if (count[index] == -1) {
+					deathEffects[maxTime - time][i] = new Object(stage, defPos.X, defPos.Y, 25, 25);
+					deathEffects[maxTime - time][i].Load(game.Content, "Effect\\playerDeathEffect0");
+				} else if (count[index] == 0) {
+					deathEffects[maxTime - time][i].isActive = true;
+					stage.unitToAdd.Add(deathEffects[maxTime - time][i]);
 
-					deathEffects[i].speed.X = (float)Math.Cos(MathHelper.ToRadians(direction * i)) * speed;
-					deathEffects[i].speed.Y = (float)Math.Sin(MathHelper.ToRadians(direction * i)) * speed;
+					deathEffects[maxTime - time][i].speed.X = (float)Math.Cos(MathHelper.ToRadians(direction * i)) * speed;
+					deathEffects[maxTime - time][i].speed.Y = (float)Math.Sin(MathHelper.ToRadians(direction * i)) * speed;
 				} else if (deathEffectMaxSize % counter == 0) {// counter % deathEffectDelayTime == 0
-					foreach (Object obj in deathEffects) obj.position = defPos;
+					foreach (Object obj in deathEffects[maxTime - time]) obj.position = defPos;
 				} else {
-					deathEffects[i].position += deathEffects[i].speed;
-					deathEffects[i].drawPos.X = deathEffects[i].position.X - stage.camera.position.X;
-					deathEffects[i].drawPos.Y = deathEffects[i].position.Y;
-					deathEffects[i].animation.Update(4, 0, 25, 25, 12, 1);
+					deathEffects[maxTime - time][i].position += deathEffects[maxTime - time][i].speed;
+					//deathEffects[i].drawPos = defPos;
+					deathEffects[maxTime - time][i].drawPos.X = deathEffects[maxTime - time][i].position.X - stage.camera.position.X;// スクロールもさせちゃう
+					deathEffects[maxTime - time][i].drawPos.Y = deathEffects[maxTime - time][i].position.Y;
+					deathEffects[maxTime - time][i].animation.Update(4, 0, 25, 25, 12, 1);
 
 					//deathEffects[i].Draw(spriteBatch);
-					spriteBatch.Draw(deathEffects[i].texture, deathEffects[i].drawPos, deathEffects[i].animation.rect, Color.White, 0, Vector2.Zero, new Vector2(size), SpriteEffects.None, 0);
-					spriteBatch.DrawString(game.Arial, (deathEffectMaxSize % counter).ToString(), new Vector2(0, 250), Color.Orange);
+					spriteBatch.Draw(deathEffects[maxTime - time][i].texture, deathEffects[maxTime - time][i].drawPos, deathEffects[maxTime - time][i].animation.rect, Color.White, 0, Vector2.Zero, new Vector2(size), SpriteEffects.None, 0);
+					// debug : //spriteBatch.DrawString(game.Arial, (deathEffectMaxSize % counter).ToString(), new Vector2(0, 250), Color.Orange);
 				}
 			}
 
-			counter++;
+			count[index]++;
 			//if (counter > deathEffectMaxSize * 2) stage.hasEffectedPlayerDeath = true;	// 120
 			if (repeatTime > 2) stage.hasEffectedPlayerDeath = true;
 		}
-		public void DrawPlayerDeathEffectOutSide(SpriteBatch spriteBatch)
+		/*public void DrawPlayerDeathEffectOutSide(SpriteBatch spriteBatch)
 		{
 			Vector2 defPos = new Vector2(stage.player.position.X + stage.player.width / 2, stage.player.position.Y + stage.player.height / 2);
 			float direction = 360 / (float)(deathEffectNum * 2);
@@ -257,7 +274,7 @@ namespace _2DActionGame
 					spriteBatch.Draw(deathEffectsOutSide[i].texture, deathEffectsOutSide[i].drawPos, deathEffectsOutSide[i].animation.rect, Color.White, 0, Vector2.Zero, new Vector2(size), SpriteEffects.None, 0);
 				}
 			}
-		}
+		}*/
 
 		/// <summary>
 		/// screen関係
