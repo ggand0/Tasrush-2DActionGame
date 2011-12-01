@@ -11,6 +11,10 @@ namespace _2DActionGame
     public class Block : Terrain
     {
 		/// <summary>
+		/// 辺の数
+		/// </summary>
+		public const byte sideNum = 4;
+		/// <summary>
 		/// 天井か地面か。天井用のBLockは反転させて描画する
 		/// </summary>
         public bool onCeiling { get; private set; }
@@ -24,9 +28,9 @@ namespace _2DActionGame
         public bool ontop, onleft, onright, onBottom; 
         private int textureType;
 
-        public Vector2[] sideVector = new Vector2[4];
-        public Vector2[] sideVectorStart = new Vector2[4];
-        public Vector2[] sideVectorEnd = new Vector2[4];
+        public Vector2[] sideVector = new Vector2[sideNum];
+		public Vector2[] sideVectorStart = new Vector2[sideNum];
+		public Vector2[] sideVectorEnd = new Vector2[sideNum];
 		
 		private Vector2[] locusVectors = new Vector2[10];
 		private Vector2 locusVec;
@@ -251,12 +255,12 @@ namespace _2DActionGame
         }
         public void IsHit(Object targetObject, Vector2 vec)
         {
-            if(targetObject.firstTimeInAFrame) {
-                isHit = false;
-                targetObject.firstTimeInAFrame = false;
-                isHitCB = false;
-                targetObject.isOnSomething = false;
-            }
+			if (targetObject.firstTimeInAFrame) {
+				isHit = false;
+				targetObject.firstTimeInAFrame = false;
+				isHitCB = false;
+				targetObject.isOnSomething = false;
+			}
             if (vec.X + targetObject.width < position.X) {
 			} else if (position.X + width < vec.X) {
 			} else if (vec.Y + targetObject.height < position.Y) {

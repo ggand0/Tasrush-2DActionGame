@@ -1153,7 +1153,7 @@ namespace _2DActionGame
 				SoundControl.Stop();
 				PushScene(new GameOver(this));
 			}
-			if (boss.position.Y > 600) boss.isAlive = false;								// characterが自分で殺すようにする...?
+			if (boss.position.Y > 600) boss.isAlive = false;// characterが自分で殺すようにする...?
 			if (hasEffectedBossExplosion && game.stageNum != 0 && !boss.isAlive) {
 				SoundControl.Stop();
 				PushScene(new ClearScene(this));
