@@ -41,23 +41,23 @@ namespace _2DActionGame
         {
 			base.ButtonUpdate();
 
-            if (button[0].isSelected && Controller.IsOnKeyDown(3)) {
+            if (button[0].isSelected && JoyStick.IsOnKeyDown(3)) {
 				PushScene(new LvlSelect(this));
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
             }
-			if (button[1].isSelected && Controller.IsOnKeyDown(3)) {
+			if (button[1].isSelected && JoyStick.IsOnKeyDown(3)) {
 				PushScene(new Tutorial(this));
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
             }
-			if (button[2].isSelected && Controller.IsOnKeyDown(3)) {
+			if (button[2].isSelected && JoyStick.IsOnKeyDown(3)) {
 				PushScene(new Option(this));
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
             }
-			if (button[3].isSelected && Controller.IsOnKeyDown(3)) {
+			if (button[3].isSelected && JoyStick.IsOnKeyDown(3)) {
 				PushScene(new StageSelect(this));
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
             }
-			if (button[4].isSelected && Controller.IsOnKeyDown(3)) {
+			if (button[4].isSelected && JoyStick.IsOnKeyDown(3)) {
 				PushScene(new Ranking(this));
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 			}

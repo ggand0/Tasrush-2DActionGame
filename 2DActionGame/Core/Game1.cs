@@ -91,7 +91,7 @@ namespace _2DActionGame
 
 			random = new Random();
             
-			//isMuted = true;
+			isMuted = true;
 			//noEnemy = true;
         }
 		
@@ -179,7 +179,8 @@ namespace _2DActionGame
                 this.Exit();
 
             // TODO: Add your update logic here
-            Controller.Update(1);
+            //JoyStick.Update(1);
+            JoyStick.Update(1);
 			KeyInput.Update();
 			dt = gameTime.ElapsedGameTime.TotalSeconds;
 

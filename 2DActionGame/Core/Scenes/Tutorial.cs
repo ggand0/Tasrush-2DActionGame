@@ -28,10 +28,10 @@ namespace _2DActionGame
 		}
 		public override void Update(double dt)
 		{
-			if (Controller.IsOnKeyDown(2)) {
+			if (JoyStick.IsOnKeyDown(2)) {
 				isEndScene = true;
 			}
-			if (Controller.IsOnKeyDown(3)) {
+			if (JoyStick.IsOnKeyDown(3)) {
 				page++;
 				if (page >= pageNum) {
 					page = pageNum - 1;

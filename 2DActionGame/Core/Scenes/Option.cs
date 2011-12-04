@@ -38,25 +38,25 @@ namespace _2DActionGame
         {
 			base.ButtonUpdate();
 
-            if (button[0].isSelected && Controller.IsOnKeyDown(3)) {						// KeyConfig
+            if (button[0].isSelected && JoyStick.IsOnKeyDown(3)) {						// KeyConfig
 				game.PushScene(new KeyConfig(this));
                 if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
             }
-			if (button[1].isSelected && Controller.IsOnKeyDown(3)) {						// FullScreen / Window
+			if (button[1].isSelected && JoyStick.IsOnKeyDown(3)) {						// FullScreen / Window
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 				game.graphics.ToggleFullScreen();
             }
-			if (button[2].isSelected && Controller.KEY(3) && counter % 10 == 0) {			// Volume Control
+			if (button[2].isSelected && JoyStick.KEY(3) && counter % 10 == 0) {			// Volume Control
 				game.wholeVolume = SoundControl.volumeAll += .05f;
 				if (SoundControl.volumeAll > 1.0f) 
 					game.wholeVolume = SoundControl.volumeAll = 0;
             }
-			if (button[3].isSelected && Controller.IsOnKeyDown(3)) {						// Mute
+			if (button[3].isSelected && JoyStick.IsOnKeyDown(3)) {						// Mute
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 				if (!game.isMuted) game.isMuted = true;
 				else game.isMuted = false;
 			}
-			if (button[4].isSelected && Controller.IsOnKeyDown(3)) {						// Back To Menu
+			if (button[4].isSelected && JoyStick.IsOnKeyDown(3)) {						// Back To Menu
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 				isEndScene = true;
 			}

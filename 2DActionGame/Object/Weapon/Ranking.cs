@@ -34,7 +34,7 @@ namespace _2DActionGame
 		{
 			base.ButtonUpdate();
 
-			if (button[0].isSelected && Controller.IsOnKeyDown(3)) {
+			if (button[0].isSelected && JoyStick.IsOnKeyDown(3)) {
 				if (!game.isMuted) cancel.Play(SoundControl.volumeAll, 0f, 0f);
 				isEndScene = true;
 			}

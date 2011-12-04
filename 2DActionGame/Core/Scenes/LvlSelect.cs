@@ -35,12 +35,12 @@ namespace _2DActionGame
         {
 			base.ButtonUpdate();
 
-			if (button[0].isSelected && Controller.IsOnKeyDown(3)) {
+			if (button[0].isSelected && JoyStick.IsOnKeyDown(3)) {
                 game.isHighLvl = false;
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 				PushScene(new AvilitySelect(this));
             }
-			if (button[1].isSelected && Controller.IsOnKeyDown(3)) {
+			if (button[1].isSelected && JoyStick.IsOnKeyDown(3)) {
                 game.isHighLvl = true;
                 if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 				PushScene(new AvilitySelect(this));

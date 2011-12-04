@@ -47,26 +47,26 @@ namespace _2DActionGame
 			base.ButtonUpdate();
 
 			if (!waitingInput) {
-				if (button[0].isSelected && Controller.IsOnKeyDown(3)) {
+				if (button[0].isSelected && JoyStick.IsOnKeyDown(3)) {
 					// crossのconfig処理
 					waitingInput = true;
 					if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 				}
-				if (button[1].isSelected && Controller.IsOnKeyDown(3)) {
+				if (button[1].isSelected && JoyStick.IsOnKeyDown(3)) {
 					// leftButtonのconfig処理
 					if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 				}
-				if (button[2].isSelected && Controller.IsOnKeyDown(3)) {
+				if (button[2].isSelected && JoyStick.IsOnKeyDown(3)) {
 					isEndScene = true;
 					if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 				}
 			} else {
-				if (Controller.curButtons.Count > 0) {
+				if (JoyStick.curButtons.Count > 0) {
 					if (button[0].isSelected) {
-						Controller.keyMap[2] = Controller.curButtons[0];
+						JoyStick.keyMap[2] = JoyStick.curButtons[0];
 						waitingInput = false;
 					} else if (button[1].isSelected) {
-						Controller.keyMap[5] = Controller.curButtons[0];
+						JoyStick.keyMap[5] = JoyStick.curButtons[0];
 						waitingInput = false;
 					}
 				}
@@ -96,31 +96,31 @@ namespace _2DActionGame
 										
 										switch (xmlReader.Name) {
 											case "sword_lite" :
-												Controller.keyMap[0] = Int32.Parse(xmlReader.ReadString());
+												JoyStick.keyMap[0] = Int32.Parse(xmlReader.ReadString());
 												break;
 											case "sword_strong":
-												Controller.keyMap[1] = Int32.Parse(xmlReader.ReadString());
+												JoyStick.keyMap[1] = Int32.Parse(xmlReader.ReadString());
 												break;
 											case "jump":
-												Controller.keyMap[2] = Int32.Parse(xmlReader.ReadString());
+												JoyStick.keyMap[2] = Int32.Parse(xmlReader.ReadString());
 												break;
 											case "nothing0":
-												Controller.keyMap[3] = Int32.Parse(xmlReader.ReadString());
+												JoyStick.keyMap[3] = Int32.Parse(xmlReader.ReadString());
 												break;
 											case "dash":
-												Controller.keyMap[4] = Int32.Parse(xmlReader.ReadString());
+												JoyStick.keyMap[4] = Int32.Parse(xmlReader.ReadString());
 												break;
 											case "TAS":
-												Controller.keyMap[5] = Int32.Parse(xmlReader.ReadString());
+												JoyStick.keyMap[5] = Int32.Parse(xmlReader.ReadString());
 												break;
 											case "nothing1":
-												Controller.keyMap[6] = Int32.Parse(xmlReader.ReadString());
+												JoyStick.keyMap[6] = Int32.Parse(xmlReader.ReadString());
 												break;
 											case "nothing2":
-												Controller.keyMap[7] = Int32.Parse(xmlReader.ReadString());
+												JoyStick.keyMap[7] = Int32.Parse(xmlReader.ReadString());
 												break;
 											case "PAUSE":
-												Controller.keyMap[8] = Int32.Parse(xmlReader.ReadString());
+												JoyStick.keyMap[8] = Int32.Parse(xmlReader.ReadString());
 												break;
 										}
 									}

@@ -191,7 +191,7 @@ namespace _2DActionGame
 
         private void UpdateKeyPress(KeyboardState keystate_now)
         {
-            if (!isAutoReversed && (!Controller.KEY(5) || Controller.IsOnKeyUp(5))) //自動発動でなければ
+            if (!isAutoReversed && (!JoyStick.KEY(5) || JoyStick.IsOnKeyUp(5))) //自動発動でなければ
                 isReversed = false;
         }
 

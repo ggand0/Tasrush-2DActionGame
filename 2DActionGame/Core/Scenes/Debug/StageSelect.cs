@@ -27,42 +27,42 @@ namespace _2DActionGame
 
 		protected override void ButtonUpdate()
 		{
-			if (button[0].isSelected && Controller.IsOnKeyDown(3)) { //IsOnKeyDown(3)
+			if (button[0].isSelected && JoyStick.IsOnKeyDown(3)) { //IsOnKeyDown(3)
 				game.stageNum = 0;
 
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 				
 			}
-			if (button[1].isSelected && Controller.IsOnKeyDown(3)) {
+			if (button[1].isSelected && JoyStick.IsOnKeyDown(3)) {
 				game.stageNum = 1;
 				PushScene(new LvlSelect(this));
 
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 			}
-			if (button[2].isSelected && Controller.IsOnKeyDown(3)) {
+			if (button[2].isSelected && JoyStick.IsOnKeyDown(3)) {
 				game.stageNum = 5;
 				PushScene(new LvlSelect(this));
 
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 			}
-			if (button[3].isSelected && Controller.IsOnKeyDown(3)) {
+			if (button[3].isSelected && JoyStick.IsOnKeyDown(3)) {
 				game.stageNum = 6;
 				PushScene(new LvlSelect(this));
 
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 			}
 
-			if (button[4].isSelected && Controller.IsOnKeyDown(3)) {
+			if (button[4].isSelected && JoyStick.IsOnKeyDown(3)) {
 				if (!game.isMuted) cancel.Play(SoundControl.volumeAll, 0f, 0f);
 				isEndScene = true;
 			}
-			if (button[5].isSelected && Controller.IsOnKeyDown(3)) {
+			if (button[5].isSelected && JoyStick.IsOnKeyDown(3)) {
 				game.stageNum = 2;
 				PushScene(new LvlSelect(this));
 
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 			}
-			if (button[6].isSelected && Controller.IsOnKeyDown(3)) {
+			if (button[6].isSelected && JoyStick.IsOnKeyDown(3)) {
 				game.stageNum = 3;
 				PushScene(new LvlSelect(this));
 
@@ -70,21 +70,21 @@ namespace _2DActionGame
 			}
 
 			// ↓Hard↓
-			/*if (button[7].isSelected && Controller.IsOnKeyDown(3)) {
+			/*if (button[7].isSelected && JoyStick.IsOnKeyDown(3)) {
 				game.stageNum = 1;
 				game.isHighLvl = true;
 				game.ReloadStage(game.isHighLvl);
 
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 			}
-			if (button[8].isSelected && Controller.IsOnKeyDown(3)) {
+			if (button[8].isSelected && JoyStick.IsOnKeyDown(3)) {
 				game.stageNum = 2;
 				game.isHighLvl = true;
 				game.ReloadStage(game.isHighLvl);
 
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 			}
-			if (button[9].isSelected && Controller.IsOnKeyDown(3)) {
+			if (button[9].isSelected && JoyStick.IsOnKeyDown(3)) {
 				game.stageNum = 3;
 				game.isHighLvl = true;
 				game.ReloadStage(game.isHighLvl);

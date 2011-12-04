@@ -210,7 +210,7 @@ namespace _2DActionGame
 			int[] buttonCheck = new int[workButtonNum];
 
 			for (int i = 0; i < buttonNum.Length; i++) {
-				if (Controller.KEY(buttonNum[i])) buttonCheck[i] = 1;
+				if (JoyStick.KEY(buttonNum[i])) buttonCheck[i] = 1;
 				else buttonCheck[i] = 0;
 			}
 			return buttonCheck;
@@ -221,7 +221,7 @@ namespace _2DActionGame
 			int[] stickCheck = new int[workStickNum];
 
 			for (int i = 0; i < stickNum.Length; i++) {
-				if (Controller.stickDirection == (stickNum[i])) stickCheck[i] = 1;
+				if (JoyStick.stickDirection == (stickNum[i])) stickCheck[i] = 1;
 				else stickCheck[i] = 0;
 			}
 			return stickCheck;
@@ -363,37 +363,37 @@ namespace _2DActionGame
 				if (game.inDebugMode) {
 					switch (game.avilityNum) {
 						case 0://Reverse
-							if (Controller.KEY(5))
+							if (JoyStick.KEY(5))
 								stage.reverse.StartReverse();
-							if (Controller.IsOnKeyDown(5)) {
+							if (JoyStick.IsOnKeyDown(5)) {
 								if (!game.isMuted) tasSound.Play(SoundControl.volumeAll, 0f, 0f);
 							}
 
-							if (!Controller.KEY(5) || Controller.IsOnKeyUp(5))
+							if (!JoyStick.KEY(5) || JoyStick.IsOnKeyUp(5))
 								stage.reverse.isReversed = false;
 							break;
 						case 1://SlowMotion
-							if (Controller.KEY(5))
+							if (JoyStick.KEY(5))
 								stage.slowmotion.StartSlowMotion();
-							if (Controller.IsOnKeyDown(5)) {
+							if (JoyStick.IsOnKeyDown(5)) {
 								if (!game.isMuted) tasSound.Play(SoundControl.volumeAll, 0f, 0f);
 							}
 
-							if (!Controller.KEY(5) || Controller.IsOnKeyUp(5))
+							if (!JoyStick.KEY(5) || JoyStick.IsOnKeyUp(5))
 								stage.slowmotion.FinishSlowMotion();
 							break;
 						case 2://Accel
-							if (Controller.KEY(5))
+							if (JoyStick.KEY(5))
 								stage.isAccelerated = true;
-							if (Controller.IsOnKeyDown(5)) {
+							if (JoyStick.IsOnKeyDown(5)) {
 								if (!game.isMuted) tasSound.Play(SoundControl.volumeAll, 0f, 0f);
 							}
-							if (!Controller.KEY(5) || Controller.IsOnKeyUp(5))
+							if (!JoyStick.KEY(5) || JoyStick.IsOnKeyUp(5))
 								stage.isAccelerated = false;
 							break;
 					}
 				} else {
-					if (Controller.KEY(5))
+					if (JoyStick.KEY(5))
 						switch (game.avilityNum) {
 							case 0:
 								stage.reverse.StartReverse();
@@ -405,7 +405,7 @@ namespace _2DActionGame
 								stage.isAccelerated = true;
 								break;
 						}
-					if (!Controller.KEY(5) || Controller.IsOnKeyUp(5))
+					if (!JoyStick.KEY(5) || JoyStick.IsOnKeyUp(5))
 						switch (game.avilityNum) {
 							case 0:
 								stage.reverse.isReversed = false;
@@ -417,7 +417,7 @@ namespace _2DActionGame
 								stage.isAccelerated = false;
 								break;
 						}
-					if (Controller.IsOnKeyDown(5)) {
+					if (JoyStick.IsOnKeyDown(5)) {
 						if (!game.isMuted) tasSound.Play(SoundControl.volumeAll, 0f, 0f);
 					}
 				}
@@ -426,7 +426,7 @@ namespace _2DActionGame
 			}
 
 			// Pause
-			if (Controller.IsOnKeyDown(8)) {
+			if (JoyStick.IsOnKeyDown(8)) {
 				stage.isPausing = true;
 			}
 			#endregion
@@ -436,7 +436,7 @@ namespace _2DActionGame
 			// LaunchCombo: △ △ △＋↑ ○/× △...
 
 			#region cross(rect)
-			if (/*KeyInput.IsOnKeyDown(Keys.Down) || */Controller.IsOnKeyDown(0)) {
+			if (/*KeyInput.IsOnKeyDown(Keys.Down) || */JoyStick.IsOnKeyDown(0)) {
 				if (normalComboCount == 4) {
 					if (time < normaSecondComboTime) {
 						hasAttacked = isAttacking = isInCombo = isCuttingDown = sword.isBeingUsed = true;
@@ -452,7 +452,7 @@ namespace _2DActionGame
 			}
 			#endregion
 			#region rect
-			if (TASpower >= thrustPowerConsumption && /*KeyInput.IsOnKeyDown(Keys.Right) || */Controller.IsOnKeyDown(0) && thrustCount >= thrustingTime) {
+			if (TASpower >= thrustPowerConsumption && /*KeyInput.IsOnKeyDown(Keys.Right) || */JoyStick.IsOnKeyDown(0) && thrustCount >= thrustingTime) {
 				//BackStep();
 				if (normalComboCount == 0 || normalComboCount == 2 || normalComboCount == 3) {
 					hasAttacked = isAttacking = isInCombo = isThrusting = sword.isBeingUsed = true;
@@ -467,7 +467,7 @@ namespace _2DActionGame
 			}
 			#endregion
 			#region circle
-			if (Controller.IsOnKeyDown(3)) {
+			if (JoyStick.IsOnKeyDown(3)) {
 				if (normalComboCount == 0) {// 単発の強攻撃
 					hasAttacked = isAttacking = isAttacking3 = isInCombo = sword.isBeingUsed = true;
 					time = 0;              // 最初に押したときから計り始める
@@ -515,7 +515,7 @@ namespace _2DActionGame
 			}
 			#endregion
 			#region triangle
-			if (/*KeyInput.IsOnKeyDown(Keys.Up) ||*/ Controller.IsOnKeyDown(1)) {
+			if (/*KeyInput.IsOnKeyDown(Keys.Up) ||*/ JoyStick.IsOnKeyDown(1)) {
 				if (normalComboCount == 0) {
 					hasAttacked = isAttacking = isAttacking1 = isInCombo = sword.isBeingUsed = true;
 					isAttacking2 = false;
@@ -537,7 +537,7 @@ namespace _2DActionGame
 						inCombos[normalComboCount++] = true;
 						time = 0;
 					} // すぐに1段目を出せるようにする。地上の3段目は○とか△＋○とかにしよう　上に書く
-				} else if (normalComboCount == 2 && Controller.stickDirection != Direction.UP) {
+				} else if (normalComboCount == 2 && JoyStick.stickDirection != Direction.UP) {
 					hasAttacked = isAttacking = isAttacking1 = isInCombo = sword.isBeingUsed = true;
 					isAttacking2 = false;
 					isInNormalCombo = true;
@@ -575,7 +575,7 @@ namespace _2DActionGame
 				}
 			}
 			#region ShootBeam
-			/*if (Controller.KEY(1) && normalComboCount==1) {
+			/*if (JoyStick.KEY(1) && normalComboCount==1) {
                 if(time > 60) {
                     hasAttacked = true;
                     isAttacking = true; sword.isBeingUsed=true;
@@ -585,7 +585,7 @@ namespace _2DActionGame
                     normalComboCount = 2;
                 }
             }
-            if(Controller.IsOnKeyUp(1) ) {//Controller.IsOnKeyUp(1) && normalComboCount == 2
+            if(JoyStick.IsOnKeyUp(1) ) {//JoyStick.IsOnKeyUp(1) && normalComboCount == 2
                 if(isChargingPower && time > 40) {
                     hasAttacked = true;
                     isAttacking = true; sword.isBeingUsed=true;
@@ -610,7 +610,7 @@ namespace _2DActionGame
 			// 2撃目を出すために△を押したフレームのときは飛ばしたい
 			#region !syoryu
 			if (!syouryuuMode) {
-				if (Controller.IsOnKeyDown(1) /*&& Controller.onStickDirectionChanged*/ && Controller.stickDirection == Direction.UP) {// この設定なら、押しっぱなしで自動追撃するようにしたほうがよい(DMC3みたいに)
+				if (JoyStick.IsOnKeyDown(1) /*&& JoyStick.onStickDirectionChanged*/ && JoyStick.stickDirection == Direction.UP) {// この設定なら、押しっぱなしで自動追撃するようにしたほうがよい(DMC3みたいに)
 					if (normalComboCount == 2 && time != 0) {// stickが倒れた瞬間
 						if (time < normaSecondComboTime) {
 							hasAttacked = isAttacking = isCuttingUp = isTrackingEnemy = isInCombo = sword.isBeingUsed = true;
@@ -643,13 +643,13 @@ namespace _2DActionGame
 					}*/
 				}
 				//trackCounter++;
-				if (normalComboCount == 3 && isTrackingEnemy && Controller.IsOnKeyUp(1) && time < 20) {// 斬り上げのコンボ中かつ指定時間以内に離さないなら自動追尾
+				if (normalComboCount == 3 && isTrackingEnemy && JoyStick.IsOnKeyUp(1) && time < 20) {// 斬り上げのコンボ中かつ指定時間以内に離さないなら自動追尾
 					normalComboCount = 0;
 					isAttacking = isCuttingUp = isInCombo = false;
 					//inCombo3 = false;
 					inCombos[normalComboCount] = false;
 				}
-				if (normalComboCount == 3 && isTrackingEnemy && time > 20) {//isCuttingUp && Controller.KEY(1) && Controller.stickDirection == Direction.UP) {
+				if (normalComboCount == 3 && isTrackingEnemy && time > 20) {//isCuttingUp && JoyStick.KEY(1) && JoyStick.stickDirection == Direction.UP) {
 					hasAttacked = isAttacking = isCuttingUp = false;
 					isInCombo = isTrackingEnemy = true;
 
@@ -665,7 +665,7 @@ namespace _2DActionGame
 			#endregion
 			#region syoryu
 			 else {
-				if (Controller.IsOnKeyDown(1) && Controller.stickDirection == Direction.UP /*|| (Controller.KEY(1) && Controller.onStickDirectionChanged && Controller.Vector.Y < .5)*/) {
+				if (JoyStick.IsOnKeyDown(1) && JoyStick.stickDirection == Direction.UP /*|| (JoyStick.KEY(1) && JoyStick.onStickDirectionChanged && JoyStick.Vector.Y < .5)*/) {
 					if (normalComboCount == 2 && time != 0) {// stickが倒れた瞬間
 						if (time < normaSecondComboTime) {
 							hasAttacked = isAttacking = isCuttingUp = isTrackingEnemy = isInCombo = sword.isBeingUsed = true;
@@ -699,7 +699,7 @@ namespace _2DActionGame
 			#endregion
 			#endregion
 			#region triangle+↓
-			if ((Controller.IsOnKeyDown(1) && Controller.stickDirection == Direction.DOWN) || (Controller.KEY(1) && Controller.onStickDirectionChanged && Controller.Vector.Y > .5)) {// コンボを強制終了させる　とりあえずコンボから独立させよう
+			if ((JoyStick.IsOnKeyDown(1) && JoyStick.stickDirection == Direction.DOWN) || (JoyStick.KEY(1) && JoyStick.onStickDirectionChanged && JoyStick.Vector.Y > .5)) {// コンボを強制終了させる　とりあえずコンボから独立させよう
 				if (/*normalComboCount == 2 &&*/ time != 0 || time == 0) {
 					//if(time < normaSecondComboTime) {
 					isAttacking1 = isAttacking2 = isAttacking3 = isCuttingAway = isCuttingDown = isCuttingUp = isTrackingEnemy = false;
@@ -728,7 +728,7 @@ namespace _2DActionGame
 			UpdateAttackProcess();
 			#region EndProcess
 			// Comboの終了処理
-			/*if ((inCombo1 && time > normaFirstComboTime && !Controller.KEY(1)) || (inCombo2 && time > normaSecondComboTime && !isChargingPower)// 段別に時間制限を設定可
+			/*if ((inCombo1 && time > normaFirstComboTime && !JoyStick.KEY(1)) || (inCombo2 && time > normaSecondComboTime && !isChargingPower)// 段別に時間制限を設定可
 				|| (inCombo3 && time > normaSecondComboTime) || (inCombo4 && time > normaSecondComboTime)
 				|| (inCombo5 && time > normaSecondComboTime)// 最後の技を出した後すぐ終わらせたい場合はComboTimeを短くすればおｋ
 				|| (inCombo6 && time > normaSecondComboTime) || (inCombo7 && time > 10)) {// 遅かったら勝手にコンボ終了
@@ -746,7 +746,7 @@ namespace _2DActionGame
 				time = 0;
 			}*/
 			for (int i = 0; i < inCombos.Length; i++) {
-				if (i == 1 && time > normaFirstComboTime && !Controller.KEY(1) || i == 2 && time > normaSecondComboTime && !isChargingPower
+				if (i == 1 && time > normaFirstComboTime && !JoyStick.KEY(1) || i == 2 && time > normaSecondComboTime && !isChargingPower
 					|| i >= 3 && i < 7 && time > normaSecondComboTime || i == 7 && time > 10) {
 					isInCombo = false;
 					if (inCombos[i]) inCombos[i] = false;
@@ -760,7 +760,7 @@ namespace _2DActionGame
 			#region Moving
 			// 左右移動
 			if (!disableMovingInput) {
-				if (Controller.stickDirection == Direction.RIGHT) {
+				if (JoyStick.stickDirection == Direction.RIGHT) {
 					turnsRight = true;
 					if (isDashing) {
 						if (stage.isAccelerated)
@@ -784,7 +784,7 @@ namespace _2DActionGame
 						if (!game.isMuted) footstep.Play(SoundControl.volumeAll, 0f, 0f);
 					}
 				}
-				if (Controller.stickDirection == Direction.LEFT) {
+				if (JoyStick.stickDirection == Direction.LEFT) {
 					turnsRight = false;
 					if (isDashing) {
 						if (stage.isAccelerated)
@@ -811,10 +811,10 @@ namespace _2DActionGame
 			}
 
 			// 落下速度うｐ→4/1：二度押しにする.空中下技が欲しい
-			//if (Controller.stickDirection == Direction.DOWN) speed.Y += 5;
+			//if (JoyStick.stickDirection == Direction.DOWN) speed.Y += 5;
 
 			// ダッシュ
-			/*if (Controller.KEY(4)) {//KeyInput.IsOnKeyDown(Keys.LeftShift) ||
+			/*if (JoyStick.KEY(4)) {//KeyInput.IsOnKeyDown(Keys.LeftShift) ||
 				if(hasDashed) {
 					isEffected = true;
 					dashEffected = true;
@@ -822,20 +822,20 @@ namespace _2DActionGame
 				}
 				isDashing = true; 
 			}
-			if (Controller.IsOnKeyUp(4)) {
+			if (JoyStick.IsOnKeyUp(4)) {
 				isDashing = false; 
 				hasDashed = true; //buttonを押し込む度にエフェクトが出てしまう
 			}*/
-			/*if ((Controller.IsOnKeyDown(4) && (Controller.stickDirection == Direction.LEFT || Controller.stickDirection == Direction.RIGHT) ) ) {
-					//|| (Controller.KEY(4) && (Controller.stickDirection == Direction.LEFT || Controller.stickDirection == Direction.RIGHT))) {
+			/*if ((JoyStick.IsOnKeyDown(4) && (JoyStick.stickDirection == Direction.LEFT || JoyStick.stickDirection == Direction.RIGHT) ) ) {
+					//|| (JoyStick.KEY(4) && (JoyStick.stickDirection == Direction.LEFT || JoyStick.stickDirection == Direction.RIGHT))) {
 				isDashing = true;
 				isEffected = true;
 				hasDashed = false;
 				dashEffected = true;
 			}
-			if (Controller.IsOnKeyUp(4)) isDashing = false;
-			if (Controller.KEY(4)) hasDashed = true;*/
-			if (Controller.KEY(4) && (Controller.stickDirection == Direction.LEFT || Controller.stickDirection == Direction.RIGHT)) {
+			if (JoyStick.IsOnKeyUp(4)) isDashing = false;
+			if (JoyStick.KEY(4)) hasDashed = true;*/
+			if (JoyStick.KEY(4) && (JoyStick.stickDirection == Direction.LEFT || JoyStick.stickDirection == Direction.RIGHT)) {
 				if (!hasDashed) {
 					isEffected = true;
 					dashEffected = true;
@@ -843,14 +843,14 @@ namespace _2DActionGame
 				}
 				isDashing = true;
 			}
-			if (Controller.IsOnKeyUp(4)) {
+			if (JoyStick.IsOnKeyUp(4)) {
 				isDashing = false;
 				hasDashed = false;
 			}
 			if (!hasDashed && isDashing) {
 			}
 
-			if (KeyInput.IsOnKeyDown(Keys.B) || Controller.KEY(7)) {// debug用超ダッシュ
+			if (KeyInput.IsOnKeyDown(Keys.B) || JoyStick.KEY(7)) {// debug用超ダッシュ
 				isDashing = true;
 				if (speed.X > 0) {
 					if (!stage.isScrolled) speed.X = 24;
@@ -864,7 +864,7 @@ namespace _2DActionGame
 			#endregion
 			#region Jumping
 			// ジャンプ
-			if (Controller.KEY(2) && /*isOnSomething*/!isInCombo) {
+			if (JoyStick.KEY(2) && /*isOnSomething*/!isInCombo) {
 				jumpTime++;                                         // 押下時間をチェック
 				if (jumpTime > 12 && !isJumping) {
 					Jump(12);
@@ -880,7 +880,7 @@ namespace _2DActionGame
 						normalComboCount = time = 0;
 					}
 				}
-			} else if (Controller.KEY(2) && isInCombo) {           // キャンセル用
+			} else if (JoyStick.KEY(2) && isInCombo) {           // キャンセル用
 				//if (isAttacking) {// falseだった　邪魔だなこれは
 				sword.EndQuickly();
 				hasAttacked = true;
@@ -892,7 +892,7 @@ namespace _2DActionGame
 			}
 			counter++;
 			// 2段目以降は、空中なのでIsOnKeyDownでおｋ
-			if (Controller.IsOnKeyDown(2)) {// 一気にjumpCountが0～2までいくのを修正.3/10 ここだけだとちょっとキャンセル具合がよろしくないのでKEYでも.
+			if (JoyStick.IsOnKeyDown(2)) {// 一気にjumpCountが0～2までいくのを修正.3/10 ここだけだとちょっとキャンセル具合がよろしくないのでKEYでも.
 				if (isAttacking) {
 					sword.EndQuickly();
 					hasAttacked = true;
@@ -908,7 +908,7 @@ namespace _2DActionGame
 					Jump(12);
 				}
 			}
-			if (Controller.IsOnKeyUp(2) && jumpTime > 0 && !isInCombo && !isJumping) {
+			if (JoyStick.IsOnKeyUp(2) && jumpTime > 0 && !isInCombo && !isJumping) {
 				// 調整が難しい
 				//if(jumpTime < 5) scalarSpeed = 0;
 				//if(!hasJumped) 
@@ -1123,9 +1123,9 @@ namespace _2DActionGame
 				}
 
 				if (isOnSomething) isInJumpAnim = false;
-				/*if (isOnSomething && (jumpCount > 0 || ((buttonCheck[1] == 1 && buttonCheck[4] == 1) || (buttonCheck[3] == 1 && buttonCheck[4] == 1)) || Controller.onStickDirectionChanged))
+				/*if (isOnSomething && (jumpCount > 0 || ((buttonCheck[1] == 1 && buttonCheck[4] == 1) || (buttonCheck[3] == 1 && buttonCheck[4] == 1)) || JoyStick.onStickDirectionChanged))
 					isInJumpAnim = false;
-				if ((buttonCheck[4] == 1 || buttonCheck[1] == 1 || buttonCheck[3] == 1 || buttonCheck[0] == 1) && Controller.stickDirection == Direction.NEWTRAL) 
+				if ((buttonCheck[4] == 1 || buttonCheck[1] == 1 || buttonCheck[3] == 1 || buttonCheck[0] == 1) && JoyStick.stickDirection == Direction.NEWTRAL) 
 					isMoving = false;*/
 
 				// 何もしていなければ静止時の絵

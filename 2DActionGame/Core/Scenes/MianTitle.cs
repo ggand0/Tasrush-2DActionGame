@@ -40,14 +40,14 @@ namespace _2DActionGame
 		public override void Update(double dt)
         {
             if (counter < logoDisplayTime) {
-				if (Controller.IsOnKeyDown(8) || Controller.IsOnKeyDown(3))
+				if (JoyStick.IsOnKeyDown(8) || JoyStick.IsOnKeyDown(3))
 					SkipLogo();
             }
             else {
 				if (counter == logoDisplayTime) if (!game.isMuted) SoundControl.Play();
 
 				Debug();
-                if (Controller.IsOnKeyDown(8)) {
+                if (JoyStick.IsOnKeyDown(8)) {
 					PushScene(new MainMenu(this));
 					if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
                     counter = 0;

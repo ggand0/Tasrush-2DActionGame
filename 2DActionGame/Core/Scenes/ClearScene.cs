@@ -53,7 +53,7 @@ namespace _2DActionGame
         }
 		public override void Update(double dt)
 		{
-            if (Controller.IsOnKeyDown(3) || Controller.IsOnKeyDown(8)) {	// To Next Stage
+            if (JoyStick.IsOnKeyDown(3) || JoyStick.IsOnKeyDown(8)) {	// To Next Stage
 				if (game.stageNum < Game1.maxStageNum) {
 					game.stageNum++;
 					game.ReloadStage(game.isHighLvl);

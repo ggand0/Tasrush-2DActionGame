@@ -178,7 +178,7 @@ namespace _2DActionGame
 					}
 				}
 					// すぐに1段目を出せるようにする。地上の3段目は○とか△＋○とかにしよう　上に書く
-				else if (normalComboCount == 2 && Controller.stickDirection != Direction.UP) {
+				else if (normalComboCount == 2 && JoyStick.stickDirection != Direction.UP) {
 					isAttacking2 = false;// 自動終了する前に強制的に次の攻撃に移るのでfalseに調整
 					isAttacking1 = true;
 					isInCombo = true;
@@ -215,7 +215,7 @@ namespace _2DActionGame
 			}
 			#region ため攻撃
 			// これって、このままにしたらPlayerと同時攻撃になるのかな？
-			/*if(Controller.KEY(1) && normalComboCount==1) {
+			/*if(JoyStick.KEY(1) && normalComboCount==1) {
 				if(time > 60) {
 					hasAttacked = true;
 					isAttacking = true; sword.isBeingUsed=true;
@@ -225,7 +225,7 @@ namespace _2DActionGame
 					normalComboCount = 2;
 				}
 			}
-			if(Controller.IsOnKeyUp(1)) {
+			if(JoyStick.IsOnKeyUp(1)) {
 				if(isChargingPower && time > 40) {
 					hasAttacked = true;
 					isAttacking = true; sword.isBeingUsed=true;
@@ -246,7 +246,7 @@ namespace _2DActionGame
 			#endregion
 			#endregion
 			#region ○
-			if (circle) {// Controller.IsOnKeyDown(3)) {
+			if (circle) {// JoyStick.IsOnKeyDown(3)) {
 				if (normalComboCount == 0) { // 単発の強攻撃？
 					hasAttacked = true;
 					isAttacking = true;
@@ -331,7 +331,7 @@ namespace _2DActionGame
 				hasDashed = false;
 				dashEffected = true;
 			}
-			if (Controller.IsOnKeyUp(4)) isDashing = false;
+			if (JoyStick.IsOnKeyUp(4)) isDashing = false;
 			if (Shift) hasDashed = true;
 			#endregion
 			#region Jumping
@@ -339,7 +339,7 @@ namespace _2DActionGame
 				speed.Y = -12f;
 			}
 			// ジャンプ : これに関してはif(cross) vy = -12fとかでいいような
-			/*if (Controller.KEY(2) && !isInCombo) {
+			/*if (JoyStick.KEY(2) && !isInCombo) {
 				jumpTime++;// 押下時間をチェック
 				if (jumpTime > 12  && !isJumping) {
 					Jump(12);

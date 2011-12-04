@@ -35,13 +35,13 @@ namespace _2DActionGame
 
         protected override void ButtonUpdate()
         {
-            if (button[0].isSelected && (Controller.IsOnKeyDown(3) || Controller.IsOnKeyDown(8))) {		// Continue
+            if (button[0].isSelected && (JoyStick.IsOnKeyDown(3) || JoyStick.IsOnKeyDown(8))) {		// Continue
                 game.ReloadStage(game.isHighLvl);
 				isEndScene = true;
                 
                 if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
             }
-            if (button[1].isSelected && (Controller.IsOnKeyDown(3) || Controller.IsOnKeyDown(8))) {		// Back to Menu
+            if (button[1].isSelected && (JoyStick.IsOnKeyDown(3) || JoyStick.IsOnKeyDown(8))) {		// Back to Menu
                 if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 				SoundControl.Stop();
 				SoundControl.IniMusic("Audio\\BGM\\menu_new");

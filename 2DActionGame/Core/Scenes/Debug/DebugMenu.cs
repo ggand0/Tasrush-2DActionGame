@@ -28,51 +28,51 @@ namespace _2DActionGame
 
 		protected override void ButtonUpdate()
 		{
-			if (button[0].isSelected && Controller.IsOnKeyDown(3)) {
+			if (button[0].isSelected && JoyStick.IsOnKeyDown(3)) {
 				if (!game.inDebugMode) game.inDebugMode = true;
 				else game.inDebugMode = false;
 
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 			}
-			if (button[1].isSelected && Controller.IsOnKeyDown(3)) {
+			if (button[1].isSelected && JoyStick.IsOnKeyDown(3)) {
 				if (!game.isMuted) game.isMuted = true;
 				else game.isMuted = false;
 
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 			}
-			if (button[2].isSelected && Controller.IsOnKeyDown(3)) {
+			if (button[2].isSelected && JoyStick.IsOnKeyDown(3)) {
 				if (!game.visibleSword) game.visibleSword = true;
 				else game.visibleSword = false;
 
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 			}
-			if (button[3].isSelected && Controller.IsOnKeyDown(3)) {
+			if (button[3].isSelected && JoyStick.IsOnKeyDown(3)) {
 				if (!game.visibleScore) game.visibleScore = true;
 				else game.visibleScore = false;
 
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 			}
 
-			if (button[4].isSelected && Controller.IsOnKeyDown(3)) {
+			if (button[4].isSelected && JoyStick.IsOnKeyDown(3)) {
 				if (!game.isMuted) cancel.Play(SoundControl.volumeAll, 0f, 0f);
 				isEndScene = true;
 			}
 
-			if (button[5].isSelected && Controller.IsOnKeyDown(3)) {
+			if (button[5].isSelected && JoyStick.IsOnKeyDown(3)) {
 				if (!stage.player.syouryuuMode) stage.player.syouryuuMode = true;
 				else stage.player.syouryuuMode = false;
 
 
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 			}
-			if (button[6].isSelected && Controller.IsOnKeyDown(3)) {
+			if (button[6].isSelected && JoyStick.IsOnKeyDown(3)) {
 			}
 
-			if (button[7].isSelected && Controller.IsOnKeyDown(3)) {
+			if (button[7].isSelected && JoyStick.IsOnKeyDown(3)) {
 			}
-			if (button[8].isSelected && Controller.IsOnKeyDown(3)) {
+			if (button[8].isSelected && JoyStick.IsOnKeyDown(3)) {
 			}
-			if (button[9].isSelected && Controller.IsOnKeyDown(3)) {
+			if (button[9].isSelected && JoyStick.IsOnKeyDown(3)) {
 			}
 		}
 

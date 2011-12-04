@@ -70,7 +70,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\FontProcessors\bin\x86\Debug\FontProcessors.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <HintPath>..\..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.DirectX.DirectInput, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="Microsoft.Xna.Framework, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86">
       <Private>False</Private>
@@ -124,7 +126,7 @@
     <Compile Include="Core\UI\UIObject\UI_EnemyHP.cs" />
     <Compile Include="Core\UI\UIObject\UI_HP.cs" />
     <Compile Include="Core\Vector.cs" />
-    <Compile Include="Input\DirectInput.cs" />
+    <None Include="Input\DirectInput.cs" />
     <Compile Include="Core\Scenes\MainMenu.cs" />
     <Compile Include="Core\Scenes\GameOver.cs" />
     <Compile Include="Core\Scenes\MianTitle.cs" />
@@ -138,6 +140,8 @@
     <Compile Include="Core\Stages\Stage1.cs" />
     <Compile Include="Core\Stages\Stage2.cs" />
     <Compile Include="Core\Stages\Stage3.cs" />
+    <Compile Include="Input\JoyStick.cs" />
+    <Compile Include="Input\JoyStickInput.cs" />
     <Compile Include="Input\KeyInput.cs" />
     <Compile Include="Media\Animation.cs" />
     <Compile Include="Media\Effect.cs" />

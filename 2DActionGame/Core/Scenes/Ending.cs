@@ -33,7 +33,7 @@ namespace _2DActionGame
         }
 		public override void Update(double dt) 
         {
-            if (counter > defDrawTime * textureNum || Controller.IsOnKeyDown(3)) {
+            if (counter > defDrawTime * textureNum || JoyStick.IsOnKeyDown(3)) {
 				SoundControl.Stop();
 				SoundControl.IniMusic("Audio\\BGM\\menu_new");
 				BackScene(5);

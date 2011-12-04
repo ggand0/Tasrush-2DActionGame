@@ -32,8 +32,8 @@ namespace _2DActionGame
 		public override void Update(double dt)
 		{
 			if (counter % sensitivity == 0) {// Controllerを使って書ければcounterを消せる
-				if (Controller.stickDirection == Direction.DOWN) curButton++;
-				else if (Controller.stickDirection == Direction.UP) curButton--;
+				if (JoyStick.stickDirection == Direction.DOWN) curButton++;
+				else if (JoyStick.stickDirection == Direction.UP) curButton--;
 			}
 			Debug();
 
@@ -55,7 +55,7 @@ namespace _2DActionGame
 		}
 		protected virtual void ButtonUpdate()
 		{
-			if (Controller.IsOnKeyDown(2)) {
+			if (JoyStick.IsOnKeyDown(2)) {
 				isEndScene = true;
 				if (!game.isMuted) cancel.Play(SoundControl.volumeAll, 0f, 0f);
 			}
