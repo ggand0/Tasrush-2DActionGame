@@ -1141,10 +1141,12 @@ namespace _2DActionGame
 
 			/// Game Over処理
 			if (!toGameOver && (player.HP < 1 || player.position.Y > 540)) {// 600 546
-				camera.isScrollingToPlayer = true;// スクロールモードの差を取り除く
+				//camera.isScrollingToPlayer = true;// スクロールモードの差を取り除く
 				//playerDeathDrawPos = player.drawPos;
 				//player.position += Player.screenPosition;
-				camera.position.X -= Player.screenPosition.X; //player.drawPos == (-8, 199.8); 2430
+
+				//camera.position.X -= Player.screenPosition.X; //player.drawPos == (-8, 199.8); 2430
+
 				player.isAlive = false;
 				toGameOver = true;
 				hasEffectedPlayerDeath = false;

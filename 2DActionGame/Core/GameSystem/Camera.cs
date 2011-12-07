@@ -54,7 +54,8 @@ namespace _2DActionGame
 			if (isScrollingToPlayer) {
 				RemoveDistance(stage.player);
 
-				if (distanceToPlayer < 0 && distanceToPlayer > 0) {
+                if (distanceToPlayer < 2) {
+				//if (distanceToPlayer < 0 && distanceToPlayer > 0) {
 					stage.isScrolled = false;
 					isScrollingToPlayer = false;
 				}
@@ -74,6 +75,7 @@ namespace _2DActionGame
 			}
 
 			UpdateStageList(targetObject);
+
 			if (stage.boss != null && distanceToBoss < 300) {
 				stage.toBossScene = true;										// ボス戦フラグ
 			}

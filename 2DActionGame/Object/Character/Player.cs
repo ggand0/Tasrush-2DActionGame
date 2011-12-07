@@ -43,7 +43,7 @@ namespace _2DActionGame
 		public Sword sword { get; private set; }
 		private bool isInJumpAnim, inDmgMotion;
 		private bool inCombo1, inCombo2, inCombo3, inCombo4, inCombo5, inCombo6, inCombo7;// 配列にしたい　いや、リストか...
-		private bool[] inCombos = new bool[7];
+		private bool[] inCombos = new bool[8];
 		private int animCounter, animCounter2;
 		public int TASpower { get; set; }					// protected化：reverseの修正
 
@@ -152,7 +152,6 @@ namespace _2DActionGame
 		private static readonly int airReflectLimit = 15;//30		
 		private Vector2 reflectSpeed;
 		public static readonly Vector2 defReflectSpeed = new Vector2(4, -6);
-		
 		#endregion
 
 		public Player()
@@ -443,7 +442,7 @@ namespace _2DActionGame
 						isTrackingEnemy = isCuttingUp = false;
 						time = 0;
 						inCombos[normalComboCount] = false;
-						inCombos[normalComboCount++] = true;
+						inCombos[++normalComboCount] = true;
 						/*inCombo4 = false;
 						inCombo5 = true;
 						normalComboCount = 5;*/
@@ -475,7 +474,7 @@ namespace _2DActionGame
 					
 					//normalComboCount = 1;
 					//inCombo1 = true;
-					inCombos[normalComboCount++] = true;
+					inCombos[++normalComboCount] = true;
 				} else if (normalComboCount == 2) {// 地上３段目
 					if (time < normaSecondComboTime) {// hasAttacked = trueはデフォで無
 						hasAttacked = isAttacking = isAttacking3 = isInCombo = sword.isBeingUsed = true;
@@ -485,7 +484,7 @@ namespace _2DActionGame
 						inCombo2 = false;
 						inCombo3 = true;*/
 						inCombos[normalComboCount] = false;
-						inCombos[normalComboCount++] = true;
+						inCombos[++normalComboCount] = true;
 					}
 				} else if (normalComboCount == 4) {
 					if (time < normaSecondComboTime) {// hasAttacked = trueはデフォで無
@@ -496,7 +495,7 @@ namespace _2DActionGame
 						inCombo4 = false;
 						inCombo5 = true;*/
 						inCombos[normalComboCount] = false;
-						inCombos[normalComboCount++] = true;
+						inCombos[++normalComboCount] = true;
 						time = 0;
 					}
 				} else if (normalComboCount == 6) {
@@ -523,8 +522,7 @@ namespace _2DActionGame
 
 					/*normalComboCount = 1;
 					inCombo1 = true;*/
-					normalComboCount++;
-					inCombos[normalComboCount] = true;
+					inCombos[++normalComboCount] = true;
 				} else if (normalComboCount == 1) {
 					if (time < normaFirstComboTime) {
 						hasAttacked = isAttacking = isAttacking2 = isInCombo = sword.isBeingUsed = true;
@@ -534,7 +532,7 @@ namespace _2DActionGame
 						inCombo1 = false;
 						inCombo2 = true;*/
 						inCombos[normalComboCount] = false;
-						inCombos[normalComboCount++] = true;
+						inCombos[++normalComboCount] = true;
 						time = 0;
 					} // すぐに1段目を出せるようにする。地上の3段目は○とか△＋○とかにしよう　上に書く
 				} else if (normalComboCount == 2 && JoyStick.stickDirection != Direction.UP) {
@@ -557,7 +555,7 @@ namespace _2DActionGame
 						inCombo4 = false;
 						inCombo5 = true;*/
 						inCombos[normalComboCount] = false;
-						inCombos[normalComboCount++] = true;
+						inCombos[++normalComboCount] = true;
 						time = 0;
 					}
 				} else if (normalComboCount == 5) {
@@ -569,7 +567,7 @@ namespace _2DActionGame
 						inCombo5 = false;
 						inCombo6 = true;*/
 						inCombos[normalComboCount] = false;
-						inCombos[normalComboCount++] = true;
+						inCombos[++normalComboCount] = true;
 						time = 0;
 					}
 				}
@@ -623,7 +621,7 @@ namespace _2DActionGame
 							inCombo2 = false;
 							inCombo3 = true;*/
 							inCombos[normalComboCount] = false;
-							inCombos[normalComboCount++] = true;
+							inCombos[++normalComboCount] = true;
 							time = 0;
 						}
 					}
@@ -657,7 +655,7 @@ namespace _2DActionGame
 					inCombo3 = false;
 					inCombo4 = true;*/
 					inCombos[normalComboCount] = false;
-					inCombos[normalComboCount++] = true;
+					inCombos[++normalComboCount] = true;
 					time = 0;
 					TrackEnemy2();
 				}
@@ -675,8 +673,9 @@ namespace _2DActionGame
 							inCombo1 = false;
 							inCombo2 = false;
 							inCombo3 = true;*/
+                            inCombos[1] = false;
 							inCombos[normalComboCount] = false;
-							inCombos[normalComboCount++] = true;
+							inCombos[++normalComboCount] = true;
 							time = 0;
 							TrackEnemy2();
 						}
@@ -686,12 +685,11 @@ namespace _2DActionGame
 					hasAttacked = isTrackingEnemy = isInCombo = true;
 					isAttacking = isCuttingUp = false;
 
-					
 					/*normalComboCount = 4;
 					inCombo3 = false;
 					inCombo4 = true;*/
 					inCombos[normalComboCount] = false;
-					inCombos[normalComboCount++] = true;
+					inCombos[++normalComboCount] = true;
 					time = 0;
 					//TrackEnemy2();
 				}
@@ -745,9 +743,10 @@ namespace _2DActionGame
 				//isAttacking = false; // 攻撃全体を終了
 				time = 0;
 			}*/
-			for (int i = 0; i < inCombos.Length; i++) {
-				if (i == 1 && time > normaFirstComboTime && !JoyStick.KEY(1) || i == 2 && time > normaSecondComboTime && !isChargingPower
-					|| i >= 3 && i < 7 && time > normaSecondComboTime || i == 7 && time > 10) {
+            if (time > normaSecondComboTime) { }
+			for (int i = 1; i < inCombos.Length; i++) {
+                if (inCombos[1] && time > normaFirstComboTime && !JoyStick.KEY(1) || inCombos[2] && time > normaSecondComboTime && !isChargingPower
+                    || i >= 3 && i < 7 && inCombos[i] && time > normaSecondComboTime || inCombos[7] && time > 10) {
 					isInCombo = false;
 					if (inCombos[i]) inCombos[i] = false;
 					if (i == 4) isTrackingEnemy = false;

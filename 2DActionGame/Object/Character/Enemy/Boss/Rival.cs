@@ -642,7 +642,7 @@ namespace _2DActionGame
 		/// 画面左側へ走る→攻撃(2→3段コンボ)
 		/// →ジャンプして後退→default位置へ戻る、を実行するパターン。
 		/// </summary>
-		protected void InputControlB()
+		protected void InputControlB()// 1
 		{
 			int timeWaiting = 300;
 			float permissibleRange = 32;	// ジャンプし始める瞬間などにPlayerの剣撃を食らうなどして位置がずれた場合に備えるための補正値
@@ -837,11 +837,11 @@ namespace _2DActionGame
 		/// <summary>
 		/// InputControlCのsyuriken版
 		/// </summary>
-		protected void InputControlE()
+		protected void InputControlE()// 7
 		{
 			bool hasShot = hasReached && isShootingThunder;
 
-			if (inputCounter == 0) {
+			if (inputCounter == 0 && isOnSomething) {
 				speed.Y = -16;
 				isJumping = true;
 			} else if (inputCounter == 2 || inputCounter == 7) {
@@ -880,7 +880,7 @@ namespace _2DActionGame
 				isEnds[7] = true;
 			}
 		}
-		protected void InputControlF()
+		protected void InputControlF()// 9
 		{
 			if (inputCounter == 0 ) {
 				triangle = true;
@@ -1164,9 +1164,8 @@ namespace _2DActionGame
 		public override void Update()
 		{
 			if (isAlive && stage.inBossBattle) {
-				if (attackList.Count == 0) { }
-				if (syuriken.position.X > 20000) { }// どーりでBUllet見えないと思った！なぜ座標30000にいるしｗｗｗｗ
-				base.Update();Attack(30);// 動いてからtoRightSideを判断する？
+				base.Update();
+                Attack(30);// 動いてからtoRightSideを判断する？
 			}
 		}
 		public override void UpdateAnimation()
@@ -1214,7 +1213,6 @@ namespace _2DActionGame
 				if (speed.Y > 0) speed.Y = maxSpeed;
 				else speed.Y = -maxSpeed;
 			}
-
 			/*else {
 				speed.Y += 9.8f * .05f;
 				speed.X = 5;

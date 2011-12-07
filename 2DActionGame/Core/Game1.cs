@@ -91,7 +91,7 @@ namespace _2DActionGame
 
 			random = new Random();
             
-			isMuted = true;
+			//isMuted = true;
 			//noEnemy = true;
         }
 		
@@ -214,7 +214,7 @@ namespace _2DActionGame
             // TODO: Add your drawing code here
 			spriteBatch.Begin();
 			currentScene.Draw(spriteBatch);
-            dm.Draw(gameTime);
+            //dm.Draw(gameTime);
 			spriteBatch.End();
             base.Draw(gameTime);
         }

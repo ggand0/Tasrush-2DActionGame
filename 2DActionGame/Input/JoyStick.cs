@@ -43,6 +43,22 @@ namespace _2DActionGame
 			hasaJoyStick = true;
 			JoystickState jss = JoystickInput.GetAsJoystickState(0);
 			if (!jss.IsConnected) hasaJoyStick = false;
+
+            #region ジョイスティックが無かった場合キーボードのコンフィグ設定
+            if (!hasaJoyStick) {
+                oldKeyboardState = xnainput.Keyboard.GetState();
+                KeyboardConfig = new xnainput.Keys[(int)config.NUM_KEY];
+                KeyboardConfig[(int)config.A] = xnainput.Keys.Z;         // □
+                KeyboardConfig[(int)config.B] = xnainput.Keys.X;         // △
+                KeyboardConfig[(int)config.key3] = xnainput.Keys.C;      // ○
+                KeyboardConfig[(int)config.X] = xnainput.Keys.A;         // ×
+                KeyboardConfig[(int)config.Y] = xnainput.Keys.F;
+                KeyboardConfig[(int)config.key6] = xnainput.Keys.V;
+                KeyboardConfig[(int)config.MENU] = xnainput.Keys.LeftShift;
+                KeyboardConfig[(int)config.LOCK] = xnainput.Keys.D;      //Space;//TODO:コンフィグが俺コントローラ仕様すぎるから変えないと。。
+                KeyboardConfig[(int)config.START] = xnainput.Keys.Enter; // 追加
+            }
+            #endregion
 		}
 		public static int[] keyMap = new int[(int)config.NUM_KEY];
 		public static int[] PS2KeyMap = { 3, 0, 2, 1, 6, 7, 5, 4, 8 };
@@ -66,7 +82,7 @@ namespace _2DActionGame
 			if (hasaJoyStick) {
 				JoystickUpdate(0, dt);//TODO:複数のジョイパッドに対応するならここをなんとかしないと。
 			} else {
-				//KeyboardUpdate(dt);
+				KeyboardUpdate(dt);
 			}
 		}
 
@@ -121,7 +137,63 @@ namespace _2DActionGame
 		/// ジョイスティックコントローラがあるか
 		/// </summary>
 		public static bool hasaJoyStick { get; private set; }
-
+        static void KeyboardUpdate(double dt)
+        {
+            xnainput.KeyboardState newstate = xnainput.Keyboard.GetState();
+            for (int i = 0; i < (int)config.NUM_KEY; i++) {
+                if (!(oldKeyboardState.IsKeyDown(KeyboardConfig[i]))
+                    && newstate.IsKeyDown(KeyboardConfig[i])) {//今押された
+                    onKeyDown[i] = true;
+                    onKeyUp[i] = false;
+                    continue;//今押されたって事は、今離されたかどうかなんて聞くまでも無いだろって事で。
+                } else {
+                    onKeyDown[i] = false;
+                }
+                if (oldKeyboardState.IsKeyDown(KeyboardConfig[i])
+                    && !(newstate.IsKeyDown(KeyboardConfig[i]))) {//今離された
+                    onKeyUp[i] = true;
+                    keyTime[i] = 0.0;
+                } else {
+                    onKeyUp[i] = false;
+                }
+            }
+            for (int i = 0; i < (int)config.NUM_KEY; i++) {
+                if (newstate.IsKeyDown(KeyboardConfig[i])) {//古い状態を捨てて新しい状態に切り替え
+                    Key[i] = true;
+                    keyTime[i] += dt;
+                } else {
+                    Key[i] = false;
+                }
+            }
+            int horizontal = 0;
+            if (newstate.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Right)) horizontal++;
+            if (newstate.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Left)) horizontal--;
+            int vertical = 0;
+            if (newstate.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Up)) vertical++;
+            if (newstate.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Down)) vertical--;
+            V.X = (float)horizontal;
+            V.Y = (float)-vertical;//2DでY軸が下向きのためそれの補正
+            if (V.LengthSquared() != 0)
+                V = Vector2.Normalize(V);
+            Direction oldDirection = stickDirection;
+            if (V.Y <= -0.7071) {//0.7071==√2
+                stickDirection = Direction.UP;//上
+            } else if (V.Y >= 0.7071) {
+                stickDirection = Direction.DOWN;//下
+            } else if (V.X <= -0.7071) {
+                stickDirection = Direction.LEFT;//左
+            } else if (V.X >= 0.7071) {
+                stickDirection = Direction.RIGHT;//右
+            } else stickDirection = Direction.NEWTRAL;//ニュートラル
+            if (oldDirection == stickDirection) {
+                stickTime += dt;
+                onStickDirectionChanged = false;
+            } else {
+                stickTime = 0.0;
+                onStickDirectionChanged = true;
+            }
+            oldKeyboardState = newstate;
+        }
 		static void JoystickUpdate(int deviceID, double dt)
 		{
 			JoystickState jss = JoystickInput.GetAsJoystickState(deviceID);
