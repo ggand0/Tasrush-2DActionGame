@@ -337,6 +337,10 @@ namespace _2DActionGame
 				drawPos.X = 200;
 				stage.camera.position.X = 13800;
 			}
+			if (KeyInput.IsOnKeyDown(Keys.Q)) {
+				stage.boss.isAlive = false;
+				stage.boss.HP = -1;
+			}
 			if (KeyInput.IsOnKeyDown(Keys.H)) {
 				HP += 10;
 			}

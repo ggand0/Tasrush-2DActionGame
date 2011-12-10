@@ -294,6 +294,7 @@ namespace _2DActionGame
 
 			time++;
 		}
+		Vector2 adj;
 		/// <summary>
 		/// ボス死亡時の爆発エフェクト。適当なので後で直したい
 		/// </summary>
@@ -301,22 +302,29 @@ namespace _2DActionGame
 		public void DrawBossDeathEffect(SpriteBatch spriteBatch, Boss targetBoss)
 		{
 			Load(game.Content, "Effect\\DeathEffect2", ref textures[0]);// 値渡し?←関数の引数は基本値渡し！
-			Update(3, 0, 64, 64, 12, 1);//9
+			Update(3, 0, 64, 64, 4, 1);//912
 			//bossExplosionEffectTime = 360;
 
 			if (!hasPlayedSoundEffect) {
 				if (!game.isMuted) lastExplosion.Play(SoundControl.volumeAll, 0f, 0f);
 				hasPlayedSoundEffect = true;
 			} else {
-				/*spriteBatch.Draw(textures[0], targetBoss.drawPos, rect, Color.White);
-				spriteBatch.Draw(textures[0], targetBoss.drawPos + new Vector2(targetBoss.width / 2, targetBoss.height / 2), rect, Color.White);
-				spriteBatch.Draw(textures[0], targetBoss.drawPos + new Vector2(targetBoss.width / 2 - 50, targetBoss.height / 2 + 50), rect, Color.White);
-				spriteBatch.Draw(textures[0], targetBoss.drawPos + new Vector2(targetBoss.width / 2, targetBoss.height / 2 - 30), rect, Color.White);
-				spriteBatch.Draw(textures[0], targetBoss.drawPos + new Vector2(targetBoss.width, targetBoss.height + 50), rect, Color.White);*/
-				for (int i = 0; i < 10; i++) {
+				// = new Vector2();
+				if (stage.gameTimeNormal % 4 == 0) adj = new Vector2(game.random.Next(-32, 32), game.random.Next(-32, 32));
+				
+				spriteBatch.Draw(textures[0], targetBoss.drawPos + new Vector2(targetBoss.width / 2, targetBoss.height / 2) + adj, rect, Color.White);
+				spriteBatch.Draw(textures[0], targetBoss.drawPos + new Vector2(targetBoss.width / 2 - 50, targetBoss.height / 2 + 50) + adj, rect, Color.White);
+				spriteBatch.Draw(textures[0], targetBoss.drawPos + new Vector2(targetBoss.width / 2, targetBoss.height / 2 - 30) + adj, rect, Color.White);
+				spriteBatch.Draw(textures[0], targetBoss.drawPos + new Vector2(targetBoss.width, targetBoss.height + 50) + adj, rect, Color.White);/**/
+
+				spriteBatch.Draw(textures[0], targetBoss.drawPos + new Vector2(targetBoss.width / 2 - 50, targetBoss.height + 50) + adj, rect, Color.White);
+				spriteBatch.Draw(textures[0], targetBoss.drawPos + new Vector2(targetBoss.width / 3 + 100, targetBoss.height / 2 + 50) + adj, rect, Color.White);
+				spriteBatch.Draw(textures[0], targetBoss.drawPos + new Vector2(targetBoss.width , targetBoss.height / 2) + adj, rect, Color.White);
+				spriteBatch.Draw(textures[0], targetBoss.drawPos + new Vector2(targetBoss.width, targetBoss.height / 2 - 50) + adj, rect, Color.White);
+				/*for (int i = 0; i < 10; i++) {
 					if (time > i * 10)
 					spriteBatch.Draw(textures[0], targetBoss.drawPos + new Vector2(targetBoss.width / 2, targetBoss.height / 2) + new Vector2(game.random.Next(targetBoss.width / 2) * 3f, game.random.Next(targetBoss.height / 2) * 3f), rect, Color.White);
-				}
+				}*/
 			}
 			if (time > bossExplosionEffectTime) {
 				stage.hasEffectedBossExplosion = true;

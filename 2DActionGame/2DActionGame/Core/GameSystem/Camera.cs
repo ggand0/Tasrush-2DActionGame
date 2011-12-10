@@ -40,7 +40,7 @@ namespace _2DActionGame
 			if (!stage.isScrolled && !stage.inBossBattle) {
 				NormalScrollUpdate(targetObject);
 			} else if (!stage.isScrolled && stage.inBossBattle) {// 限定画面スクロール（端ではスクロールの限界あり）
-				if (stage.player.position.X < stage.boss.defaultPosition.X - 640 || stage.player.position.X > stage.boss.defaultPosition.X + 100) {
+				if (stage.player.position.X < stage.bossScreenEdgeLeft || stage.player.position.X > stage.bossScreenEdgeRight) {
 					EdgeScrollUpdate(targetObject);
 				} else {
 					//NormalScrollUpdate(targetObject);

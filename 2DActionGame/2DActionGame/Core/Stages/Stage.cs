@@ -152,7 +152,7 @@ namespace _2DActionGame
 		/// <summary>
 		/// 強制スクロールのスクロール速度
 		/// </summary>
-		private float scrollSpeed = 2;
+		public float scrollSpeed { get; private set; }
 		public float ScrollSpeed
 		{
 			get { return this.scrollSpeed; }
@@ -230,6 +230,7 @@ namespace _2DActionGame
 		public string[,] input_last;
 		#endregion
 		protected bool isHighLvl;
+		public float bossScreenEdgeLeft, bossScreenEdgeRight;
 		/// <summary>
 		/// 最小化復帰時にBackGroundを再ロードするためのフラグ
 		/// </summary>
@@ -293,6 +294,8 @@ namespace _2DActionGame
 			frontalScrollingBackGround.isFrontal = true;
 			scrollingTASEffect = new ScrollingTASEffect(this, Vector2.Zero);
 			defHP = 3;
+			scrollSpeed = 2;
+			
 			Load();
 		}
 
@@ -692,6 +695,8 @@ namespace _2DActionGame
 			gameTimeNormal = 0;
 			gameTimeTAS = 0;
 
+			bossScreenEdgeLeft = boss.defaultPosition.X - 640;// -Player.screenPosition.X;
+			bossScreenEdgeRight = boss.defaultPosition.X + 640 + 100;// 100
 			camera.position = game.hasReachedCheckPoint ? new Vector2(player.position.X, 0) : Vector2.Zero;
 			isScrolled = true;
 			hasEffectedWarning = false;

@@ -571,7 +571,13 @@ namespace _2DActionGame
 			// 自身の位置
 			if (toRightSide && hasReachedPlayer && speed.X < 0 || !toRightSide && hasReachedPlayer && speed.X > 0)
 				RestoreJump(toRightSide ? defaultPosition : defPosOtherSide, 5);
-
+			// 画面外に出ないように
+			if (stage.inBossBattle && position.X < stage.bossScreenEdgeLeft - Player.screenPosition.X) {
+				position.X = stage.bossScreenEdgeLeft;								// 位置を前に変更
+				speed.X = stage.scrollSpeed;											// 押す
+			} else if (stage.inBossBattle && position.X > stage.bossScreenEdgeRight) {
+				this.position.X = stage.bossScreenEdgeRight;
+			}
 			//RestorePosition(CenterPos, 5);
 
 			if ((position.X > defaultPosition.X - 250 && position.X < defaultPosition.X + 100) || position.X < defPosOtherSide.X - 100) {
@@ -732,11 +738,11 @@ namespace _2DActionGame
 		/// <summary>
 		/// 雷撃用
 		/// </summary>
-		protected void InputControlC()
+		protected void InputControlC()// 2
 		{
 			bool hasShot = hasReached && isShootingThunder;
 
-			if (inputCounter == 0) {
+			if (inputCounter == 0) {// このせいで、同時に複数の攻撃メソッド(inputCounterを使う)を走らせるとジャンプしないでござる？
 				speed.Y = -16;
 			} else if (inputCounter <= 5) {
 				//if (inputCounter == 0) InputControl0();
@@ -749,7 +755,7 @@ namespace _2DActionGame
 			}
 
 			if (!hasReached && (Math.Abs(attackPosition.Y - position.Y/*Vector2.Distance(position, defaultPosition + new Vector2(0, -12)*//*attackPosition*/) < 5
-				/*|| inputCounter > 60*/)) {
+				|| inputCounter > 60/**/)) {// やっぱりタイムアウトは必要
 				hasReached = true;
 				counter = 0;
 			} 
@@ -1207,7 +1213,7 @@ namespace _2DActionGame
 				}*/
 			}
 
-			if (!isBacking && System.Math.Abs(speed.Y) > maxSpeed) {
+			if (/*!isBacking && */System.Math.Abs(speed.Y) > maxSpeed) {
 				if (speed.Y > 0) speed.Y = maxSpeed;
 				else speed.Y = -maxSpeed;
 			}
