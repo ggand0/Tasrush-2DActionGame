@@ -1,0 +1,262 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{BB5F1070-FDBB-4DA7-BD17-5DAAFB700FAC}</ProjectGuid>
+    <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>_2DActionGame</RootNamespace>
+    <AssemblyName>2DActionGame</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
+    <XnaPlatform>Windows</XnaPlatform>
+    <XnaProfile>HiDef</XnaProfile>
+    <XnaCrossPlatformGroupID>4922bf6e-97d3-4375-867b-dc07d73540bd</XnaCrossPlatformGroupID>
+    <XnaOutputType>Game</XnaOutputType>
+    <ApplicationIcon>Game.ico</ApplicationIcon>
+    <Thumbnail>GameThumbnail.png</Thumbnail>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\x86\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE;WINDOWS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
+    <XnaCompressContent>false</XnaCompressContent>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\x86\Release</OutputPath>
+    <DefineConstants>TRACE;WINDOWS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
+    <XnaCompressContent>true</XnaCompressContent>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.DirectX.DirectInput, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.DirectInput.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="Microsoft.Xna.Framework.GamerServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="Microsoft.Xna.Framework.Net, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Xna.Framework.Storage, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
+    <Reference Include="mscorlib" />
+    <Reference Include="SlimDX, Version=4.0.12.43, Culture=neutral, PublicKeyToken=b1b0c32fd1ffe4f9, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\SlimDX SDK (September 2011)\Bin\net40\x86\SlimDX.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Net" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Core\Attribute.cs" />
+    <Compile Include="Core\Game1.cs" />
+    <Compile Include="Core\GameSystem\Camera.cs" />
+    <Compile Include="Core\GameSystem\CollisionDetection.cs" />
+    <Compile Include="Core\GameSystem\Damage.cs" />
+    <Compile Include="Core\GameSystem\DamageControl.cs" />
+    <Compile Include="Core\GameSystem\DrawFPS.cs" />
+    <Compile Include="Core\GameSystem\EffectControl.cs" />
+    <Compile Include="Core\GameSystem\FrameTimer.cs" />
+    <Compile Include="Core\GameSystem\Reverse.cs" />
+    <Compile Include="Core\GameSystem\SlowMotion.cs" />
+    <Compile Include="Core\GameSystem\SlowMotionCounter.cs" />
+    <Compile Include="Core\Scenes\AvilitySelect.cs" />
+    <Compile Include="Core\Scenes\ClearScene.cs" />
+    <Compile Include="Core\Scenes\Debug\DebugMenu.cs" />
+    <Compile Include="Core\Scenes\Debug\StageSelect.cs" />
+    <Compile Include="Core\Scenes\Ending.cs" />
+    <Compile Include="Core\Scenes\GameOver.cs" />
+    <Compile Include="Core\Scenes\KeyConfig.cs" />
+    <Compile Include="Core\Scenes\LvlSelect.cs" />
+    <Compile Include="Core\Scenes\MainMenu.cs" />
+    <Compile Include="Core\Scenes\MianTitle.cs" />
+    <Compile Include="Core\Scenes\Option.cs" />
+    <Compile Include="Core\Scenes\PauseMenu.cs" />
+    <Compile Include="Core\Scenes\Scene.cs" />
+    <Compile Include="Core\Scenes\SelectScene.cs" />
+    <Compile Include="Core\Scenes\Tutorial.cs" />
+    <None Include="Core\Stages\BackGround.cs" />
+    <Compile Include="Core\Stages\BossTest.cs" />
+    <Compile Include="Core\Stages\MainStages.cs" />
+    <Compile Include="Core\Stages\Stage.cs" />
+    <Compile Include="Core\Stages\Stage0.cs" />
+    <Compile Include="Core\Stages\Stage1.cs" />
+    <Compile Include="Core\Stages\Stage2.cs" />
+    <Compile Include="Core\Stages\Stage3.cs" />
+    <Compile Include="Core\UI\Debug.cs" />
+    <Compile Include="Core\UI\UIObject\UIObject.cs" />
+    <Compile Include="Core\UI\UIObject\UI_BossHP.cs" />
+    <Compile Include="Core\UI\UIObject\UI_EnemyHP.cs" />
+    <Compile Include="Core\UI\UIObject\UI_HP.cs" />
+    <Compile Include="Core\UI\UIObject\UI_TAS.cs" />
+    <Compile Include="Core\UI\UserInterface.cs" />
+    <Compile Include="Core\Vector.cs" />
+    <None Include="Input\DirectInput.cs" />
+    <Compile Include="Input\JoyStickInput.cs" />
+    <Compile Include="Input\JoyStick.cs" />
+    <Compile Include="Input\KeyInput.cs" />
+    <None Include="Input\LoadMapData.cs" />
+    <Compile Include="Media\Animation.cs" />
+    <Compile Include="Media\Effect.cs" />
+    <Compile Include="Media\ScrollingBackground.cs" />
+    <Compile Include="Media\ScrollingTASEffect.cs" />
+    <Compile Include="Media\SoundControl.cs" />
+    <Compile Include="Object\BackGround.cs" />
+    <Compile Include="Object\Bullet\Beam.cs" />
+    <Compile Include="Object\Bullet\Bullet.cs" />
+    <Compile Include="Object\Bullet\Thunder.cs" />
+    <Compile Include="Object\Character\Character.cs" />
+    <Compile Include="Object\Character\Enemy\Boss\Attack.cs" />
+    <Compile Include="Object\Character\Enemy\Boss\Attacktest.cs" />
+    <Compile Include="Object\Character\Enemy\Boss\Boss.cs" />
+    <Compile Include="Object\Character\Enemy\Boss\Fuujin.cs" />
+    <Compile Include="Object\Character\Enemy\Boss\Raijin.cs" />
+    <Compile Include="Object\Character\Enemy\Boss\Rival.cs" />
+    <Compile Include="Object\Character\Enemy\Boss\WindTurret.cs" />
+    <Compile Include="Object\Character\Enemy\Enemy.cs" />
+    <Compile Include="Object\Character\Enemy\OrdinaryEnemy1\FlyingEnemy.cs" />
+    <Compile Include="Object\Character\Enemy\OrdinaryEnemy1\FlyingOutEnemy.cs" />
+    <Compile Include="Object\Character\Enemy\OrdinaryEnemy1\JumpingEnemy.cs" />
+    <Compile Include="Object\Character\Enemy\OrdinaryEnemy1\ShootingEnemy.cs" />
+    <Compile Include="Object\Character\Enemy\OrdinaryEnemy1\StationalEnemy.cs" />
+    <Compile Include="Object\Character\Enemy\OrdinaryEnemy2\FlyingEnemy2.cs" />
+    <Compile Include="Object\Character\Enemy\OrdinaryEnemy2\FlyingOutEnemy2.cs" />
+    <Compile Include="Object\Character\Enemy\OrdinaryEnemy2\RushingOutEnemy.cs" />
+    <Compile Include="Object\Character\Enemy\OrdinaryEnemy2\SkatingEnemy.cs" />
+    <Compile Include="Object\Character\Enemy\OrdinaryEnemy3\FlyingEnemy3.cs" />
+    <Compile Include="Object\Character\Enemy\OrdinaryEnemy3\FlyingOutEnemy3.cs" />
+    <Compile Include="Object\Character\Enemy\OrdinaryEnemy3\JumpingEnemy3.cs" />
+    <Compile Include="Object\Character\Enemy\OrdinaryEnemy3\SkatingEnemy2.cs" />
+    <Compile Include="Object\Character\Enemy\OrdinaryEnemy3\StationalEnemy3.cs" />
+    <Compile Include="Object\Character\Player.cs" />
+    <Compile Include="Object\Object.cs" />
+    <Compile Include="Object\Terrain\General\Block.cs" />
+    <Compile Include="Object\Terrain\General\Foothold.cs" />
+    <Compile Include="Object\Terrain\General\MapObjects.cs" />
+    <Compile Include="Object\Terrain\General\Slope.cs" />
+    <Compile Include="Object\Terrain\Terrain.cs" />
+    <Compile Include="Object\Terrain\Traps\DamageObject.cs" />
+    <Compile Include="Object\Terrain\Traps\ShootingBlock.cs" />
+    <None Include="Object\Terrain\Traps\Trap.cs" />
+    <Compile Include="Object\Terrain\Traps\Traps1\CollapsingBlock.cs" />
+    <Compile Include="Object\Terrain\Traps\Traps1\DamageBlock.cs" />
+    <Compile Include="Object\Terrain\Traps\Traps2\CollapsingFloor.cs" />
+    <Compile Include="Object\Terrain\Traps\Traps2\Icicle.cs" />
+    <Compile Include="Object\Terrain\Traps\Traps2\Meteor.cs" />
+    <None Include="Object\Terrain\Traps\Traps2\RollingStone.cs" />
+    <Compile Include="Object\Terrain\Traps\Traps2\SnowBall.cs" />
+    <Compile Include="Object\Terrain\Traps\Traps2\Thread.cs" />
+    <Compile Include="Object\Terrain\Traps\Traps2\Water.cs" />
+    <Compile Include="Object\Terrain\Traps\Traps3\ChainSaw.cs" />
+    <Compile Include="Object\Terrain\Traps\Traps3\ConveyorBelt.cs" />
+    <Compile Include="Object\Terrain\Traps\Traps3\Line.cs" />
+    <Compile Include="Object\Terrain\Traps\Traps3\PointS.cs" />
+    <Compile Include="Object\Terrain\Traps\Traps3\TracingFoothold.cs" />
+    <Compile Include="Object\Weapon\DivisionWeapon.cs" />
+    <Compile Include="Object\Weapon\Obstacle.cs" />
+    <Compile Include="Object\Weapon\Ranking.cs" />
+    <Compile Include="Object\Weapon\Sword.cs" />
+    <Compile Include="Object\Weapon\Turret.cs" />
+    <Compile Include="Object\Weapon\Weapon.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Program.cs" />
+    <None Include="Game2.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Game.ico" />
+    <Content Include="GameThumbnail.png">
+      <XnaPlatformSpecific>true</XnaPlatformSpecific>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\2DActionGameContent\2DActionGameContent.contentproj">
+      <Name>_2DActionGameContent</Name>
+      <XnaReferenceType>Content</XnaReferenceType>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 および x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows インストーラー 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Xna.Framework.4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft XNA Framework Redistributable 4.0</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Core\GameSystem\ve-71B5.tmp" />
+    <None Include="Core\GameSystem\ve-9BB.tmp" />
+    <None Include="Core\Stages\ve-3D.tmp" />
+    <None Include="Object\Character\Enemy\Boss\ve-76D.tmp" />
+    <None Include="Object\Character\ve-9EA6.tmp" />
+    <None Include="Object\Character\ve-C2.tmp" />
+    <None Include="Object\Weapon\ve-340.tmp" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
+  <!--
+      To modify your build process, add your task inside one of the targets below and uncomment it. 
+      Other similar extension points exist, see Microsoft.Common.targets.
+      <Target Name="BeforeBuild">
+      </Target>
+      <Target Name="AfterBuild">
+      </Target>
+    -->
+</Project>
