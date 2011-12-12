@@ -56,7 +56,7 @@ namespace _2DActionGame
 				//game.winControlManager.ControlForm.Visible = true;
 				WinControl form = new WinControl(game);
 				form.Show();
-				game.EvaluateScore();
+				//game.EvaluateScore();
 			}
         }
 		public override void Update(double dt)

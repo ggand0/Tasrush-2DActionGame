@@ -27,7 +27,7 @@ namespace _2DActionGame
 		public override void Load()
 		{
 			base.Load();
-			game.LoadRanking("Ranking.txt");
+			game.LoadRanking("Ranking.txt", false, "Ranking_original.txt");
 		}
 
 		protected override void ButtonUpdate()
@@ -44,7 +44,9 @@ namespace _2DActionGame
 		{
 			base.Draw(spriteBatch);
 			for (int i = 0; i < game.scores.Length; i++) {
-				spriteBatch.DrawString(game.Arial2, game.scores[i].ToString(), new Vector2(100, 100 + i * 50), Color.White);
+				//spriteBatch.DrawString(game.Arial2, game.scores[i].ToString(), new Vector2(100, 100 + i * 50), Color.White);
+				spriteBatch.DrawString(game.Arial
+					, game.scores[i].rank + " " + game.scores[i].name + " " + game.scores[i].score.ToString(), new Vector2(100, 100 + i * 50), Color.White);
 			}
 		}
 	}

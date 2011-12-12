@@ -19,6 +19,19 @@ using Microsoft.Xna.Framework.Storage;
 
 namespace _2DActionGame
 {
+	public struct RankingStatus
+	{
+		public int rank;
+		public double score;
+		public string name;
+
+		public RankingStatus(int rank, double score, string name)
+		{
+			this.rank = rank;
+			this.score = score;
+			this.name = name;
+		}
+	}
 	/// <summary>
     /// This is the main movementType for our game. Yukkuri mite ittene!
     /// </summary>
@@ -48,7 +61,9 @@ namespace _2DActionGame
         
         // Game
 		private const int rankingNodeNum = 5;
-		public double[] scores = new double[rankingNodeNum];
+		public RankingStatus[] scores = new RankingStatus[rankingNodeNum];
+		public RankingStatus[] dummyScore = { new RankingStatus(1, 100, "nanashi")
+			, new RankingStatus(2, 100, "nanashi"), new RankingStatus(3, 100, "nanashi"), new RankingStatus(4, 100, "nanashi"), new RankingStatus(5, 100, "nanashi") };
         public double score { get; set; }
 		public string playerName { get; set; }
 		public float wholeVolume { get; set; }
@@ -72,64 +87,86 @@ namespace _2DActionGame
 			// ウィンドウのフォーカスが失われるバグ(?)対策
 			System.Windows.Forms.Form form = (System.Windows.Forms.Form) System.Windows.Forms.Form.FromHandle(Window.Handle);
 			form.BringToFront();
-
-			
 		}
-		public void LoadRanking(string fileName)
+		public void LoadRanking(string fileName, bool isTest, string fileNameT)
 		{
-			StreamReader sr = new StreamReader("Ranking_original.txt");
+			StreamReader sr = new StreamReader(fileNameT);
 			string original;
 			string[] tmp;
 			string[,] tmp2;
 
-			//original = sr.ReadToEnd();
-			// 暗号化の実験
-			//MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(original));
-			//Encryption.EncryptionData(ms, "test.txt");
+			if (isTest) {
+				original = sr.ReadToEnd();
+				// 暗号化の実験
+				MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(original));
+				Encryption.EncryptionData(ms, fileName);
+			}// １行追加してテストしてみたところ最後の行の途中から欠ける仕様らしい？
 
 			// 復号化
 			MemoryStream msd = new MemoryStream();
-			Encryption.DecryptionFile("Ranking.txt", msd);//("test.txt", msd);
+			Encryption.DecryptionFile(fileName, msd);//("test.txt", msd);
 			byte[] bs = msd.ToArray();
 			original = Encoding.UTF8.GetString(bs);		// UTF8じゃないと文字化けする
 			//original = sr.ReadToEnd();
 			original = original.TrimEnd(new char[] { '\r', '\n' });
 
 			tmp = original.Replace("\r\n", "\n").Split('\n');// 0が無視される...
-			tmp2 = new string[tmp.Length, 2];
-			for (int i = 0; i < tmp.Length; i++) {
-				string[] t = tmp[i].Split(' ');
-				tmp2[i, 0] = t[0];
-				tmp2[i, 1] = t[1];
+			tmp2 = new string[tmp.Length, 3];
+			for (int i = 0; i < tmp.Length-1; i++) {// 最後の行は削られることを想定してlength-1
+				try {
+					string[] t = tmp[i].Split(' ');
+					tmp2[i, 0] = t[0];
+					tmp2[i, 1] = t[1];
+					tmp2[i, 2] = t[2];
+				} catch {
+					throw new Exception("failed ranking decoding.");// 5番目だけ"5 na"で終わってる件ｗｗ buffer[2048]にしたらnanasまでｋｔ...?←やっぱ関係なかった
+					// そもそもbs.lengthの時点で明らかに足りてない
+				}
 			}
-			for (int i = 0; i < tmp.Length; i++) {
-				scores[i] = Double.Parse(tmp2[i, 1]);//Int32
+			for (int i = 0; i < tmp.Length-1; i++) {
+				scores[i].rank = Int32.Parse(tmp2[i, 0]);
+				scores[i].score = Double.Parse(tmp2[i, 2]);
+				scores[i].name = tmp2[i, 1];
 			}
 		}
-		public void EvaluateScore()
+		public void EvaluateScore(string fileName)
 		{
-			int ranking = rankingNodeNum;
+			int ranking = 999;//rankingNodeNum;
 			string output = "";
 			//StreamWriter sw = new StreamWriter("Ranking_test.txt");
 
 			// ランキング更新
-			for (int i = scores.Length - 1; i >= 0; i--) {
-				if (scores[i] > score) {
+			for (int i = 0; i < scores.Length; i++) {
+				if (score > scores[i].score) {
+					ranking = i + 1;
+					break;
+				} else {
+					continue;
+				}
+			}
+			/*for (int i = scores.Length - 1; i >= 0; i--) {
+				if (scores[i].score < score) {
+					continue;
+				} else {
 					ranking = scores.Length - i;
 					break;
 				}
-			}/**/
-			//for (int i = 0; i < 
+			}*/
 
-			if (ranking < scores.Length/*>= rankingNodeNum*/) scores[ranking] = score;
+			if (ranking < scores.Length/*>= rankingNodeNum*/) {
+				scores[ranking-1].score = score;
+				if (playerName != "") scores[ranking-1].name = playerName;
+				else scores[ranking].name = "nanashi";
+			}
 
 			// 暗号化＆ファイル書き込み
 			for (int i = 0; i < scores.Length; i++) {
-				output += i.ToString() + " " + scores[i].ToString() + "\r\n";
+				output += scores[i].rank.ToString() + " " + scores[i].name.ToString() + " " + scores[i].score + "\r\n";//(i+1).ToString() 
 			}
-			output = output.TrimEnd(new char[] { '\r', '\n' });
+			//output = output.TrimEnd(new char[] { '\r', '\n' });
+			output += "6 dummy 100\r\n";
 			MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(output));
-			Encryption.EncryptionData(ms, "Ranking.txt");
+			Encryption.EncryptionData(ms, fileName);
 			/*sw.Write(output);
 			sw.Close();*/
 		}
@@ -170,6 +207,7 @@ namespace _2DActionGame
 
 			isMuted = true;
 			//noEnemy = true;
+			scores = dummyScore;
 		}
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -201,7 +239,8 @@ namespace _2DActionGame
 			Scene.Initialize(this, spriteBatch, Content);
             // TODO: use this.content to load your game content here
 			PushScene(new MainTitle(null));
-			LoadRanking("test.txt");
+			EvaluateScore("Ranking.txt");
+			LoadRanking("Ranking.txt", false, "Ranking_original.txt");
 
 			// Fonts
 			Arial = Content.Load<SpriteFont>("General\\Arial32");

@@ -83,11 +83,11 @@ namespace _2DActionGame
 					using (CryptoStream cs = new CryptoStream(
 						outfs, encrypt, CryptoStreamMode.Write)) {
 						//暗号化データを書き出していく
-						byte[] buffer = new byte[1024];
+						byte[] buffer = new byte[4096];//[2048];//byte[1024]
 						int length;
 
 						while ((length = ms.Read(buffer, 0, buffer.Length)) > 0) {
-							cs.Write(buffer, 0, length);
+							cs.Write(buffer, 0, length);// bufferは87くらいまでしか使われてない
 						}
 					}
 				}

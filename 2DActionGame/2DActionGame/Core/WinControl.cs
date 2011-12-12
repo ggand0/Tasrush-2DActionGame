@@ -27,6 +27,7 @@ namespace _2DActionGame
 			game.playerName = textBox1.Text;
 			this.Visible = false;
 			this.Dispose();
+			game.EvaluateScore("Ranking.txt");
 		}
 	}
 	public class WinControlManager
