@@ -86,7 +86,8 @@ namespace _2DActionGame
 					gravity = defGravity;
 				}
 			} else if (hasFlownOut && isOnSomething) {						// 飛び出し着地後の歩く処理
-				RoundTripMotion(defPos, moveDistance, defSpeed);
+				//RoundTripMotion(defPos, moveDistance, defSpeed);
+				this.speed.X = -defSpeed;
 				counter = 0;
 			}
 		}

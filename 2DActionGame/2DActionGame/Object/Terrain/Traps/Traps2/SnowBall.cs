@@ -48,7 +48,7 @@ namespace _2DActionGame
 		public override void Update()
 		{
 			if (IsActive() && IsBeingUsed()) {
-				position = block.position;
+				//position = block.position - new Vector2(0, -height / 2);
 				defSpeed = -1;
 				block.speed.X = defSpeed;
 				d++;
@@ -61,6 +61,7 @@ namespace _2DActionGame
 		{
 			if (IsActive() && IsBeingUsed()) {
 				spriteBatch.Draw(texture, block.drawPos, null, Color.White, -d, new Vector2(width / 2, height / 2), 1, SpriteEffects.None, 0);
+				if (game.inDebugMode) block.Draw(spriteBatch);
 			}
 		}
 	}

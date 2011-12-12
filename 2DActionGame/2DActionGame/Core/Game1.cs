@@ -86,7 +86,7 @@ namespace _2DActionGame
 
 			random = new Random();
             
-			//isMuted = true;
+			isMuted = true;
 			//noEnemy = true;
         }
 		
@@ -207,7 +207,8 @@ namespace _2DActionGame
             GraphicsDevice.Clear(Color.White);
 
             // TODO: Add your drawing code here
-			spriteBatch.Begin();
+			//spriteBatch.Begin();
+			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);//SpriteSortMode.BackToFront, BlendState.NonPremultiplied);
 			currentScene.Draw(spriteBatch);
             dm.Draw(gameTime);
 			spriteBatch.End();

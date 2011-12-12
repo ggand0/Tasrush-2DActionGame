@@ -15,8 +15,8 @@ namespace _2DActionGame
 		private Game1 game;
 		private Stage stage;
         private Color[] fontColor = new Color[6];
+		private float maxValue;
 
-        int[,] fuck = new int[5, 8];
         public Debug(Game1 game, Stage stage)
         {
             this.game = game;
@@ -111,8 +111,10 @@ namespace _2DActionGame
 							spriteBatch.DrawString(game.Arial2, "player.hasAttacked:" + stage.player.hasAttacked.ToString(), new Vector2(0, 160), fontColor[1]);
 							spriteBatch.DrawString(game.Arial2, "game.score:" + game.score.ToString(), new Vector2(0, 170), fontColor[1]);
 							//spriteBatch.DrawString(game.Arial2, "boss.Turret:" + (stage.boss as Fuujin).cutterTurret5Way.defaultPosition.ToString(), new Vector2(0, 180), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "boss.Turret:" + (stage.boss as Fuujin).cutterTurret5Way.position.ToString(), new Vector2(0, 190), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "boss.dFA:" + (stage.boss as Fuujin).damageFromAttacking.ToString(), new Vector2(0, 200), fontColor[1]);
+							if (stage.boss is Fuujin) {
+								spriteBatch.DrawString(game.Arial2, "boss.Turret:" + (stage.boss as Fuujin).cutterTurret5Way.position.ToString(), new Vector2(0, 190), fontColor[1]);
+								spriteBatch.DrawString(game.Arial2, "boss.dFA:" + (stage.boss as Fuujin).damageFromAttacking.ToString(), new Vector2(0, 200), fontColor[1]);
+							}
 						}
 						break;
 					case 3:
@@ -132,15 +134,17 @@ namespace _2DActionGame
 								spriteBatch.DrawString(game.Arial2, "player.prevVector[1]:" + stage.player.locus[1].ToString(), new Vector2(0, 150), fontColor[1]);
 							spriteBatch.DrawString(game.Arial2, "player.hasAttacked:" + stage.player.hasAttacked.ToString(), new Vector2(0, 160), fontColor[1]);
 							spriteBatch.DrawString(game.Arial2, "game.score:" + game.score.ToString(), new Vector2(0, 170), fontColor[1]);
-							if (stage.boss != null) {
+							if (stage.boss is Rival) {
 								spriteBatch.DrawString(game.Arial2, "boss.syurikenTurret:" + (stage.boss as Rival).syuriken.isBeingUsed.ToString(), new Vector2(0, 180), fontColor[1]);
 								spriteBatch.DrawString(game.Arial2, "boss.syurikenTurret.bullets[0]:" + (stage.boss as Rival).syuriken.bullets[0].position.ToString(), new Vector2(0, 190), fontColor[1]);
                                 spriteBatch.DrawString(game.Arial2, "boss.position" + stage.boss.drawPos.ToString(), new Vector2(0, 200), fontColor[1]);
-                                spriteBatch.DrawString(game.Arial2, "boss.isOnSomeThing" + stage.boss.isOnSomething.ToString(), new Vector2(0, 210), fontColor[1]);
+                                spriteBatch.DrawString(game.Arial2, "boss.speed" + stage.boss.speed.ToString(), new Vector2(0, 210), fontColor[1]);
+								spriteBatch.DrawString(game.Arial2, "boss.max_speed" + maxValue.ToString(), new Vector2(0, 220), fontColor[1]);
 							}
 							for (int i = 0; i < stage.boss.attackList.Count; i++) {
-								spriteBatch.DrawString(game.Arial2, "boss.attackList:" + stage.boss.attackList[i].ToString(), new Vector2(0, 220 + i * 10), fontColor[1]);
+								spriteBatch.DrawString(game.Arial2, "boss.attackList:" + stage.boss.attackList[i].ToString(), new Vector2(0, 230 + i * 10), fontColor[1]);
 							}
+							if (stage.boss.speed.Y > maxValue) maxValue = stage.boss.speed.Y;
 						}
 						break;
 					#endregion

@@ -788,7 +788,7 @@ namespace _2DActionGame
 		/// <summary>
 		/// カッターと竜巻攻撃
 		/// </summary>
-		protected void InputControlD(int type)
+		protected void InputControlD(int type)// 3
 		{
 			//if (inputCounter == 0) speed.Y = -18;
 			if (inputCounter == 5) {
@@ -880,7 +880,7 @@ namespace _2DActionGame
 			counter++;
 
 			// 終了処理:syurikenの終了を待って終わる
-			if (syuriken.isEnd) {//isWaiting || attackCounter > 240) {
+			if (syuriken.isEnd || attackCounter > 240) {//isWaiting ) {
 				hasReached = false;
                 isShootingThunder = false;
                 hasAttackJumped = false;
@@ -989,7 +989,7 @@ namespace _2DActionGame
 						if (shootRightSide) {
 							obstacleWindLarge.MovePattern2(obstacleWindLarge.trapSet, new Vector2(position.X, 64), Vector2.Zero, new Vector2(position.X + 300, 64), 1, 10);
 						} else {
-							obstacleWindLarge.MovePattern2(obstacleWindLarge.trapSet, new Vector2(position.X, 64), Vector2.Zero, new Vector2(position.X + 300, 64), 1, 10);// position, position + (-300, 0)
+							obstacleWindLarge.MovePattern2(obstacleWindLarge.trapSet, new Vector2(position.X, 64), Vector2.Zero, new Vector2(position.X - 300, 64), 1, 10);// position, position + (-300, 0)
 						}
 					}
 					break;
@@ -1024,7 +1024,7 @@ namespace _2DActionGame
 			waitCounter = 0;
 			attackCounter++;*/
 		}
-		private void EndSkill()// 後でAWW(int)に統合予定
+		private void EndSkill()
 		{
 			if (obstacleWindSmall.isEnd) {
 				obstacleWindSmall.isEnd = false;
@@ -1116,6 +1116,7 @@ namespace _2DActionGame
 			animation = new Animation(48, 48);
 			jumpAnimation = new Animation(48, 48);
 			rnd = new Random();
+			maxSpeed = 28;
 			//Load();
 		}
 
@@ -1243,7 +1244,7 @@ namespace _2DActionGame
 					BlownAwayMotionUp(3, 65);
 					isBlownAway = true;
 				} else if (stage.player.isCuttingAway) BlownAwayMotionRight(1, 60);
-				else if (stage.player.isCuttingDown) BlownAwayMotionDown(3, 60);
+				else if (stage.player.isCuttingDown) BlownAwayMotionDown(1.5f, 60);// 3,60だとブロックをすり抜ける...
 				else if (stage.player.isAttacking3) {
 					if (distance > 0) speed.X += 5 * timeCoef;
 					else speed.X += -5 * timeCoef;

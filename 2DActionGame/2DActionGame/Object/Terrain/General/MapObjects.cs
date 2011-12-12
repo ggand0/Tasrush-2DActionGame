@@ -377,7 +377,7 @@ namespace _2DActionGame
 					break;
 				case 1:// 順に
 					if ((Vector2.Distance(mapObjects[mapObjects.Count - 1].position, endPosition + mapObjects[mapObjects.Count - 1].localPosition) < speed)/* || (mapObjects[0].position.X < endPosition.X && mapObjects[0].position.Y > endPosition.Y)*/) { // どれも同じ動きをするから[0]だけでいいだろう?
-						counter = 0;
+						counter = 0;// rival:(9751,206),(15500,356)+localPos
 						isEnd = true;
 						foreach (Terrain terrain in mapObjects) {
 							terrain.isBeingUsed = false;

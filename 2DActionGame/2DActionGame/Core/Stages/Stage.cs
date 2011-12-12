@@ -829,18 +829,7 @@ namespace _2DActionGame
 			UpdateTimeCoef();
 
 			// Update
-			foreach (Terrain terrain in activeDynamicTerrains) {
-				terrain.Update();
-			}
-			foreach (Character character in characters) {//for (int i = 0; i < characters.Count; i++)
-				character.Update();
-			}
-			foreach (Bullet bullet in bullets) {
-				bullet.Update();
-			}
-			foreach (Weapon weapon in weapons) {// これはactiveにすべきだろ...        
-				if (weapon.isAlive) weapon.Update();
-			}
+			foreach (Object obj in activeObjects) obj.Update();
 
 			//Reverse用のLogをとる←色々Update終わったあとにLog取らせることに
 			//*注意！極力UpdateReverseでのreverse.Updateと同タイミングに置くこと！！
@@ -1127,10 +1116,12 @@ namespace _2DActionGame
 				player.HP += -1;
 			}*/
 			// 左側が露出している地形だけ見るように改良
-			if ((isScrolled || inBossBattle) && player.position.X < camera.position.X) {
+			if ((isScrolled || inBossBattle) && player.position.X <= camera.position.X) {
 				player.position.X = camera.position.X;									// 位置を前に変更
 				player.speed.X = scrollSpeed;											// 押す
-			}
+				player.scrollPush = true;
+			} else player.scrollPush = false;
+
 			if (isScrolled && (player.position.X <= camera.position.X && player.isHitLeftSide/*&&
 				   activeStaticTerrains.Any((x) => !(x is Slope) && !x.isRightSlope && !x.isLeftSlope && x.isLeft && !x.isRight
 					   && x.position.X < player.position.X + player.width && player.position.Y + player.height > x.position.Y + adj && player.position.Y + adj < x.position.Y + x.height))*/
@@ -1446,9 +1437,9 @@ namespace _2DActionGame
 			}
 
 			game.GraphicsDevice.SetRenderTarget(null);
-			using (FileStream savedstream = new FileStream("bgtest0.png", FileMode.Create)) {// 描画されてはいた。描画のところか？
+			/*using (FileStream savedstream = new FileStream("bgtest0.png", FileMode.Create)) {// 描画されてはいた。描画のところか？
 				backGrounds[0].texture.SaveAsPng(savedstream, backGrounds[0].texture.Width, backGrounds[0].texture.Height);
-			}
+			}*/
 			//game.GraphicsDevice.Clear(Microsoft.Xna.Framework.Graphics.Color.White);
 			// 最後にウィンドゥに描画
 			//game.GraphicsDevice.re
@@ -1482,7 +1473,6 @@ namespace _2DActionGame
 		/// </summary>
 		public override void Draw(SpriteBatch spriteBatch)
 		{
-
 			// BackGround
 			scrollingBackGround.Draw(spriteBatch);
 			frontalScrollingBackGround.Draw(spriteBatch);
@@ -1512,10 +1502,8 @@ namespace _2DActionGame
 			// TASEffect
 			if (reverse.isReversed)
 				scrollingTASEffect.Draw(spriteBatch);
-
 			if (slowmotion.isSlow)
 				scrollingTASEffect.Draw(spriteBatch);
-
 			if (isAccelerated)
 				scrollingTASEffect.Draw(spriteBatch);
 

@@ -104,7 +104,7 @@ namespace _2DActionGame
 					if (counter == 0) dColor = 1f;
 					if (counter % 2 == 0) dColor += -.05f;
 
-					spriteBatch.Draw(texture, drawPos, animation.rect, new Color(255, 255, 255, dColor));
+					spriteBatch.Draw(texture, drawPos, animation.rect, Color.White * dColor);//new Color(255, 255, 255, dColor)
 					counter++;
 
 					// 終了処理

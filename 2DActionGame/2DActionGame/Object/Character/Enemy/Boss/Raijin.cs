@@ -577,6 +577,8 @@ namespace _2DActionGame
 			: base(stage, x, y, width, height, HP)
 		{
 			this.defaultPosition = position;
+
+			bindPos = new Vector2(100, 0);
 			tmpPosition = defaultPosition + new Vector2(-150, -50);
 			attackPosition = new Vector2(defaultPosition.X - 640, defaultPosition.Y - 50);
 			singleLightning = new Weapon(stage, position.X, position.Y, 16, 200, this);					// アニメーションの関係でWeaponじゃ処理しきれないのでBeamに移行

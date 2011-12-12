@@ -123,12 +123,12 @@ namespace _2DActionGame
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-           /* if (user == null) {// == staticTerrain
+           if (user == null) {// == staticTerrain
                 spriteBatch.Draw(texture, position, Color.White);
 			} else if (isActive && isBeingUsed) {
 				spriteBatch.Draw(texture, drawPos, Color.White);
-			}*/
-			spriteBatch.Draw(texture, position/*drawVectorvector*/, Color.White);
+			}/* */
+			//spriteBatch.Draw(texture, position/*drawVectorvector*/, Color.White);
        }
     }
 }

@@ -29,7 +29,7 @@ namespace _2DActionGame
         {
             bool isDividing = false;
 
-            if (!isAlive) isDividing = true;
+            if (!isAlive || this.comboCount >= 3) isDividing = true;// 3ダメージ目で強制分裂
 
 			if (isDividing && !isDivided) {
 				J1 = new JumpingEnemy(stage, defPos.X, defPos.Y, 20, 20, 3);

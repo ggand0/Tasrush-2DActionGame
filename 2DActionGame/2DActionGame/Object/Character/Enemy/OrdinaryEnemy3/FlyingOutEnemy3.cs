@@ -30,6 +30,7 @@ namespace _2DActionGame
 			LoadXML("FlyingOutEnemy3", "Xml\\Objects_Enemy_Stage3.xml");
 			flyingOutDistance = defFlyingOutDistance;
 			flyingOutSpeed = defFlyingOutSpeed;
+			speed.X = -defSpeed;
         }
 		protected override void Load()
 		{

@@ -49,7 +49,7 @@ namespace _2DActionGame
 
 			// Scoreをcastして確定
 			this.scoreToDisplay = (int)game.score;
-			game.hasReachedCheckPoint = false;
+			//game.hasReachedCheckPoint = false;
         }
 		public override void Update(double dt)
 		{
@@ -58,6 +58,7 @@ namespace _2DActionGame
 					game.stageNum++;
 					game.ReloadStage(game.isHighLvl);
                     //SoundControl.Pause();//SoundControl.Stop();
+					game.hasReachedCheckPoint = false;
 					isEndScene = true;
 				} else {
 					PushScene(new Ending(this));

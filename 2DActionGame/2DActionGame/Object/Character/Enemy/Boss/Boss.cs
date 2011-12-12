@@ -14,8 +14,8 @@ namespace _2DActionGame
 	{
 		private SoundEffect hitSoundSmall;
 		public Object bind { get; protected set; }
-		protected readonly Vector2 bindSize = new Vector2(200, 200);
-		protected readonly Vector2 bindPos = new Vector2(100, 100);
+		protected Vector2 bindSize = new Vector2(200, 200);
+		protected  Vector2 bindPos = new Vector2(100, 100);
 		//private int turretNum;// turretの数
 
 		/// <summary>
@@ -238,6 +238,8 @@ namespace _2DActionGame
 		{
 			if (attackList == null) attackList = new List<int>();
 
+			bindSize = new Vector2(width, height);
+			bindPos = Vector2.Zero;
 			bind = new Object(stage, (int)bindSize.X, (int)bindSize.Y);
 			bind.Load(game.Content, "Debug\\debugBind");
 			//stage.objects.Add(bind);
@@ -271,8 +273,9 @@ namespace _2DActionGame
 					weapon.isBeingUsed = false;
 				}
 			}
-			bind.position = this.position + bindPos;
-			bind.drawPos = this.drawPos + bindPos;
+			bind.position = position + bindPos;
+			bind.drawPos = drawPos + bindPos;
+			if (stage.inBossBattle) activeDistance = 9999;// ボス戦時に端に行ったときにstage.activeObjectsに追加されなくなるため
 
 			base.Update();
 		}

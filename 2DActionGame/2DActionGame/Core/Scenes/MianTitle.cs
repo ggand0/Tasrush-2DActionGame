@@ -56,7 +56,7 @@ namespace _2DActionGame
 			counter++;
         }
 
-        public override void Draw(SpriteBatch sprite)
+        public override void Draw(SpriteBatch spriteBatch)
         {   
             // 文字列幅or高さの取得はfontArial.MeasureString 
             if (counter < logoDisplayTime) {
@@ -69,15 +69,15 @@ namespace _2DActionGame
                     if (counter % 2 == 0) 
                         dColor += -.05f;
 
-                sprite.Draw(texture[1], Vector2.Zero, Color.White);
-                sprite.Draw(texture[2], Vector2.Zero, new Color(255, 255, 255, dColor));
+                spriteBatch.Draw(texture[1], Vector2.Zero, Color.White);
+                spriteBatch.Draw(texture[2], Vector2.Zero, Color.White * dColor);//new Color(255, 255, 255, dColor
             }
             else {
                 if (counter % 5 == 0 ) e += .02f;//if (d >= 360) e = 0;
                 dColor = (float)Math.Sin(e * 8) / 2.0f + 0.5f;
 
-                sprite.Draw(texture[0], Vector2.Zero, Color.White);
-                sprite.Draw(texture[3], Vector2.Zero, new Color(255, 255, 255, dColor));
+                spriteBatch.Draw(texture[0], Vector2.Zero, Color.White);
+				spriteBatch.Draw(texture[3], Vector2.Zero, Color.White * dColor);
             }
         }
 

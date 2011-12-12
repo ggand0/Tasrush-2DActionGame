@@ -30,13 +30,13 @@ namespace _2DActionGame
 		// Const
 		protected readonly double defGravity = .60;
 		protected readonly float accel = .40f;
-		protected readonly float maxSpeed = 32f;
+		protected float maxSpeed = 32f;
 		protected readonly float defFriction = .40f;
 		/// <summary>
 		/// めり込み許容範囲
 		/// </summary>
 		public readonly float maxLength = 32;
-		public readonly float defActiveDistance = 640;
+		public readonly float defActiveDistance = 1280;//640;
 		public readonly int defHitPoint = 3;
 		public float timeCoefObject { get; protected set; }//readonly 0.3f
 

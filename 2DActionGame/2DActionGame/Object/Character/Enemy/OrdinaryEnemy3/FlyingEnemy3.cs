@@ -31,6 +31,7 @@ namespace _2DActionGame
 		{
 			base.Load();
 			texture = content.Load<Texture2D>("Object\\Character\\FlyingEnemy3");
+			//defSpeed = 2;
 		}
 
         public override void UpdateAnimation()

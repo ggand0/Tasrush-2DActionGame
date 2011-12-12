@@ -153,6 +153,7 @@ namespace _2DActionGame
 		private Vector2 reflectSpeed;
 		public static readonly Vector2 defReflectSpeed = new Vector2(4, -6);
 		#endregion
+		public bool scrollPush { get; set; }
 
 		public Player()
 			: this(null, 0, 0, 32, 32)
@@ -929,6 +930,10 @@ namespace _2DActionGame
 		}
 		protected override void UpdateNumbers()
 		{
+			/*if (scrollPush) {
+				isMoving = true;
+			}*/
+
 			if (isOnSomething) {
 				damageTime = 0;
 				if (normalComboCount == 4 || normalComboCount == 0) isTrackingEnemy = false;
@@ -995,6 +1000,11 @@ namespace _2DActionGame
 			locus.Clear();
 			locus.Add(position);
 			locus.Add(nextVector);*/
+
+			// デバッグ
+			if (game.inDebugMode) {
+				this.TASpower = MAXTAS;
+			}
 		}
 		public override void Update()
 		{
@@ -1124,6 +1134,7 @@ namespace _2DActionGame
 							isMoving = true;
 						}
 				}
+				
 
 				if (isOnSomething) isInJumpAnim = false;
 				/*if (isOnSomething && (jumpCount > 0 || ((buttonCheck[1] == 1 && buttonCheck[4] == 1) || (buttonCheck[3] == 1 && buttonCheck[4] == 1)) || JoyStick.onStickDirectionChanged))
@@ -1134,6 +1145,10 @@ namespace _2DActionGame
 				// 何もしていなければ静止時の絵
 				if (!isMoving && /*!isInJumpAnim &&*/ !isJumping)
 					animation.Update(2, 1, 48, 48);
+				// スクロールに押されてたら
+				/*if (scrollPush) {
+					animation.Update(3, 0, 48, 48, 5, 1);
+				}*/
 			}
 
 			animCounter2++;
