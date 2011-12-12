@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -15,6 +16,10 @@ namespace _2DActionGame
 		private readonly int defDrawTime = 1125;// 9000 / 8 = 1125
 
         private Texture2D[] textures = new Texture2D[textureNum];
+		private void WriteScore()
+		{
+			//StreamWriter ws = new StreamWriter();
+		}
 
 		public Ending(Scene privousScene)
 			: base(privousScene)

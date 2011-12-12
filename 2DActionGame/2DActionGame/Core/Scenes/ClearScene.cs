@@ -50,6 +50,14 @@ namespace _2DActionGame
 			// Scoreをcastして確定
 			this.scoreToDisplay = (int)game.score;
 			//game.hasReachedCheckPoint = false;
+
+			if (game.stageNum == 3) {
+				//game.winControlManager = new WinControlManager(game, game.graphics);
+				//game.winControlManager.ControlForm.Visible = true;
+				WinControl form = new WinControl(game);
+				form.Show();
+				game.EvaluateScore();
+			}
         }
 		public override void Update(double dt)
 		{
@@ -59,6 +67,7 @@ namespace _2DActionGame
 					game.ReloadStage(game.isHighLvl);
                     //SoundControl.Pause();//SoundControl.Stop();
 					game.hasReachedCheckPoint = false;
+					//game.winControlManager.ControlForm.Visible = false;
 					isEndScene = true;
 				} else {
 					PushScene(new Ending(this));

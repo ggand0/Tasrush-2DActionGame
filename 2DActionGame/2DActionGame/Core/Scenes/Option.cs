@@ -19,7 +19,7 @@ namespace _2DActionGame
 		public Option(Scene privousScene)
 			: base(privousScene)
 		{
-			buttonNum = 5;
+			buttonNum = 6;
 			button = new Button[buttonNum];
 
 			for (int i = 0; i < button.Length; i++) {
@@ -56,7 +56,12 @@ namespace _2DActionGame
 				if (!game.isMuted) game.isMuted = true;
 				else game.isMuted = false;
 			}
-			if (button[4].isSelected && JoyStick.IsOnKeyDown(3)) {						// Back To Menu
+			if (button[4].isSelected && JoyStick.IsOnKeyDown(3)) {						// Ranking
+				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
+				PushScene(new Ranking(this));
+				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
+			}
+			if (button[5].isSelected && JoyStick.IsOnKeyDown(3)) {						// Back To Menu
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 				isEndScene = true;
 			}
@@ -70,8 +75,9 @@ namespace _2DActionGame
 			spriteBatch.DrawString(game.Arial, "Full Screen / Window", new Vector2(200, 150), button[1].color);
 			spriteBatch.DrawString(game.Arial, "BGMVolume", new Vector2(200, 200), button[2].color);
 			spriteBatch.DrawString(game.Arial, "volume : " + SoundControl.volumeAll.ToString(), new Vector2(200, 250), button[2].color);
-			spriteBatch.DrawString(game.Arial, "Mute :" + (game.isMuted ? "On" : "Off")   + SoundControl.volumeAll.ToString(), new Vector2(200, 300), button[3].color);
-			spriteBatch.DrawString(game.Arial, "Back", new Vector2(200, 400), button[3].color);
+			spriteBatch.DrawString(game.Arial, "Mute : " + (game.isMuted ? "On" : "Off"), new Vector2(200, 300), button[3].color);
+			spriteBatch.DrawString(game.Arial, "ViewRanking", new Vector2(200, 350), button[4].color);
+			spriteBatch.DrawString(game.Arial, "Back", new Vector2(200, 420), button[5].color);
         }
     }
 }

@@ -80,6 +80,8 @@
       <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\SlimDX SDK (September 2011)\Bin\net40\x86\SlimDX.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -131,6 +133,13 @@
     <Compile Include="Core\UI\UserInterface.cs" />
     <Compile Include="Core\Vector.cs" />
     <None Include="Input\DirectInput.cs" />
+    <Compile Include="Core\WinControl.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Core\WinControl.Designer.cs">
+      <DependentUpon>WinControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Input\Encryption.cs" />
     <Compile Include="Input\JoyStickInput.cs" />
     <Compile Include="Input\JoyStick.cs" />
     <Compile Include="Input\KeyInput.cs" />
@@ -193,7 +202,7 @@
     <Compile Include="Object\Terrain\Traps\Traps3\TracingFoothold.cs" />
     <Compile Include="Object\Weapon\DivisionWeapon.cs" />
     <Compile Include="Object\Weapon\Obstacle.cs" />
-    <Compile Include="Object\Weapon\Ranking.cs" />
+    <Compile Include="Core\Scenes\Ranking.cs" />
     <Compile Include="Object\Weapon\Sword.cs" />
     <Compile Include="Object\Weapon\Turret.cs" />
     <Compile Include="Object\Weapon\Weapon.cs" />
@@ -248,6 +257,11 @@
     <None Include="Object\Character\ve-9EA6.tmp" />
     <None Include="Object\Character\ve-C2.tmp" />
     <None Include="Object\Weapon\ve-340.tmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Core\WinControl.resx">
+      <DependentUpon>WinControl.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />

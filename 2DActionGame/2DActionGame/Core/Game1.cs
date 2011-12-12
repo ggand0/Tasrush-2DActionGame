@@ -1,10 +1,12 @@
-// Welcome to TASLASH source code!
+// Welcome to TASRUSH source code!
 
 // 注意：意味不明なコメントや試行錯誤していた時に残した箇所、全く使っていない箇所、などがあります。
 // さらに、読みづらい部分や稚拙かつ非効率的な処理をしている所もあるでしょう。が、幾許かはこのコードを読む人の参考になると思います。ゆっくり読んでいってね！
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -17,7 +19,7 @@ using Microsoft.Xna.Framework.Storage;
 
 namespace _2DActionGame
 {
-    /// <summary>
+	/// <summary>
     /// This is the main movementType for our game. Yukkuri mite ittene!
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
@@ -28,7 +30,7 @@ namespace _2DActionGame
 		public static readonly int Width = 640, Height = 480;
 		public static readonly int maxStageNum = 3;
 
-		//public WinControlManager winControlManager { get; private set; }
+		public WinControlManager winControlManager { get; set; }
 		public Random random { get; private set; }
 		public double dt { get; private set; }
         public GraphicsDeviceManager graphics { get; set; }
@@ -45,7 +47,10 @@ namespace _2DActionGame
 		public SpriteFont pumpDemi { get; private set; }
         
         // Game
+		private const int rankingNodeNum = 5;
+		public double[] scores = new double[rankingNodeNum];
         public double score { get; set; }
+		public string playerName { get; set; }
 		public float wholeVolume { get; set; }
         public int avilityNum { get; set; }
 		public int stageNum { get; set; }
@@ -57,8 +62,6 @@ namespace _2DActionGame
 		public bool visibleSword { get; set; }
 		public bool visibleScore { get; set; }
 		public bool hasReachedCheckPoint { get; set; }
-
-		
 
 		public void PushScene(Scene scene)
 		{
@@ -72,24 +75,102 @@ namespace _2DActionGame
 
 			
 		}
+		public void LoadRanking(string fileName)
+		{
+			StreamReader sr = new StreamReader("Ranking_original.txt");
+			string original;
+			string[] tmp;
+			string[,] tmp2;
 
-        public Game1()
+			//original = sr.ReadToEnd();
+			// 暗号化の実験
+			//MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(original));
+			//Encryption.EncryptionData(ms, "test.txt");
+
+			// 復号化
+			MemoryStream msd = new MemoryStream();
+			Encryption.DecryptionFile("Ranking.txt", msd);//("test.txt", msd);
+			byte[] bs = msd.ToArray();
+			original = Encoding.UTF8.GetString(bs);		// UTF8じゃないと文字化けする
+			//original = sr.ReadToEnd();
+			original = original.TrimEnd(new char[] { '\r', '\n' });
+
+			tmp = original.Replace("\r\n", "\n").Split('\n');// 0が無視される...
+			tmp2 = new string[tmp.Length, 2];
+			for (int i = 0; i < tmp.Length; i++) {
+				string[] t = tmp[i].Split(' ');
+				tmp2[i, 0] = t[0];
+				tmp2[i, 1] = t[1];
+			}
+			for (int i = 0; i < tmp.Length; i++) {
+				scores[i] = Double.Parse(tmp2[i, 1]);//Int32
+			}
+		}
+		public void EvaluateScore()
+		{
+			int ranking = rankingNodeNum;
+			string output = "";
+			//StreamWriter sw = new StreamWriter("Ranking_test.txt");
+
+			// ランキング更新
+			for (int i = scores.Length - 1; i >= 0; i--) {
+				if (scores[i] > score) {
+					ranking = scores.Length - i;
+					break;
+				}
+			}/**/
+			//for (int i = 0; i < 
+
+			if (ranking < scores.Length/*>= rankingNodeNum*/) scores[ranking] = score;
+
+			// 暗号化＆ファイル書き込み
+			for (int i = 0; i < scores.Length; i++) {
+				output += i.ToString() + " " + scores[i].ToString() + "\r\n";
+			}
+			output = output.TrimEnd(new char[] { '\r', '\n' });
+			MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(output));
+			Encryption.EncryptionData(ms, "Ranking.txt");
+			/*sw.Write(output);
+			sw.Close();*/
+		}
+		public void ReloadStage(bool isHighLvl)
         {
-            graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = Width;
-            graphics.PreferredBackBufferHeight = Height;
-            Content.RootDirectory = "Content";
+            this.isHighLvl = isHighLvl;
+            score = 0;
 
+			scenes.Pop();// クリアしたStageもしくは失敗したStageをPop。
+			switch (stageNum) {
+				case 1:
+					Scene.PushScene(new Stage1(scenes.Peek(), isHighLvl));
+					break;
+				case 2:
+					Scene.PushScene(new Stage2(scenes.Peek(), isHighLvl));
+					break;
+				case 3:
+					Scene.PushScene(new Stage3(scenes.Peek(), isHighLvl));
+					break;
+			}
+        }
+
+		// コンストラクタ
+		public Game1()
+		{
+			graphics = new GraphicsDeviceManager(this);
+			graphics.PreferredBackBufferWidth = Width;
+			graphics.PreferredBackBufferHeight = Height;
+			Content.RootDirectory = "Content";
+
+			//winControlManager = new WinControlManager(this, graphics);
+			//winControlManager.ControlForm.Visible = false;
 			System.Windows.Forms.Form MyForm = (System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(this.Window.Handle);
 			MyForm.MaximizeBox = false;
-			MyForm.MinimizeBox = false; 
+			MyForm.MinimizeBox = false;
 
 			random = new Random();
-            
+
 			isMuted = true;
 			//noEnemy = true;
-        }
-		
+		}
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -120,6 +201,7 @@ namespace _2DActionGame
 			Scene.Initialize(this, spriteBatch, Content);
             // TODO: use this.content to load your game content here
 			PushScene(new MainTitle(null));
+			LoadRanking("test.txt");
 
 			// Fonts
 			Arial = Content.Load<SpriteFont>("General\\Arial32");
@@ -132,25 +214,6 @@ namespace _2DActionGame
             /*audioEngine = new AudioEngine("Content\\Audio\\Audio.xgs");
             waveBank = new WaveBank(audioEngine, "Content\\Audio\\Wave Bank.xwb");
             soundBank = new SoundBank(audioEngine, "Content\\Audio\\Sound Bank.xsb");*/
-        }
-
-        public void ReloadStage(bool isHighLvl)
-        {
-            this.isHighLvl = isHighLvl;
-            score = 0;
-
-			scenes.Pop();// クリアしたStageもしくは失敗したStageをPop。
-			switch (stageNum) {
-				case 1:
-					Scene.PushScene(new Stage1(scenes.Peek(), isHighLvl));
-					break;
-				case 2:
-					Scene.PushScene(new Stage2(scenes.Peek(), isHighLvl));
-					break;
-				case 3:
-					Scene.PushScene(new Stage3(scenes.Peek(), isHighLvl));
-					break;
-			}
         }
 
         /// <summary>

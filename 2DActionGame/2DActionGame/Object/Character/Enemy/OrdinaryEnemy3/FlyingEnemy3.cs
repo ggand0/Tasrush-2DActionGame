@@ -13,24 +13,27 @@ namespace _2DActionGame
     /// </summary>
     public class FlyingEnemy3 : JumpingEnemy
     {
-		protected new readonly float defSpeed = 2;
-		protected new readonly float jumpSpeed = -16;
-		public new readonly byte defMovePattern = 1;
-
+		//protected new readonly float defSpeed = 2;
+		//protected new readonly float jumpSpeed = -16;
+		//public new readonly byte defMovePattern = 1;
         private Turret turret;
 
         public FlyingEnemy3(Stage stage, float x, float y, int width, int height, int HP)
             : base(stage, x, y, width, height,HP)
         {
-			LoadXML("FlyingEnemy2", "Xml\\Objects_Enemy_Stage2.xml");
             //turret = new Turret(stage, this, new Vector2(5, 5), 5, 5, 0, 1);// ビームを放つタイプ：実装としてはThunderの方が近いのでそっちで.
-            turret = new Turret(stage, this, new Vector2(5, 5), 5, 5, 0, 0, 1, false, true, 0, 0);
+            turret = new Turret(stage, this, new Vector2(5), 5, 5, 0, 0, 1, false, true, 0, 0);
             turret.bulletSpeed = new Vector2(0, 10);
+			/*baseクラスの定数に割り当てようとしてもbaseクラスコンストラクタ内でしかできないのでエラー、しかしnewして新しく定義してもbaseクラスの定数を使う処理では
+			 当然baseクラスで定義されている定数が使われるので反映されない。困った...
+			 これの解決策としてはreadonlyを外すしかないのでは...?
+			 →Load()のoverrideで上手くできそう→できたっぽい*/
         }
 		protected override void Load()
 		{
 			base.Load();
 			texture = content.Load<Texture2D>("Object\\Character\\FlyingEnemy3");
+			LoadXML("FlyingEnemy3", "Xml\\Objects_Enemy_Stage2.xml");
 			//defSpeed = 2;
 		}
 

@@ -35,7 +35,8 @@ namespace _2DActionGame
             thread = new Thread(stage, x, y - 150, 2, 150, 45, 150);// lengthは適当.あとで追加
             stage.dynamicTerrains.Add(thread);
 
-            turret = new Turret(stage, this, new Vector2(), 8, 8, 0, 5, 2, false, true, 0, 3);
+            turret = new Turret(stage, this, new Vector2(width/2, height/2), 8, 8, 0, 5, 2, false, true, 0, 3);
+			//turret = new Turret(stage, this, new Vector2(width / 2, height / 2), 8, 8, 0, 5, 2, false, true, 0, 3, 2, 120, 20, Vector2.Zero, false, false); // こっちに変えても発射位置の問題は直らなかった
 			stage.weapons.Add(turret);
             turret.isBeingUsed = true;
             //turret = new Turret(stage, this, shootPosition[0], 32, 32, 5, bulletType)
@@ -62,7 +63,7 @@ namespace _2DActionGame
 				//if (turret.isEnd) turret.Inicialize();    // 面白いけど失敗.
 				//if (!turret.isBeingUsed) turret.isBeingUsed = true;
 
-				turret.Update();
+				//turret.Update();
 				base.Update();
 			} else {
 				turret.isAlive = false;

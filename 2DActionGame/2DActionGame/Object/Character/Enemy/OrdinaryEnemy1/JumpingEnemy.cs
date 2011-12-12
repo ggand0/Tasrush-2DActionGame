@@ -37,7 +37,7 @@ namespace _2DActionGame
         public JumpingEnemy(Stage stage, float x, float y, int width, int height, int HP, Character user)
 			: base(stage, x, y, width, height, HP, user)
         {
-			LoadXML("JumpingEnemy", "Xml\\Objects_Enemy_Stage1.xml");
+			
             isMovingAround = true;
             moveDistance = 80;
             speed.X = defSpeed;
@@ -56,6 +56,7 @@ namespace _2DActionGame
 
 			texture = content.Load<Texture2D>("Object\\Character\\JumpingEnemy1");
 			jumpSound = content.Load<SoundEffect>("Audio\\SE\\jump2");
+			LoadXML("JumpingEnemy", "Xml\\Objects_Enemy_Stage1.xml");
 		}
 
         public override void Update()

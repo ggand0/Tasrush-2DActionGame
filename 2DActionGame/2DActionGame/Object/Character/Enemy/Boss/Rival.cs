@@ -573,7 +573,7 @@ namespace _2DActionGame
 				RestoreJump(toRightSide ? defaultPosition : defPosOtherSide, 5);
 			// 画面外に出ないように
 			if (stage.inBossBattle && position.X < stage.bossScreenEdgeLeft - Player.screenPosition.X) {
-				position.X = stage.bossScreenEdgeLeft;								// 位置を前に変更
+				position.X = stage.bossScreenEdgeLeft - Player.screenPosition.X;								// 位置を前に変更
 				speed.X = stage.scrollSpeed;											// 押す
 			} else if (stage.inBossBattle && position.X > stage.bossScreenEdgeRight) {
 				this.position.X = stage.bossScreenEdgeRight;

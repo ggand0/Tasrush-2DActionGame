@@ -478,37 +478,42 @@ namespace _2DActionGame
 		}
 		internal void MegaThrust(bool turnsRight, int width, int height)
 		{
-			int defaultDegree = 100;
+			int adj;
+			int defaultDegree;
 
-			if (turnsRight) {
-				if (degreeCounter == 0) {
-					degree = defaultDegree;
-					rect.Width = width;
-					rect.Height = height;
-					time = 0;
-					animation.poseCount = 0;
-					animation.count = 0;
+			if (turnsRight) adj = -1;
+			else adj = 1;
+			defaultDegree = 90 + adj * 70;//100
 
-					degreeCounter++;// 初期化は1回
-					isEnd = false;
-					degree = 30;
-				}
-				//Random rnd1 = new Random();
-				//randomDegree = rnd1.Next(10,60);
-				if (time % 5 == 0) {// % 3
-					if (!game.isMuted) slashSounds[0].Play(SoundControl.volumeAll, 0f, 0f);
-				}
-				// randomDegree;
-				/*Random rnd2 = new Random();
-				rnd1.Next(10);
-				position = player.position + new Vector2(8,rnd1.Next(0,32));
-				drawPos = player.drawPos + new Vector2(8, rnd1.Next(0, 32));*/
+			//if (turnsRight) {
+			if (degreeCounter == 0) {
+				Inicialize();
+				degree = defaultDegree;
+				rect.Width = width;
+				rect.Height = height;
+				time = 0;
+				animation.poseCount = 0;
+				animation.count = 0;
 
-				if (time > 30) {// 攻撃終了
-					isEnd = true;
-					isBeingUsed = false;
-					degreeCounter = 0;
-				}
+				degreeCounter++;
+				isEnd = false;
+				//degree = 30;
+			}
+			//Random rnd1 = new Random();
+			//randomDegree = rnd1.Next(10,60);
+			if (time % 5 == 0) {// % 3
+				if (!game.isMuted) slashSounds[0].Play(SoundControl.volumeAll, 0f, 0f);
+			}
+			// randomDegree;
+			/*Random rnd2 = new Random();
+			rnd1.Next(10);
+			position = player.position + new Vector2(8,rnd1.Next(0,32));
+			drawPos = player.drawPos + new Vector2(8, rnd1.Next(0, 32));*/
+
+			if (time > 30) {// 攻撃終了
+				isEnd = true;
+				isBeingUsed = false;
+				degreeCounter = 0;
 			}
 		}
 		internal void ThrustInDashing(bool turnsRight, int width, int height)
@@ -635,7 +640,6 @@ namespace _2DActionGame
 		}
 		#endregion
 
-
 		private void DrawThrustAnimation(SpriteBatch spriteBatch, bool turnsRight)
 		{
 			float deg = 0;
@@ -692,10 +696,12 @@ namespace _2DActionGame
 							//else if (counter % 3 == 0) spriteBatch.Draw(effects[1], drawPos + new Vector2(24, -56), animation.rect, Color.White);
 							//else if (counter % 2 == 0) spriteBatch.Draw(effects[2], drawPos + new Vector2(24, -56), animation.rect, Color.White);
 							//else spriteBatch.Draw(effects[0], drawPos + new Vector2(24, -56), animation.rect, Color.White);
-							spriteBatch.Draw(effects[4], drawPos + new Vector2(0, -user.height * 3/4), animation.rect, Color.White, MathHelper.ToRadians(-20), Vector2.Zero, new Vector2(1.5f), SpriteEffects.None, 0);
+							spriteBatch.Draw(effects[4], drawPos + new Vector2(0, -user.height * 3 / 4), animation.rect, Color.White, MathHelper.ToRadians(-20), Vector2.Zero, new Vector2(1.5f), SpriteEffects.None, 0);
+							
 						} else {
-							spriteBatch.Draw(effects[4], drawPos + new Vector2(-68, -56), animation.rect, Color.White, 0, Vector2.Zero, 1, SpriteEffects.FlipHorizontally, 0);
-						}/**/
+							//spriteBatch.Draw(effects[4], drawPos + new Vector2(-68, -56), animation.rect, Color.White, 0, Vector2.Zero, 1, SpriteEffects.FlipHorizontally, 0);
+							spriteBatch.Draw(effects[4], drawPos + new Vector2(-effects[4].Width / 5, -user.height * 5 / 4), animation.rect, Color.White, MathHelper.ToRadians(20), Vector2.Zero, new Vector2(1.5f), SpriteEffects.FlipHorizontally, 0);
+						}
 						//DrawThrustAnimation(spriteBatch, user.turnsRight);
 					}
 				}

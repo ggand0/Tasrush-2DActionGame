@@ -10,8 +10,8 @@ namespace _2DActionGame
 {
 	public class Ranking : SelectScene
 	{
-		private const int displayNum = 5;
-		private int[] scores = new int[displayNum];
+		//private const int displayNum = 5;
+		//private int[] scores = new int[displayNum];
 
 		public Ranking(Scene upperScene)
 			:base(upperScene)
@@ -27,7 +27,7 @@ namespace _2DActionGame
 		public override void Load()
 		{
 			base.Load();
-			LoadRanking("Ranking.txt");
+			game.LoadRanking("Ranking.txt");
 		}
 
 		protected override void ButtonUpdate()
@@ -40,30 +40,11 @@ namespace _2DActionGame
 			}
 		}
 
-		private void LoadRanking(string fileName)
-		{
-			StreamReader sr = new StreamReader("Ranking.txt");
-			string original;
-			string[] tmp;
-			string[,] tmp2;
-
-			original = sr.ReadToEnd();
-			tmp = original.Replace("\r\n", "\n").Split('\n');
-			tmp2 = new string[tmp.Length, 2];
-			for (int i = 0; i < tmp.Length; i++) {
-				string[] t = tmp[i].Split(' ');
-				tmp2[i, 0] = t[0];
-				tmp2[i, 1] = t[1];
-			}
-			for (int i = 0; i < tmp.Length; i++) {
-				scores[i] = Int32.Parse(tmp2[i, 1]);
-			}
-		}
 		public override void Draw(SpriteBatch spriteBatch)
 		{
 			base.Draw(spriteBatch);
-			for (int i = 0; i < scores.Length; i++) {
-				spriteBatch.DrawString(game.Arial2, scores[i].ToString(), new Vector2(100, 100 + i * 50), Color.White);
+			for (int i = 0; i < game.scores.Length; i++) {
+				spriteBatch.DrawString(game.Arial2, game.scores[i].ToString(), new Vector2(100, 100 + i * 50), Color.White);
 			}
 		}
 	}

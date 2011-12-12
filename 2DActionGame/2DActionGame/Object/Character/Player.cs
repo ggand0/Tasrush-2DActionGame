@@ -154,6 +154,14 @@ namespace _2DActionGame
 		public static readonly Vector2 defReflectSpeed = new Vector2(4, -6);
 		#endregion
 		public bool scrollPush { get; set; }
+		/// <summary>
+		/// ダメージ時の点滅処理に使用するカウンタ
+		/// </summary>
+		private int blinkCount;
+		/// <summary>
+		/// 透過処理時に使用。名前変えたい
+		/// </summary>
+		private float e;
 
 		public Player()
 			: this(null, 0, 0, 32, 32)
@@ -894,7 +902,7 @@ namespace _2DActionGame
 				normalComboCount = time = 0;
 				//}
 			}
-			counter++;
+			//counter++;// これってUpdate直下でしてるから要らなくないか...?
 			// 2段目以降は、空中なのでIsOnKeyDownでおｋ
 			if (JoyStick.IsOnKeyDown(2)) {// 一気にjumpCountが0～2までいくのを修正.3/10 ここだけだとちょっとキャンセル具合がよろしくないのでKEYでも.
 				if (isAttacking) {
@@ -1064,6 +1072,7 @@ namespace _2DActionGame
 				if (turnsRight) speed = new Vector2(-8, -8);
 				else speed = new Vector2(8, -8);
 				inDmgMotion = true;
+				blinkCount = 0; e = 0;
 				animCounter2 = 0;
 
 				if (HP >= 0) {
@@ -1204,7 +1213,7 @@ namespace _2DActionGame
 			isTrackingEnemy = true;
 			//stage.damagedCharacters[0]
 			speed = 18;
-			counter++;
+			//counter++;
 
 			//if(counter < 10) {
 			if (stage.damagedCharacters.Count > 0 && stage.damagedCharacters[0].speed.X < 10 /*&& sword.damagedCharacters[0].scalarSpeed < 10*/) {//stage.characters[i].isDamagedはダメ  
@@ -1321,10 +1330,18 @@ namespace _2DActionGame
 		public override void Draw(SpriteBatch spriteBatch)
 		{
 			if (isAlive) {
-				if (turnsRight) {
-					spriteBatch.Draw(texture, drawPos, animation.rect, Color.White);
-				} else {
-					spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, 0, Vector2.Zero, 1, SpriteEffects.FlipHorizontally, 0);
+				if (!inDmgMotion) {
+					if (turnsRight) {
+						spriteBatch.Draw(texture, drawPos, animation.rect, Color.White);
+					} else {
+						spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, 0, Vector2.Zero, 1, SpriteEffects.FlipHorizontally, 0);
+					}
+				} else {// 点滅させる
+					if (blinkCount % 5 == 0) e += 60f;//30f;//.02f;
+					dColor = (float)Math.Sin(e * 8) / 2.0f + 0.5f;
+
+					spriteBatch.Draw(texture, drawPos, animation.rect, Color.Red * dColor);
+					blinkCount++;
 				}
 				spriteBatch.DrawString(game.pumpDemi, HP.ToString(), drawPos + new Vector2(width, -10), Color.Orange, 0, Vector2.Zero, new Vector2(.3f), SpriteEffects.None, 0f);
 			}

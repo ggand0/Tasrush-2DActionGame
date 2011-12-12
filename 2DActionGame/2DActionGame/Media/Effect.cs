@@ -209,7 +209,7 @@ namespace _2DActionGame
 				count[index] = 0;
 				deathEffects.Add(new Object[deathEffectNum]);
 
-				playerDeath.Play(SoundControl.volumeAll, 0f, 0f);
+				if (!game.isMuted) playerDeath.Play(SoundControl.volumeAll, 0f, 0f);
 			}
 
 			for (int i = 0; i < deathEffectNum; i++) {
