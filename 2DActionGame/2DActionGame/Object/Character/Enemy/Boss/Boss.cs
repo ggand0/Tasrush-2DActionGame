@@ -282,8 +282,7 @@ namespace _2DActionGame
 		public override void Draw(SpriteBatch spriteBatch)
 		{
 			base.Draw(spriteBatch);
-			if (game.inDebugMode) spriteBatch.Draw(bind.texture, new Rectangle((int)bind.drawPos.X, (int)bind.drawPos.Y, (int)bindSize.X, (int)bindSize.Y)
-				, new Rectangle(0, 0, (int)bindSize.X, (int)bindSize.Y), Color.White);
+			
 		}
 		/// <summary>
 		/// 今のところBossは仰け反らない仕様
@@ -315,6 +314,9 @@ namespace _2DActionGame
 				damageEffected = true;
 				time = 0;   //raivalでcomboで使ってるtimeと同じだから干渉しないかどうか...
 				delayTime = 0;
+				inDmgMotion = true;
+				blinkCount = 0;
+				e = 0;
 
 				if (time < deathComboTime) {
 					comboCount++;

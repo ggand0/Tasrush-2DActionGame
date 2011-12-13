@@ -108,12 +108,8 @@ namespace _2DActionGame
 		}
 		public override void Draw(SpriteBatch spriteBatch)
 		{
+			base.Draw(spriteBatch);
 			if (IsActive()) {
-				if (!turnsRight) {
-					spriteBatch.Draw(texture, drawPos, animation.rect, Color.White);
-				} else {
-					spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, 0, Vector2.Zero, 1, SpriteEffects.FlipHorizontally, 0);
-				}
 				DrawComboCount(spriteBatch);
 			}
 		}

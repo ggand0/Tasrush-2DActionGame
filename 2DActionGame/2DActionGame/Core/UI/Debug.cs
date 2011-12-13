@@ -109,7 +109,8 @@ namespace _2DActionGame
 							if (stage.player.locus.Count > 1)
 								spriteBatch.DrawString(game.Arial2, "player.prevVector[1]:" + stage.player.locus[1].ToString(), new Vector2(0, 150), fontColor[1]);
 							spriteBatch.DrawString(game.Arial2, "player.hasAttacked:" + stage.player.hasAttacked.ToString(), new Vector2(0, 160), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "game.score:" + game.score.ToString(), new Vector2(0, 170), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "sword.isHit:" + stage.player.sword.isHit.ToString(), new Vector2(0, 170), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "game.score:" + game.score.ToString(), new Vector2(0, 180), fontColor[1]);
 							//spriteBatch.DrawString(game.Arial2, "boss.Turret:" + (stage.boss as Fuujin).cutterTurret5Way.defaultPosition.ToString(), new Vector2(0, 180), fontColor[1]);
 							if (stage.boss is Fuujin) {
 								spriteBatch.DrawString(game.Arial2, "boss.Turret:" + (stage.boss as Fuujin).cutterTurret5Way.position.ToString(), new Vector2(0, 190), fontColor[1]);

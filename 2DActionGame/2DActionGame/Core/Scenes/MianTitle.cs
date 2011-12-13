@@ -12,10 +12,11 @@ namespace _2DActionGame
 {
     public class MainTitle : Scene
     {
-		private static readonly int logoDisplayTime = 120;
+		private static readonly int logoDisplayTime = 220;//120;
 
         private Texture2D[] texture = new Texture2D[4];
         private float dColor, e;
+		private Random rnd = new Random();
 
 		public MainTitle(Scene privousScene)
 			: base(privousScene)
@@ -26,7 +27,9 @@ namespace _2DActionGame
         {
             texture[0] = content.Load<Texture2D>("General\\Menu\\TitleBG");
             texture[1] = content.Load<Texture2D>("General\\OP\\OP0");
-            texture[2] = content.Load<Texture2D>("General\\OP\\OP1");
+			string t = rnd.Next(1, 2).ToString();
+            texture[2] = content.Load<Texture2D>("General\\OP\\OP" + t);
+			if (game.random.Next(1, 20) == 1) texture[2] = content.Load<Texture2D>("General\\OP\\OP3");
 			texture[3] = content.Load<Texture2D>("General\\Menu\\PushStart");
 
 			//music = content.Load<SoundEffect>("Audio\\BGM\\menu_new");

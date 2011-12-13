@@ -114,8 +114,8 @@ namespace _2DActionGame
 		private List<int> shootPatternLoop = new List<int>();
 
 		#endregion
-		#region Constructors																																				// ↓参照してるクラス
-		public Turret(Stage stage, float x, float y, int width, int height)
+		#region Constructors
+		public Turret(Stage stage, float x, float y, int width, int height)// ↓参照してるクラス
 			: this(stage, null, new Vector2(0, 0), width, height, 0, 0, 1)
 		{
 		}
@@ -434,6 +434,7 @@ namespace _2DActionGame
 			if (customShootPattern) {
 				customShootPatternNum++;
 				if (customShootPatternNum == shootPatternLoop.Count) customShootPatternNum = 0;
+
 				shootPattern = shootPatternLoop[customShootPatternNum];
 				isEnd = false;
 			}
@@ -529,7 +530,7 @@ namespace _2DActionGame
 					}
 				} else {
 					//bullets.Clear(); // stageのbulletsはココのbulletsを”参照”してるので消したら意味内　Updateするだけ用のリストに移す必要あり
-					foreach (Bullet bullet in bullets) hasShotBullets.Add(bullet);// これでも多分ダメだなー
+					//foreach (Bullet bullet in bullets) hasShotBullets.Add(bullet);// これでも多分ダメだなー
 					bullets.Clear();
 					AddBullets();
 				}

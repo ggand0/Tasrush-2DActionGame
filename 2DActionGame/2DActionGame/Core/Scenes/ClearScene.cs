@@ -12,6 +12,7 @@ namespace _2DActionGame
 {
     public class ClearScene : SelectScene
     {
+		private WinControl form;
 		private GameStatus gameStatus;
 		private static readonly int displayTime = 120;
 
@@ -49,14 +50,9 @@ namespace _2DActionGame
 
 			// Scoreをcastして確定
 			this.scoreToDisplay = (int)game.stageScores[game.stageNum-1];
-			//game.hasReachedCheckPoint = false;
-
 			if (game.stageNum == 3) {
-				//game.winControlManager = new WinControlManager(game, game.graphics);
-				//game.winControlManager.ControlForm.Visible = true;
-				WinControl form = new WinControl(game);
+				form = new WinControl(game);
 				form.Show();
-				//game.EvaluateScore();
 			}
         }
 		public override void Update(double dt)
@@ -64,12 +60,14 @@ namespace _2DActionGame
             if (JoyStick.IsOnKeyDown(3) || JoyStick.IsOnKeyDown(8)) {	// To Next Stage
 				if (game.stageNum < Game1.maxStageNum) {
 					game.stageNum++;
+					game.hasReachedCheckPoint = false;
 					game.ReloadStage(game.isHighLvl);
                     //SoundControl.Pause();//SoundControl.Stop();
-					game.hasReachedCheckPoint = false;
-					//game.winControlManager.ControlForm.Visible = false;
+					
 					isEndScene = true;
-				} else {
+				} else if (game.stageNum == Game1.maxStageNum && (form.IsDisposed || form == null)) {// To Ending
+					game.stageNum = 1;
+					game.hasReachedCheckPoint = false;
 					PushScene(new Ending(this));
 				}
             }

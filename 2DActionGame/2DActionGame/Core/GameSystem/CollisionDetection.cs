@@ -936,6 +936,10 @@ namespace _2DActionGame
 		{
 			targetObject.isDamaged = false;
 
+			if (myObject.firstTimeInAFrame) {
+				myObject.isHit = false;
+				targetObject.firstTimeInAFrame = false;
+			}
 			if (targetObject.firstTimeInAFrame) {
 				targetObject.isHit = false;
 				targetObject.firstTimeInAFrame = false;
@@ -944,6 +948,7 @@ namespace _2DActionGame
 			if (Result[0] * Result[1] < 0 && Result[2] * Result[3] < 0) {
 				targetObject.isDamaged = true;  // Rivalのときもここまで到達している=当たってる
 				targetObject.isHit = true;
+				myObject.isHit = true;
 				if (targetObject is Bullet) { }
 				if (myObject is Sword) { }
 			}

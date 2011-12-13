@@ -14,7 +14,7 @@ namespace _2DActionGame
 	/// </summary>
 	public class SnowBall : Enemy
 	{
-		private float defSpeed;
+		private static readonly float defSpeed = -1;
 		/// <summary>
 		/// staticTerrainとの当たり判定用
 		/// </summary>
@@ -30,7 +30,6 @@ namespace _2DActionGame
 			this.width = 96;
 			this.height = 96;
 			this.user = user;
-			defSpeed = -8;
 			HP = 2;
 
 			//block = new DamageBlock (stage, x + 8, y + 32, 48, 48);     // 下端は合わせる    // DamageBlock
@@ -48,11 +47,9 @@ namespace _2DActionGame
 		public override void Update()
 		{
 			if (IsActive() && IsBeingUsed()) {
-				//position = block.position - new Vector2(0, -height / 2);
-				defSpeed = -1;
+				position = block.position + new Vector2(-width, -height);// -new Vector2(0, -height / 2);
 				block.speed.X = defSpeed;
 				d++;
-
 				base.Update();
 			}
 		}
@@ -60,9 +57,10 @@ namespace _2DActionGame
 		public override void Draw(SpriteBatch spriteBatch)
 		{
 			if (IsActive() && IsBeingUsed()) {
-				spriteBatch.Draw(texture, block.drawPos, null, Color.White, -d, new Vector2(width / 2, height / 2), 1, SpriteEffects.None, 0);
+				spriteBatch.Draw(texture, block.drawPos + new Vector2(-width / 2, -height / 2), null, Color.White, -d, new Vector2(width / 2, height / 2), 1, SpriteEffects.None, 0);
 				if (game.inDebugMode) block.Draw(spriteBatch);
 			}
 		}
+
 	}
 }

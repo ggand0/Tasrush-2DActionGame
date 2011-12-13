@@ -26,7 +26,7 @@ namespace _2DActionGame
 		/// <summary>
 		/// 画面外に出てからBulletが消滅するまでの距離
 		/// </summary>
-		protected readonly float marginalDistance = 120;
+		protected readonly float marginalDistance = 320;//120;
 		
 		/// <summary>
 		/// userの座標を基準にしたBUlletの位置。Turret手動に移行した今となっては使用していない。
@@ -144,9 +144,10 @@ namespace _2DActionGame
 			//if (turret != null && !turret.isBeingUsed) isShot = false;
 
 			// 画面外に出たら消す
-			if (isShot /*&& !isActive */&& IsOutside()) {
+			if (isShot /*&& !isActive */&& IsOutside()) {// activeDistance ==760
 				isAlive = false;
-				turret.hasShotBullets.Remove(this);	// 呼ばれてない可能性大
+				isShot = false;
+				//turret.hasShotBullets.Remove(this);// 全体的にここに到達せずにRemoveされてない
 				stage.bullets.Remove(this);
 			}
 		}

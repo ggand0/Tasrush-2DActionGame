@@ -22,6 +22,10 @@ namespace _2DActionGame
 		/// </summary>
 		public readonly int motionDelayTime = 60;
 		public readonly byte defMovePattern;
+		/// <summary>
+		/// 何コンボ目で強制的に死ぬか。まだ未使用
+		/// </summary>
+		protected readonly int maxComboTime = 6;
 		
 		protected SoundEffect damageSound, hitSound;
 		protected Vector2 defPos;
@@ -56,7 +60,6 @@ namespace _2DActionGame
 		public Enemy(Stage stage, float x, float y, int width, int height, int HP, Character user)
 			: base(stage, x, y, width, height, user)
 		{
-			LoadXML("Enemy", "Xml\\Objects_Base.xml");
 			this.HP = HP;
 			defPos = new Vector2(x, y);
 
@@ -68,12 +71,14 @@ namespace _2DActionGame
 
 			damageSound = content.Load<SoundEffect>("Audio\\SE\\damage");
 			hitSound = content.Load<SoundEffect>("Audio\\SE\\hit_big");
+			LoadXML("Enemy", "Xml\\Objects_Base.xml");
 		}
 
 		public override void Update()
 		{
 			base.Update();
 
+			// HP0でフルボッコが終わったら死亡
 			if (HP <= 0 && time > deathComboTime) {
 				if (!game.isMuted)
 					if (!hasPlayedSoundEffect) {
@@ -81,18 +86,15 @@ namespace _2DActionGame
 						hasPlayedSoundEffect = true;
 					}
 				isAlive = false;
-			}// HP0でフルボッコが終わったら志望
+			}
 			if (!isAlive && counter == 0) {
 				isEffected = true;
 				deathEffected = true;
 				counter++;
 			}
-
 			if (time > deathComboTime) {
 				comboCount = 0;
-				//hasPlayedSoundEffect = false;
 			}
-			//if (!stage.player.isThrusting && isDamaged) MotionUpdate();
 			MotionDelay();
 
 			time++;
@@ -109,6 +111,7 @@ namespace _2DActionGame
 		/// </summary>
 		public override void MotionUpdate()
 		{
+			base.MotionUpdate();
 			/* 毎フレーム削られないための対策案：
 			 * ①ishitがfalse→true→falseと変わって攻撃が終わったときにダメージ
 			 * ②単純な無敵時間の追加
@@ -215,7 +218,7 @@ namespace _2DActionGame
 			x += 2;
 			gravity = 0;
 			position.X += x * timeCoef;
-			position.Y += -(float)(2 * Math.Pow(x, 2)) * timeCoef;// position.Xの2乗は凄まじいに決まってる！当たった地点からの位置にしよう
+			position.Y += -(float)(2 * Math.Pow(x, 2)) * timeCoef;
 
 			counter++;
 		}
@@ -237,8 +240,14 @@ namespace _2DActionGame
 		public override void Draw(SpriteBatch spriteBatch)
 		{
 			if (isAlive && isActive) {
-				spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, .0f);
-				DrawComboCount(spriteBatch);
+				if (!inDmgMotion) {
+					spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, .0f);
+					DrawComboCount(spriteBatch);
+				} else {// 一旦戻す
+					spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, .0f);
+					DrawComboCount(spriteBatch);
+					//DrawDamageBlink(spriteBatch, Color.Red, .05f);//.60f 15f
+				}
 			}
 		}
 		protected void DrawComboCount(SpriteBatch spriteBatch)

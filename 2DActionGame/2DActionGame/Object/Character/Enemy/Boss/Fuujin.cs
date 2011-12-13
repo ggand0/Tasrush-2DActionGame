@@ -738,10 +738,13 @@ namespace _2DActionGame
 		}
 		public override void Draw(SpriteBatch spriteBatch)
 		{
-			if (base.IsBeingUsed() && IsActive()) {
+			base.Draw(spriteBatch);
+			if (IsBeingUsed() && IsActive()) {
 				if (game.visibleSword) spriteBatch.Draw(texture2, drawPos, animation2.rect, Color.White);// 判定用の矩形の描画
-				spriteBatch.Draw(texture, drawPos, animation.rect, Color.White);
-				DrawComboCount(spriteBatch);
+				if (game.inDebugMode && game.stageNum != 3) spriteBatch.Draw(bind.texture, new Rectangle((int)bind.drawPos.X, (int)bind.drawPos.Y, (int)bindSize.X, (int)bindSize.Y)
+				, new Rectangle(0, 0, (int)bindSize.X, (int)bindSize.Y), Color.White);
+				//spriteBatch.Draw(texture, drawPos, animation.rect, Color.White);
+				//DrawComboCount(spriteBatch);
 			}
 		}
 	}

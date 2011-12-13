@@ -94,6 +94,7 @@ namespace _2DActionGame
 
 		public override void MotionUpdate()
 		{
+			base.MotionUpdate();
 			float distance = position.X - stage.player.position.X;
 
 			if (isDamaged && isAlive) {
@@ -162,13 +163,8 @@ namespace _2DActionGame
 
 		public override void Draw(SpriteBatch spriteBatch)
 		{
+			base.Draw(spriteBatch);
 			if (IsActive()) {
-				if (!hasFlownOut) {
-
-					spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, .0f);//spriteBatch.Draw(textures, drawPos, animation.rect, Color.White);
-				} else {
-					spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, .0f);
-				}
 				DrawComboCount(spriteBatch);
 			}
 		}

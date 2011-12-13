@@ -30,7 +30,10 @@ namespace _2DActionGame
 		public static readonly int normaFirstComboTime = 40;
 		public static readonly int normaSecondComboTime = 40;
 		public static readonly int thrustingTime = 40;
+		public static readonly Vector2 defReflectSpeed = new Vector2(4, -6);
         private static readonly int thrustPowerConsumption = 800;
+		private static readonly int miniJumpWaitTime = 12;
+		private static readonly int airReflectLimit = 15;//30
 
 		private readonly float timeCoefPlayer = 0.5f;
 		public readonly float firstJumpSpeed = -13.0f;
@@ -41,7 +44,7 @@ namespace _2DActionGame
 		// Basis
 		private SoundEffect footstep, jumpSound, landingSound, tasSound, damageSound;
 		public Sword sword { get; private set; }
-		private bool isInJumpAnim, inDmgMotion;
+		private bool isInJumpAnim;//, inDmgMotion;
 		private bool inCombo1, inCombo2, inCombo3, inCombo4, inCombo5, inCombo6, inCombo7;// 配列にしたい　いや、リストか...
 		private bool[] inCombos = new bool[8];
 		private int animCounter, animCounter2;
@@ -147,22 +150,14 @@ namespace _2DActionGame
 
 		// 空中斬りの反動関係
 		public bool inAirReflection { get; private set; }
+		private Vector2 reflectSpeed;
 		private bool disableMovingInput;
 		private int airReflectCount, airReflectTime;
-		private static readonly int airReflectLimit = 15;//30		
-		private Vector2 reflectSpeed;
-		public static readonly Vector2 defReflectSpeed = new Vector2(4, -6);
-		#endregion
-		public bool scrollPush { get; set; }
-		/// <summary>
-		/// ダメージ時の点滅処理に使用するカウンタ
-		/// </summary>
-		private int blinkCount;
-		/// <summary>
-		/// 透過処理時に使用。名前変えたい
-		/// </summary>
-		private float e;
 
+		public bool scrollPush { get; set; }
+		#endregion
+
+		// コンストラクタ
 		public Player()
 			: this(null, 0, 0, 32, 32)
 		{
@@ -878,7 +873,7 @@ namespace _2DActionGame
 			// ジャンプ
 			if (JoyStick.KEY(2) && /*isOnSomething*/!isInCombo) {
 				jumpTime++;                                         // 押下時間をチェック
-				if (jumpTime > 12 && !isJumping) {
+				if (jumpTime > miniJumpWaitTime && !isJumping) {
 					Jump(12);
 					counter = 0;
 					//hasJumped = true;
@@ -914,9 +909,9 @@ namespace _2DActionGame
 					normalComboCount = time = 0;
 				}
 
-				if (jumpCount == 1 && isJumping && counter > 30) {
+				if (jumpCount == 1 && isJumping && counter > miniJumpWaitTime) {//30
 					Jump(12);//12は使われない
-				} else if (game.inDebugMode && jumpCount >= 2 && isJumping && counter > 30) {
+				} else if (game.inDebugMode && jumpCount >= 2 && isJumping && counter > miniJumpWaitTime) {//30
 					Jump(12);
 				}
 			}
@@ -1037,8 +1032,12 @@ namespace _2DActionGame
                 timeCoef = 1.0f;
             }
 		}
+		/// <summary>
+		/// ダメージを受けたときに敵によって反動速度を変えたいならここを弄る
+		/// </summary>
 		public override void MotionUpdate()
 		{
+			base.MotionUpdate();
 			/* 毎フレーム削られないための対策：
 			 * ①ishitがfalse→true→falseと変わって攻撃が終わったときにダメージ
 			 * ②単純な無敵時間の追加
@@ -1072,7 +1071,6 @@ namespace _2DActionGame
 				if (turnsRight) speed = new Vector2(-8, -8);
 				else speed = new Vector2(8, -8);
 				inDmgMotion = true;
-				blinkCount = 0; e = 0;
 				animCounter2 = 0;
 
 				if (HP >= 0) {
@@ -1201,7 +1199,7 @@ namespace _2DActionGame
 			jumpTime = 0;
 
 			//hasJumped = false;
-		}
+		}// jumpPower使われてない...
 		private void TrackEnemy()
 		{
 			// ゲーム内の物理エンジンを利用するパターン：これはこれでよいが不安定

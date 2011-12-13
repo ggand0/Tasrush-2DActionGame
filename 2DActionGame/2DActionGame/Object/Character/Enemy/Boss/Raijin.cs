@@ -731,5 +731,13 @@ namespace _2DActionGame
 		{
 			animation.Update(2, 0, 300, 280, 12, 1);
 		}
+		public override void Draw(SpriteBatch spriteBatch)
+		{
+			base.Draw(spriteBatch);
+			if (IsBeingUsed() && IsActive()) {
+				if (game.inDebugMode && game.stageNum != 3) spriteBatch.Draw(bind.texture, new Rectangle((int)bind.drawPos.X, (int)bind.drawPos.Y, (int)bindSize.X, (int)bindSize.Y)
+					, new Rectangle(0, 0, (int)bindSize.X, (int)bindSize.Y), Color.White);
+			}
+		}
 	}
 }

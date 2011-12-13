@@ -67,6 +67,10 @@ namespace _2DActionGame
 			, new RankingStatus(100, "nanashi"), new RankingStatus(100, "nanashi"), new RankingStatus(100, "nanashi"), new RankingStatus(100, "nanashi") };
 
 		/// <summary>
+		/// そのステージのボス戦までのスコア。
+		/// </summary>
+		public double tmpScore { get; set; }
+		/// <summary>
 		/// ゲーム全体を通したスコア
 		/// </summary>
         public double score { get; set; }
@@ -88,16 +92,39 @@ namespace _2DActionGame
 		public bool visibleScore { get; set; }
 		public bool hasReachedCheckPoint { get; set; }
 
+		private void graphics_DeviceResetting(object sender, EventArgs e)
+		{
+			// ウィンドウのフォーカスが失われるバグ(?)対策
+			System.Windows.Forms.Form form = (System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(Window.Handle);
+			form.BringToFront();
+		}
 		public void PushScene(Scene scene)
 		{
 			scenes.Push(scene);//this.Window.
 		}
-		private void graphics_DeviceResetting(object sender, EventArgs e)
-		{
-			// ウィンドウのフォーカスが失われるバグ(?)対策
-			System.Windows.Forms.Form form = (System.Windows.Forms.Form) System.Windows.Forms.Form.FromHandle(Window.Handle);
-			form.BringToFront();
-		}
+		public void ReloadStage(bool isHighLvl)
+        {
+            this.isHighLvl = isHighLvl;
+			if (hasReachedCheckPoint) {
+				stageScores[stageNum - 1] = tmpScore;
+			} else {
+				stageScores[stageNum - 1] = 0;// スコアリセット
+				//score = 0;
+			}
+
+			scenes.Pop();// クリアしたStageもしくは失敗したStageをPop。
+			switch (stageNum) {
+				case 1:
+					Scene.PushScene(new Stage1(scenes.Peek(), isHighLvl));
+					break;
+				case 2:
+					Scene.PushScene(new Stage2(scenes.Peek(), isHighLvl));
+					break;
+				case 3:
+					Scene.PushScene(new Stage3(scenes.Peek(), isHighLvl));
+					break;
+			}
+        }
 		public void LoadRanking(string fileName, bool isTest, string fileNameT)
 		{
 			StreamReader sr = new StreamReader(fileNameT);
@@ -186,25 +213,7 @@ namespace _2DActionGame
 			/*sw.Write(output);
 			sw.Close();*/
 		}
-		public void ReloadStage(bool isHighLvl)
-        {
-            this.isHighLvl = isHighLvl;
-			stageScores[stageNum - 1] = 0;// スコアリセット
-			//score = 0;
-
-			scenes.Pop();// クリアしたStageもしくは失敗したStageをPop。
-			switch (stageNum) {
-				case 1:
-					Scene.PushScene(new Stage1(scenes.Peek(), isHighLvl));
-					break;
-				case 2:
-					Scene.PushScene(new Stage2(scenes.Peek(), isHighLvl));
-					break;
-				case 3:
-					Scene.PushScene(new Stage3(scenes.Peek(), isHighLvl));
-					break;
-			}
-        }
+		
 
 		// コンストラクタ
 		public Game1()

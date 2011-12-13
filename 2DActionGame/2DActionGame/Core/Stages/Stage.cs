@@ -742,7 +742,10 @@ namespace _2DActionGame
 		}
 		private void UpdateNormal()
 		{
-			if (player.position.X > 13000) game.hasReachedCheckPoint = true;
+			if (player.position.X > 13000 && !game.hasReachedCheckPoint) {
+				game.hasReachedCheckPoint = true;
+				game.tmpScore = game.stageScores[game.stageNum - 1];
+			}
 
 			if (isPausing) PushScene(new PauseMenu(this));
 			//if (gameTimeNormal % 60 == 0) GC.Collect();

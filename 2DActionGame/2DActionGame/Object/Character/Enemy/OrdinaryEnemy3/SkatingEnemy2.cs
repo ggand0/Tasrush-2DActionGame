@@ -45,10 +45,25 @@ namespace _2DActionGame
         {
 			if (IsActive()) {
 				// 回転を考慮して描画座標を幅分ずらす
-				spriteBatch.Draw(texture, drawPos + new Vector2(width, 0), animation.rect, Color.White, MathHelper.ToRadians(90), Vector2.Zero, Vector2.One, SpriteEffects.None, 0f);
+				if (!inDmgMotion) {
+					spriteBatch.Draw(texture, drawPos + new Vector2(width, 0), animation.rect, Color.White, MathHelper.ToRadians(90), Vector2.Zero, Vector2.One, SpriteEffects.None, 0f);
+				} else {
+					//DrawDamageBlink(spriteBatch, Color.Red, .60f);
+					spriteBatch.Draw(texture, drawPos + new Vector2(width, 0), animation.rect, Color.White, MathHelper.ToRadians(90), Vector2.Zero, Vector2.One, SpriteEffects.None, 0f);
+				}
 				DrawComboCount(spriteBatch);
 			}
         }
+		protected override void DrawDamageBlink(SpriteBatch spriteBatch, Color color, float blinkSpeed)
+		{
+			if (blinkCount % 5 == 0) e += blinkSpeed;
+			dColor = (float)Math.Sin(e * 8) / 2.0f + 0.5f;
+
+			spriteBatch.Draw(texture, drawPos + new Vector2(width, 0), animation.rect, color * dColor, MathHelper.ToRadians(90), Vector2.Zero, Vector2.One, SpriteEffects.None, 0f);
+			blinkCount++;
+
+			if (blinkCount > 20) inDmgMotion = false;
+		}
 
     }
 }

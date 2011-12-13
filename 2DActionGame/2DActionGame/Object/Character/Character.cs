@@ -37,6 +37,25 @@ namespace _2DActionGame
         public int comboCount { get; protected set; }
         #endregion
 
+		/// <summary>
+		/// ダメージ時の点滅処理に使用するカウンタ
+		/// </summary>
+		protected int blinkCount;
+		/// <summary>
+		/// 透過処理時に使用。名前変えたい
+		/// </summary>
+		protected float e;
+		protected bool inDmgMotion;
+		protected virtual void DrawDamageBlink(SpriteBatch spriteBatch, Color color, float blinkSpeed)
+		{
+			if (blinkCount % 5 == 0) e += blinkSpeed;
+			dColor = (float)Math.Sin(e * 8) / 2.0f + 0.5f;
+
+			spriteBatch.Draw(texture, drawPos, animation.rect, Color.Red * dColor);
+			blinkCount++;
+
+			if (blinkCount > 20) inDmgMotion = false;
+		}
         public Character()
             : this(null, 0, 0, 32, 32)
         {
@@ -61,14 +80,29 @@ namespace _2DActionGame
 				isBeingUsed = false;
 			}
         }
+		public override void MotionUpdate()
+		{
+			base.MotionUpdate();
+			inDmgMotion = true;
+			blinkCount = 0;
+			e = 0;
+		}
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (isActive) {
-                if (user != null && isBeingUsed)// userが指定されているときはuserのフラグで管理させる
-                    spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, .0f);
-                else
-                    spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, .0f);
+            if (IsActive()) {
+				if (IsBeingUsed()) {// userが指定されているときはuserのフラグで管理させる
+					//spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, .0f);
+					if (!inDmgMotion) {
+						if (!turnsRight) {
+							spriteBatch.Draw(texture, drawPos, animation.rect, Color.White);
+						} else {
+							spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, 0, Vector2.Zero, 1, SpriteEffects.FlipHorizontally, 0);
+						}
+					} else {
+						DrawDamageBlink(spriteBatch, Color.Red, .60f);
+					}
+				}
             }
         }
 
