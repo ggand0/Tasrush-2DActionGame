@@ -77,16 +77,16 @@ namespace _2DActionGame
 
         private void RegenerateTAS()
         {
-            if (game.score > score_prev) {
+            if (game.stageScores[game.stageNum-1] > score_prev) {
                 //(game.score - score_prev) * (stage.player.MAXTAS / 50) が基本的なTASの回復量。
 
-                if (stage.player.TASpower + (int)(game.score - score_prev) * (stage.player.MAXTAS / 50) < stage.player.MAXTAS) {
-                    stage.player.TASpower = stage.player.TASpower + (int)(game.score - score_prev) * 12;
+				if (stage.player.TASpower + (int)(game.stageScores[game.stageNum - 1] - score_prev) * (stage.player.MAXTAS / 50) < stage.player.MAXTAS) {
+					stage.player.TASpower = stage.player.TASpower + (int)(game.stageScores[game.stageNum - 1] - score_prev) * 12;
                 } else {
                     stage.player.TASpower = stage.player.MAXTAS;
                 }
             }
-            score_prev = game.score;
+            score_prev = game.stageScores[game.stageNum-1];
         }
         public void UpdateLog()
         {

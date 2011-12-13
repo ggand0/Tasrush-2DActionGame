@@ -48,7 +48,7 @@ namespace _2DActionGame
 			if (!game.isMuted) SoundControl.Play();
 
 			// Scoreをcastして確定
-			this.scoreToDisplay = (int)game.score;
+			this.scoreToDisplay = (int)game.stageScores[game.stageNum-1];
 			//game.hasReachedCheckPoint = false;
 
 			if (game.stageNum == 3) {
@@ -95,12 +95,12 @@ namespace _2DActionGame
 				sec = 0;*/
 				
 				if (game.avilityNum == 2) {
-					game.score *= (gameStatus.time / 20.0);// 20.0:補正値
+					game.stageScores[game.stageNum-1] *= (gameStatus.time / 20.0);// 20.0:補正値
 				} else if (scoreCount / 20.0 != 0) {
-					game.score /= (gameStatus.time / 20.0);
+					game.stageScores[game.stageNum-1] /= (gameStatus.time / 20.0);
 				}
 				// 再度castしつつ更新
-				scoreToDisplay = (int)game.score;
+				scoreToDisplay = (int)game.stageScores[game.stageNum-1];
 				
 				scoreCount++;
 			}

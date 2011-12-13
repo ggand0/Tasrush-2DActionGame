@@ -159,7 +159,7 @@ namespace _2DActionGame
 
 				int adj = 0;
 				adj = stage.gameStatus.maxComboCount;
-				game.score += stage.inComboObjects.Count + (1 + stage.gameStatus.maxComboCount * .01f);//10 * stage.inComboObjects.Count * stage.maxComboCount;
+				game.stageScores[game.stageNum-1] += stage.inComboObjects.Count + (1 + stage.gameStatus.maxComboCount * .01f);//10 * stage.inComboObjects.Count * stage.maxComboCount;
 			}
 		}
 		protected virtual void MotionDelay()

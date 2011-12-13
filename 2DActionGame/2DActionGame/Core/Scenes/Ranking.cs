@@ -43,10 +43,10 @@ namespace _2DActionGame
 		public override void Draw(SpriteBatch spriteBatch)
 		{
 			base.Draw(spriteBatch);
-			for (int i = 0; i < game.scores.Length; i++) {
+			for (int i = 0; i < game.scores.Count; i++) {
 				//spriteBatch.DrawString(game.Arial2, game.scores[i].ToString(), new Vector2(100, 100 + i * 50), Color.White);
-				spriteBatch.DrawString(game.Arial
-					, game.scores[i].rank + " " + game.scores[i].name + " " + game.scores[i].score.ToString(), new Vector2(100, 100 + i * 50), Color.White);
+				spriteBatch.DrawString(game.Arial2
+					, (i+1).ToString()/*game.scores[i].rank*/ + " " + game.scores[i].name + " " + game.scores[i].score.ToString(), new Vector2(100, 30 + i * 50), Color.White);
 			}
 		}
 	}

@@ -21,13 +21,13 @@ namespace _2DActionGame
 {
 	public struct RankingStatus
 	{
-		public int rank;
+		//public int rank;
 		public double score;
 		public string name;
 
-		public RankingStatus(int rank, double score, string name)
+		public RankingStatus(double score, string name)
 		{
-			this.rank = rank;
+			//this.rank = rank;
 			this.score = score;
 			this.name = name;
 		}
@@ -61,10 +61,20 @@ namespace _2DActionGame
         
         // Game
 		private const int rankingNodeNum = 5;
-		public RankingStatus[] scores = new RankingStatus[rankingNodeNum];
-		public RankingStatus[] dummyScore = { new RankingStatus(1, 100, "nanashi")
-			, new RankingStatus(2, 100, "nanashi"), new RankingStatus(3, 100, "nanashi"), new RankingStatus(4, 100, "nanashi"), new RankingStatus(5, 100, "nanashi") };
+		//public RankingStatus[] scores = new RankingStatus[rankingNodeNum];
+		public List<RankingStatus> scores = new List<RankingStatus>();
+		public RankingStatus[] dummyScore = { new RankingStatus(100, "nanashi")
+			, new RankingStatus(100, "nanashi"), new RankingStatus(100, "nanashi"), new RankingStatus(100, "nanashi"), new RankingStatus(100, "nanashi") };
+
+		/// <summary>
+		/// ゲーム全体を通したスコア
+		/// </summary>
         public double score { get; set; }
+		/// <summary>
+		/// ステージ毎のスコア
+		/// </summary>
+		public double[] stageScores { get; set; }
+
 		public string playerName { get; set; }
 		public float wholeVolume { get; set; }
         public int avilityNum { get; set; }
@@ -94,6 +104,7 @@ namespace _2DActionGame
 			string original;
 			string[] tmp;
 			string[,] tmp2;
+			scores.Clear();
 
 			if (isTest) {
 				original = sr.ReadToEnd();
@@ -111,22 +122,24 @@ namespace _2DActionGame
 			original = original.TrimEnd(new char[] { '\r', '\n' });
 
 			tmp = original.Replace("\r\n", "\n").Split('\n');// 0が無視される...
-			tmp2 = new string[tmp.Length, 3];
+			tmp2 = new string[tmp.Length, 2];
 			for (int i = 0; i < tmp.Length-1; i++) {// 最後の行は削られることを想定してlength-1
-				try {
+				//try {
 					string[] t = tmp[i].Split(' ');
 					tmp2[i, 0] = t[0];
 					tmp2[i, 1] = t[1];
-					tmp2[i, 2] = t[2];
-				} catch {
+					//tmp2[i, 2] = t[2];
+				/*} catch {
 					throw new Exception("failed ranking decoding.");// 5番目だけ"5 na"で終わってる件ｗｗ buffer[2048]にしたらnanasまでｋｔ...?←やっぱ関係なかった
 					// そもそもbs.lengthの時点で明らかに足りてない
-				}
+				}*/
 			}
 			for (int i = 0; i < tmp.Length-1; i++) {
-				scores[i].rank = Int32.Parse(tmp2[i, 0]);
+				/*scores[i].rank = Int32.Parse(tmp2[i, 0]);
 				scores[i].score = Double.Parse(tmp2[i, 2]);
-				scores[i].name = tmp2[i, 1];
+				scores[i].name = tmp2[i, 1];*/
+				//scores[i] = new RankingStatus(Int32.Parse(tmp2[i, 0]), Double.Parse(tmp2[i, 2]), tmp2[i, 1]);
+				scores.Add(new RankingStatus(/*Int32.Parse(tmp2[i, 0]), */Double.Parse(tmp2[i, 1]), tmp2[i, 0]));
 			}
 		}
 		public void EvaluateScore(string fileName)
@@ -134,9 +147,19 @@ namespace _2DActionGame
 			int ranking = 999;//rankingNodeNum;
 			string output = "";
 			//StreamWriter sw = new StreamWriter("Ranking_test.txt");
+			// 各ステージのスコアを総計
+			foreach (double d in stageScores) {
+				score += d;
+			}
 
 			// ランキング更新
-			for (int i = 0; i < scores.Length; i++) {
+			int index = scores.FindIndex((x) => x.score < score);
+			if (index != -1)
+				scores.Insert(index, new RankingStatus(/*index+1, */score, playerName != "" ? playerName : "nanashi"));
+			else
+				scores.Add(new RankingStatus(score, playerName != "" ? playerName : "nanashi"));
+
+			/*for (int i = 0; i < scores.Count; i++) {
 				if (score > scores[i].score) {
 					ranking = i + 1;
 					break;
@@ -144,24 +167,17 @@ namespace _2DActionGame
 					continue;
 				}
 			}
-			/*for (int i = scores.Length - 1; i >= 0; i--) {
-				if (scores[i].score < score) {
-					continue;
-				} else {
-					ranking = scores.Length - i;
-					break;
-				}
+
+			if (ranking < scores.Count) {
+				//scores[ranking-1].score = score;
+				//if (playerName != "") {scores[ranking-1].name = playerName;
+				//else scores[ranking].name = "nanashi";
+				scores[ranking - 1] = new RankingStatus(ranking, score, playerName != "" ?  playerName : "nanashi");
 			}*/
 
-			if (ranking < scores.Length/*>= rankingNodeNum*/) {
-				scores[ranking-1].score = score;
-				if (playerName != "") scores[ranking-1].name = playerName;
-				else scores[ranking].name = "nanashi";
-			}
-
 			// 暗号化＆ファイル書き込み
-			for (int i = 0; i < scores.Length; i++) {
-				output += scores[i].rank.ToString() + " " + scores[i].name.ToString() + " " + scores[i].score + "\r\n";//(i+1).ToString() 
+			for (int i = 0; i < scores.Count; i++) {
+				output += /*scores[i].rank.ToString() + " " + */scores[i].name.ToString() + " " + scores[i].score + "\r\n";//(i+1).ToString() 
 			}
 			//output = output.TrimEnd(new char[] { '\r', '\n' });
 			output += "6 dummy 100\r\n";
@@ -173,7 +189,8 @@ namespace _2DActionGame
 		public void ReloadStage(bool isHighLvl)
         {
             this.isHighLvl = isHighLvl;
-            score = 0;
+			stageScores[stageNum - 1] = 0;// スコアリセット
+			//score = 0;
 
 			scenes.Pop();// クリアしたStageもしくは失敗したStageをPop。
 			switch (stageNum) {
@@ -207,7 +224,8 @@ namespace _2DActionGame
 
 			isMuted = true;
 			//noEnemy = true;
-			scores = dummyScore;
+			stageScores = new double[maxStageNum];
+			//scores = dummyScore.ToList<RankingStatus>();// 復号化失敗のとき用＋テスト用＋要素数確保
 		}
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -239,7 +257,7 @@ namespace _2DActionGame
 			Scene.Initialize(this, spriteBatch, Content);
             // TODO: use this.content to load your game content here
 			PushScene(new MainTitle(null));
-			EvaluateScore("Ranking.txt");
+			//EvaluateScore("Ranking.txt");
 			LoadRanking("Ranking.txt", false, "Ranking_original.txt");
 
 			// Fonts

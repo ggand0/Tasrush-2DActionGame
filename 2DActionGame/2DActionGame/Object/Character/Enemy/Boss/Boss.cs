@@ -319,7 +319,7 @@ namespace _2DActionGame
 				if (time < deathComboTime) {
 					comboCount++;
 				}
-				game.score += stage.inComboObjects.Count + (1 + stage.gameStatus.maxComboCount * .01f);
+				game.stageScores[game.stageNum-1] += stage.inComboObjects.Count + (1 + stage.gameStatus.maxComboCount * .01f);
 			}
 		}
 		/// <summary>
