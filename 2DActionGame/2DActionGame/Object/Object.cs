@@ -36,7 +36,7 @@ namespace _2DActionGame
 		/// めり込み許容範囲
 		/// </summary>
 		public readonly float maxLength = 32;
-		public readonly float defActiveDistance = 1280;//640;
+		public readonly float defActiveDistance = 640;//640;
 		public readonly int defHitPoint = 3;
 		public float timeCoefObject { get; protected set; }//readonly 0.3f
 
@@ -363,7 +363,8 @@ namespace _2DActionGame
 			// 端
 			if (position.Y < 0) position.Y = 0;
 
-			locus.Add(this.drawPos);
+			// 軌跡
+			locus.Add(position);
 			if (locus.Count > 2) locus.RemoveAt(0);
 		}
 		public virtual void UpdateTimeCoef()
@@ -461,6 +462,10 @@ namespace _2DActionGame
 		}
 
 		// 補助メソッド
+		public object Clone()
+		{
+			return MemberwiseClone();
+		}
 		/// <summary>
 		/// 自分をウェイポイントに沿って移動させるメソッド。使い始めにisStartingMove = trueにする必要がある。
 		/// </summary>
@@ -524,10 +529,6 @@ namespace _2DActionGame
 				isMovingRight = true;
 				position.X += speed;
 			}
-		}
-		public object Clone()
-		{
-			return MemberwiseClone();
 		}
 		public virtual bool IsActive()
 		{

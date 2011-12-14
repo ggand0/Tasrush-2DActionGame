@@ -28,7 +28,7 @@ namespace _2DActionGame
             characters.Add(player);
             sword = player.sword;
             weapons.Add(sword);
-            boss = new Fuujin(this, 14500, 100, 210, 210, 50, 0, 0, 1);
+            boss = new Fuujin(this, 14500, 100, 380, 310, 50, 0, 0, 1);//210, 210
             characters.Add(boss);
 
             SetTerrainDirection();

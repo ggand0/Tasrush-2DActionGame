@@ -241,10 +241,10 @@ namespace _2DActionGame
 		{
 			if (isAlive && isActive) {
 				if (!inDmgMotion) {
-					spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, .0f);
+					spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, 0, Vector2.Zero, Vector2.One, !turnsRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally, .0f);
 					DrawComboCount(spriteBatch);
 				} else {// 一旦戻す
-					spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, .0f);
+					spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, 0, Vector2.Zero, Vector2.One, !turnsRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally, .0f);
 					DrawComboCount(spriteBatch);
 					//DrawDamageBlink(spriteBatch, Color.Red, .05f);//.60f 15f
 				}

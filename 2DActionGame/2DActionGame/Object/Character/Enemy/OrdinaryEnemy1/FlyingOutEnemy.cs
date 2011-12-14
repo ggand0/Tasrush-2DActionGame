@@ -55,8 +55,8 @@ namespace _2DActionGame
 		{
 			if (IsActive()) {
 				if (isMovingAround) MovementUpdate();
+				
 			}
-
 			base.Update();
 		}
 		public override void UpdateAnimation()
@@ -94,7 +94,7 @@ namespace _2DActionGame
 
 		public override void MotionUpdate()
 		{
-			base.MotionUpdate();
+			//base.MotionUpdate(); Enemyのも入っちゃう
 			float distance = position.X - stage.player.position.X;
 
 			if (isDamaged && isAlive) {
@@ -132,6 +132,9 @@ namespace _2DActionGame
 				delayTime = 0;
 				isEffected = true;
 				damageEffected = true;
+				inDmgMotion = true;
+				blinkCount = 0;
+				e = 0;
 
 				if (!game.isMuted) hitSound.Play(SoundControl.volumeAll, 0f, 0f);
 				if (time < deathComboTime) {

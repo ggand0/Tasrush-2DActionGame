@@ -108,7 +108,7 @@ namespace _2DActionGame
 			}
 			counter++;
 		}
-		private void AttackPattern1A(Vector2 startPos, Vector2 wayPos, Vector2 attackPos, bool willReturn)
+		private void AttackWithBeam(Vector2 startPos, Vector2 wayPos, Vector2 attackPos, bool willReturn)// 8
 		{
 			Vector2 returnVector, wayVector, attackVector;
 
@@ -129,21 +129,19 @@ namespace _2DActionGame
 			distanceA = Vector2.Distance(position, attackPos);
 
 			if (isStartingAttack) {
-				beamTurret.isBeingUsed = true;			// isBeingUsedがtrueになる前に一瞬描画されてるぜfuck
-				//beamTurret.Inicialize();
+				beamTurret.isBeingUsed = true;
+				beamTurret.Inicialize();
 				speed = baseVectorT;
 				hasPlayedSoundEffect = false;
 				attackPos = new Vector2(startPos.X - 480, startPos.Y - 50);
 			}
-			if (isStartingAttack && distanceT < 5) {	// 攻撃位置まで来たらフラグをたてて攻撃開始.
+			if (isStartingAttack && distanceT < 5) {// 攻撃位置まで来たらフラグをたてて攻撃開始.
 				counter = 0;
 				isStartingAttack = false;
 				isAttacking = true;
 			}
 			if (isAttacking) {
-				//hasPlayedSoundEffect = true;
 				speed = baseVectorA;
-				//beamTurret.Update();
 			}
 			if (isStartingAttack || isAttacking || isEndingAttack) {
 				if (!hasPlayedSoundEffect) {
@@ -155,14 +153,12 @@ namespace _2DActionGame
 
 			if (isAttacking && distanceA < 5) {
 				isAttacking = false;
-				//hasPlayedSoundEffect = true;
 				isEndingAttack = true;
 				willReturn = true;
 			}
 			if (willReturn) {
 				if (isEndingAttack) speed = baseVector;
 				//if (isEndingAttack && distanceD < 5) isEndingAttack = false;
-				//attackCounter++;
 				if (isEndingAttack && distanceD < 5) {
 					speed.X = 0; speed.Y = 0;
 					beamTurret.isBeingUsed = false;
@@ -345,7 +341,10 @@ namespace _2DActionGame
 		{
 			base.Move(moveSpeed, wayPoints);
 
+			//if (isStartingAttack) height = (int)bindSize.Y;
+
 			if (hasMoved) {
+				//height = texture.Height;
 				isEnds[3] = true;
 				isWaiting = true;
 			}
@@ -482,11 +481,14 @@ namespace _2DActionGame
 		{
 			if (isStartingAttack) {
 				foreach (Turret tur in thunderTurrets)
-					tur.isVisible = false;
+					tur.isVisible = true;
 				isStartingAttack = false;
 				attackCounter++;
 			}
+			//if (thunderTurrets[0].isBeingUsed && thunderTurrets[1].isBeingUsed && thunderTurrets[2].isBeingUsed) { }// 全部isBeingUsedなのにthunderが出ない
+			//if (thunderTurrets[0].shootNumTotal) {}
 
+			if (attackCounter % 40 == 0) { }
 			for (int i = 0; i < thunderTurrets.Count; i++) {
 				if (attackCounter % (40 * (i + 1)) == 0) {
 					thunderTurrets[i].Inicialize();
@@ -497,8 +499,8 @@ namespace _2DActionGame
 				if (tur.isBeingUsed)
 					ControlTurret(tur, 1, 8);
 			}
-			if (attackCounter > 480) isEndingAttack = true;
 
+			if (attackCounter > 480) isEndingAttack = true;
 			if (isEndingAttack) {
 				foreach (Turret tur in thunderTurrets) {
 					tur.isVisible = false;
@@ -535,7 +537,7 @@ namespace _2DActionGame
 			attackCounter++;
 			for (int i = 0; i < thunderTurrets3Way.Count; i++) {
 				if (attackCounter % (40 * (i + 1)) == 0) {
-					thunderTurrets[i].isVisible = true;
+					thunderTurrets3Way[i].isVisible = true;
 					if (i < thunderTurrets3Way.Count) thunderTurrets3Way[i].position = vecs[i];
 				}
 			}
@@ -588,16 +590,17 @@ namespace _2DActionGame
 			ballTurret.bulletSpeed = new Vector2(0, 8);
 
 			thunderTurret = new Turret(stage, this, this.position, 64, 48, 2, 0, 3, false, false, 3, 3, 14, 120, 10);//, , 3...2
+			thunderTurret.isVisible = true;
 			thunderTurret2 = new Turret(stage, this, this.position, 64, 48, 2, 0, 3, false, false, 3, 3, 14, 120, 10);//, , 3...2
 			thunderTurret3 = new Turret(stage, this, this.position, 64, 48, 2, 3, 3, false, false, 3, 3, 14, 120, 10);//, , 3...2
             thunderTurret.isVisible = true; thunderTurret2.isVisible = true; thunderTurret3.isVisible = true;
 
-			beamTurret = new Turret(stage, this, new Vector2(width / 2 + 32, height), 32, 32, 1, 0, 1, true);//, , 2
+			beamTurret = new Turret(stage, this, new Vector2(width / 2 - 16, height - 32), 32, 32, 1, 0, 1, true);//, , 2 //new Vector2(width / 2 + 32, height)
 			thunderTurret8Way = new Turret(stage, this, this.position, 64, 48, 2, 3, 8, false, false, 3, 3, 14, 360, 30);//...3
             thunderTurret8Way.isVisible = true;
 
-			for (int i = 0; i < 10; i++) {
-				thunderTurrets.Add(new Turret(stage, this, this.position, 64, 48, 2, 1, 5, false, false, 3, 3, 14, 240, 40));//...1
+			for (int i = 0; i < 10; i++) {// 10
+				thunderTurrets.Add(new Turret(stage, this, this.position, 64, 48, 2, 1, 5, false, false, 3, 3, 14, 240, 40));//...1 // 240
                 thunderTurrets[i].isVisible = true;
             }
 			thunderTurrets3Way.Add(thunderTurret);
@@ -661,12 +664,12 @@ namespace _2DActionGame
 			attackMethods.Add(attackMethodType0 = SpawnEnemy);
 			attackMethods.Add(attackMethodType0 = AttackWithThunder);
 			attackMethods.Add(attackMethodType0 = AttackWithThunder2);
-			attackMethods.Add(attackMethodType3 = this.Move);
+			attackMethods.Add(attackMethodType3 = Move);// 3
 			attackMethods.Add(attackMethodType0 = Division);
 			attackMethods.Add(attackMethodType4 = MoveLite);//5
 			attackMethods.Add(attackMethodType0 = SpawnATurret);
 			attackMethods.Add(attackMethodType0 = UseTurrets);//7
-			attackMethods.Add(attackMethodType4 = AttackPattern1A);//8
+			attackMethods.Add(attackMethodType4 = AttackWithBeam);//8
 			//attackMethods.Add(attackMethodType0 = Division);
 			attackMethods.Add(attackMethodType5 = PutTurrets);
 			//attackMethods.Add(attackMethodType0 = DropIciclesInTurn);
@@ -674,10 +677,14 @@ namespace _2DActionGame
 			attackMethodsArgs.Add(null);
 			attackMethodsArgs.Add(null);
 			attackMethodsArgs.Add(null);
-			attackMethodsArgs.Add(new object[] { 5,  new Vector2[] { defaultPosition
+			attackMethodsArgs.Add(new object[] { 5,  new Vector2[] { defaultPosition//14000
+							, new Vector2(defaultPosition.X - 100, defaultPosition.Y - 100)
+							, new Vector2(defaultPosition.X - 360, defaultPosition.Y - 200)
+							, new Vector2(defaultPosition.X - 720, defaultPosition.Y - 200)}});
+			/*new Vector2[] { defaultPosition
 							, new Vector2(defaultPosition.X, defaultPosition.Y + 100)
 							, new Vector2(defaultPosition.X - 240, defaultPosition.Y - 150)
-							, new Vector2(defaultPosition.X - 480, defaultPosition.Y - 150)}});//defaultPosition
+							, new Vector2(defaultPosition.X - 480, defaultPosition.Y - 150)}*/
 			attackMethodsArgs.Add(null);
 			attackMethodsArgs.Add(new object[] { new Vector2(defaultPosition.X - 350, defaultPosition.Y - 150)
 							, new Vector2(defaultPosition.X - 200, defaultPosition.Y - 100)
@@ -686,9 +693,12 @@ namespace _2DActionGame
 			attackMethodsArgs.Add(null);
 			attackMethodsArgs.Add(null);
 			attackMethodsArgs.Add(new object[] { defaultPosition
-							 , new Vector2(defaultPosition.X, defaultPosition.Y + 100)
-							 , new Vector2(defaultPosition.X - 480, defaultPosition.Y - 150)
+							 , new Vector2(defaultPosition.X - 100, defaultPosition.Y - 50)
+							 , new Vector2(defaultPosition.X - 720, defaultPosition.Y - 200)
 							 , false });
+			/* defaultPosition
+							 , new Vector2(defaultPosition.X, defaultPosition.Y + 100)
+							 , new Vector2(defaultPosition.X - 480, defaultPosition.Y - 150)*/
 			//attackMethodsArgs.Add(null);
 			attackMethodsArgs.Add(new object[] { new Vector2[] {
                              new Vector2(defaultPosition.X - 350, defaultPosition.Y - 50)

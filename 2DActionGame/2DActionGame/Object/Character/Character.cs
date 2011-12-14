@@ -72,7 +72,7 @@ namespace _2DActionGame
 
         public override void Update()
         {
-            if (isActive) {
+            if (IsActive()) {//isActive
                 UpdateNumbers();
                 UpdateAnimation();
             }

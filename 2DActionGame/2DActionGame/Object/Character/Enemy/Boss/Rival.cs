@@ -1229,7 +1229,8 @@ namespace _2DActionGame
 			// 端
 			//if (!isBacking && position.Y < 0) position.Y = 0;
 
-			locus.Add(this.drawPos);
+			// 軌跡
+			locus.Add(position);
 			if (locus.Count > 2) locus.RemoveAt(0);
 		}
 		/// <summary>

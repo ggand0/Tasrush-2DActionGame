@@ -270,7 +270,7 @@ namespace _2DActionGame
 		/// </summary>
 		/// <param name="turretNumber"></param>
 		/// <param name="shootTime"></param>
-		private void AttackWithCutterAlternate(int shootTime)
+		private void AttackWithCutterAlternate(int shootTime)// 10
 		{
 			if (isStartingAttack) {
 				isStartingAttack = false;
@@ -281,7 +281,8 @@ namespace _2DActionGame
 				cutterTurretAlternate.shootNumTotal = 0;
 			}
 
-			if (cutterTurretAlternate.shootNumTotal == shootTime/*|| attackCounter > resWaitTime*/) {/*cutterTurretAlternate.isEnd*/
+			// 左の条件だけだと最後の弾が跳ね返せない気がする
+			if (cutterTurretAlternate.shootNumTotal == shootTime && cutterTurretAlternate.isEnd/*|| attackCounter > resWaitTime*/) {/*cutterTurretAlternate.isEnd*/
 				isWaiting = true;
 				attackCounter = 0;
 				cutterTurretAlternate.isBeingUsed = false;
@@ -638,8 +639,8 @@ namespace _2DActionGame
 			position += speed * timeCoef;
 			// 端
 			//if (position.Y < 0) position.Y = 0;
-			// 軌跡をListに追加
-			locus.Add(this.drawPos);
+			// 軌跡
+			locus.Add(position);
 			if (locus.Count > 2) locus.RemoveAt(0);
 
 			// shootPositionのUpdate

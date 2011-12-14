@@ -14,7 +14,7 @@ namespace _2DActionGame
 	{
 		private SoundEffect hitSoundSmall;
 		public Object bind { get; protected set; }
-		protected Vector2 bindSize = new Vector2(200, 200);
+		protected Vector2 bindSize = new Vector2(210, 210);
 		protected  Vector2 bindPos = new Vector2(100, 100);
 		//private int turretNum;// turretの数
 
@@ -114,7 +114,6 @@ namespace _2DActionGame
 		/// 11/9 引数の数が２つ以上のメソッドに対応させるために二次元に拡張。いよいよクラス化したくなってきた
 		/// </summary>
 		protected List<object[]> attackMethodsArgs = new List<object[]>();
-
 
 		/// <summary>
 		/// 自Objectをウェイポイントに沿って移動させるメソッド。
@@ -238,7 +237,7 @@ namespace _2DActionGame
 		{
 			if (attackList == null) attackList = new List<int>();
 
-			bindSize = new Vector2(width, height);
+			//bindSize = new Vector2(width, height);
 			bindPos = Vector2.Zero;
 			bind = new Object(stage, (int)bindSize.X, (int)bindSize.Y);
 			bind.Load(game.Content, "Debug\\debugBind");
@@ -272,6 +271,11 @@ namespace _2DActionGame
 				foreach (Weapon weapon in weapons) {
 					weapon.isBeingUsed = false;
 				}
+			}
+			if ((position.X + width/2) - stage.player.position.X > 0) {
+				turnsRight = false;
+			} else if ((position.X + width / 2) - stage.player.position.X < 0) {
+				turnsRight = true;
 			}
 			bind.position = position + bindPos;
 			bind.drawPos = drawPos + bindPos;
@@ -355,6 +359,10 @@ namespace _2DActionGame
 			for (int i = 0; i < shootPosition.Count; i++) {
 				shootPosition[i] += new Vector2((float)this.scalarSpeed, 0);
 			}
+
+			// 軌跡
+			locus.Add(position);
+			if (locus.Count > 2) locus.RemoveAt(0);
 		}
 	}
 }

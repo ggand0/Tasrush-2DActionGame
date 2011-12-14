@@ -111,7 +111,9 @@ namespace _2DActionGame
 		protected override void UpdateNumbers()
 		{
 			base.UpdateNumbers();
-			height = Math.Abs((int)stage.CheckGroundHeight(this.position.X) - (int)this.position.Y);
+			int t = (int)stage.CheckGroundHeight(position.X);
+			height = Math.Abs(416 - (int)position.Y);// デバッグの結果ここが原因では無いことがわかった
+			if (t != 416) { }//100!?
 		}
 
 		public override void Draw(SpriteBatch spriteBatch)
@@ -127,25 +129,35 @@ namespace _2DActionGame
 		/// </summary>
 		private void DrawBeams(SpriteBatch spriteBatch)
 		{
-			for (int i = 0; i < animations.Length; i++) {
+			// 全く描画されてない瞬間は何故か!isShotになってた...
+			int debug = 0;
+			for (int i = 0; i < animations.Length; i++) {// toolong:height:205 heightのせいだった明らかに目視で100くらいなのに
 				animations[i].hasStarted = false;
-				animations[i].vector = position;
+				//animations[i].vector = position;
 				animations[i].vector = drawPos + new Vector2(0, 64 * i);
 			}
 			for (int i = 0; i < animations.Length; i++) {
-				if (animations[i].vector.Y > position.Y + height)
+				if (animations[i].vector.Y > position.Y + height) {// これ以降は明らかに描画する必要がないのでbreak
 					break;
-				if (animations[i].vector.Y < position.Y + height && animations[i].vector.Y + animations[i].rect.Height > position.Y + height) {
+				} /*else if (animations[i].vector.Y < position.Y + height && animations[i].vector.Y + animations[i].rect.Height > position.Y + height) {// ここの条件が違う気がする
 					animations[i].rect.Height = (int)((position.Y + height) - animations[i].vector.Y);
-
 					animations[i].hasStarted = true;
 					break;
+				}*/
+				else if (animations[i].vector.Y < position.Y + height && animations[i].vector.Y + animations[i].rect.Height < position.Y + height) {// 収まってる
+					animations[i].hasStarted = true;
+					debug += 64;
+				} else if (animations[i].vector.Y < position.Y + height && animations[i].vector.Y + animations[i].rect.Height >= position.Y + height) {// はみ出てる
+					animations[i].rect.Height = (int)((position.Y + height) - animations[i].vector.Y);
+					debug += animations[i].rect.Height;
+					animations[i].hasStarted = true;
 				}
 
 				//animations[i].position = position;
 				//animations[i].position = drawPos + new Vector2(0, 64 * i);
-				animations[i].hasStarted = true;
+				//animations[i].hasStarted = true;
 			}
+			if (debug > height) { }
 
 			foreach (Animation ani in animations) {
 				if (ani.hasStarted)
@@ -158,6 +170,9 @@ namespace _2DActionGame
 		{
 			spriteBatch.Draw(texture2, drawPos, animation2.rect, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, .2f);
 			spriteBatch.Draw(texture2, drawPos + new Vector2(0, height - animation2.rect.Height), animation2.rect, Color.White, 0, new Vector2(), new Vector2(1, 1), SpriteEffects.FlipVertically, .2f);
+			// debug
+			spriteBatch.DrawString(game.Arial2, height.ToString(), drawPos, Color.Red);
+			if (height > 242) { }
 		}
 
 	}

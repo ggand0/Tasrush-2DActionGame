@@ -252,7 +252,6 @@ namespace _2DActionGame
 
 		public override void Update()
 		{
-			if (user is Rival && shootPattern == 0 && bulletType == 0 && bulletTextureType == 2) { }
 			if (IsBeingUsed()) {
 				// Method USN0でまとめようとしたが、Manualで射撃させようとするとBeamが表示されないバグが
 				if (!shootManually) {
@@ -363,7 +362,9 @@ namespace _2DActionGame
 		}
 		private void ShootPatternBeam0(float degree)
 		{
-			foreach (Bullet bul in bullets) bul.degree = degree;
+			foreach (Bullet bul in bullets) {
+				bul.degree = degree;
+			}
 		}
 		private void ShootPatternBeam1(params float[] degrees)
 		{
@@ -455,7 +456,7 @@ namespace _2DActionGame
 					InicializeShootingN0(false, isManual);
 					break;
 			}
-
+			#region shoot
 			// bulletsの挙動を管理する。最初の１フレームだけだったり毎フレームだったり
 			if (hasShot) {
 				switch (bulletType) {
@@ -512,13 +513,14 @@ namespace _2DActionGame
 						}
 						break;
 				}
-				shootCounter++;// 2ずつ増えてますねふぁっ区
+				shootCounter++;
 			}
 			timeInterval++;
-
+			#endregion
+			#region ending
 			// bulletが自然にexpireするようにしなきゃ... hasShotは単に全弾撃ち終わった意味にしたい
 			// 912:sI次第で全弾打ち終わる前に終わる
-			if (hasShot && /*!bullets[bullets.Count - 1].isShot*/ ++shootCounter == shootInterval/**/) {
+			if (hasShot && /*!bullets[bullets.Count - 1].isShot*/ ++shootCounter == shootInterval) {
 				hasShot = false;
 				shootCounter = bulletCounter = shootNum = 0;
 				//if (isManual) isEnd = true;
@@ -532,13 +534,14 @@ namespace _2DActionGame
 					//bullets.Clear(); // stageのbulletsはココのbulletsを”参照”してるので消したら意味内　Updateするだけ用のリストに移す必要あり
 					//foreach (Bullet bullet in bullets) hasShotBullets.Add(bullet);// これでも多分ダメだなー
 					bullets.Clear();
-					AddBullets();
+					AddBullets();// 次回に備えて
 				}
 				UpdateShootingPattern();
 
 				isEnd = true;
 				//if (bullets[bullets.Count - 1].isEnd) isEnd = true;// thunder用
 			}
+			#endregion
 		}
 		/// <summary>
 		/// 射撃開始時に呼ばれる初期化メソッド。
@@ -553,9 +556,9 @@ namespace _2DActionGame
 				/*if (!reuseBullets) {
 					AddBullets();
 				}*/
-
 				hasShot = true;
 				isEnd = false;
+				shootNum = 0;
 				bulletCounter = shootCounter = 0;
 				foreach (Bullet bul in bullets) {
 					bul.position = position + defaultPosition;
@@ -568,7 +571,6 @@ namespace _2DActionGame
 			}
 
 			// 1射撃の中での１弾目の射撃開始
-			if (shootPattern == 1) { }// sNが既に1..
 			if (hasShot && timeInterval % bulletInterval == 0 && shootNum <= bulletNumber/* + 1*/) {// bulletが1個だとsIが長いせいで1回の射撃で2回よばれてるな...? shootNum < bulletNumberを追加
 				if (shootInTurn) {
 					if (bulletCounter < bulletNumber) {

@@ -320,6 +320,8 @@ namespace _2DActionGame
 
 			}
 		}
+		private static readonly int walkingFootStepRatio = 10;
+		private static readonly int dashingFootStepRatio = 7;
 		protected void UpdateInput()
 		{
 			#region General
@@ -469,7 +471,7 @@ namespace _2DActionGame
 					//inCombo1 = true;
 					normalComboCount = 3;
 					time = thrustCount = sword.degreeCounter = 0;
-					TASpower -= thrustPowerConsumption;
+					//TASpower -= thrustPowerConsumption;	// デバッグのため
 				}
 			}
 			#endregion
@@ -785,9 +787,9 @@ namespace _2DActionGame
 							else speed.X += 5.0f * timeCoef;
 					}
 
-					if (counter % 15 == 0 && !isJumping && !isDashing) {
+					if (counter % walkingFootStepRatio == 0 && !isJumping && !isDashing) {
 						if (!game.isMuted) footstep.Play(SoundControl.volumeAll, 0f, 0f);
-					} else if (counter % 10 == 0 && !isJumping && isDashing) {
+					} else if (counter % dashingFootStepRatio == 0 && !isJumping && isDashing) {
 						if (!game.isMuted) footstep.Play(SoundControl.volumeAll, 0f, 0f);
 					}
 				}
@@ -809,9 +811,9 @@ namespace _2DActionGame
 							else speed.X += -4.0f * timeCoef;
 					}
 
-					if (counter % 15 == 0 && !isJumping && !isDashing) {
+					if (counter % walkingFootStepRatio == 0 && !isJumping && !isDashing) {
 						if (!game.isMuted) footstep.Play(SoundControl.volumeAll, 0f, 0f);
-					} else if (counter % 10 == 0 && !isJumping && isDashing) {
+					} else if (counter % dashingFootStepRatio == 0 && !isJumping && isDashing) {
 						if (!game.isMuted) footstep.Play(SoundControl.volumeAll, 0f, 0f);
 					}
 				}

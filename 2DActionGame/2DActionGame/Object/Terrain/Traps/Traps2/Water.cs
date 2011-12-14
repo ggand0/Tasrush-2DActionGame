@@ -47,6 +47,7 @@ namespace _2DActionGame
         {
             this.user = user;
             this.localPosition = localPosition;
+			activeDistance = 640;
 
 			Load();
         }

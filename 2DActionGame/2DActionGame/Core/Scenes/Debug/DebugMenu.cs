@@ -79,18 +79,18 @@ namespace _2DActionGame
 		public override void Draw(SpriteBatch sprite)
 		{
 			sprite.Draw(backGround, Vector2.Zero, Color.White);
-			sprite.DrawString(game.pumpDemi, "Debug Options", new Vector2(250, 30), Color.Orange);
-			sprite.DrawString(game.pumpDemi, "change on/off", new Vector2(200, 70), Color.Orange);
-			sprite.DrawString(game.pumpDemi, "inDebugMode", new Vector2(200, 100), button[0].color);
-			sprite.DrawString(game.pumpDemi, "isMuted", new Vector2(200, 120), button[1].color);
-			sprite.DrawString(game.pumpDemi, "visibleSword", new Vector2(200, 140), button[2].color);
-			sprite.DrawString(game.pumpDemi, "score", new Vector2(200, 160), button[3].color);
-			sprite.DrawString(game.pumpDemi, "Back", new Vector2(200, 180), button[4].color);
-			sprite.DrawString(game.pumpDemi, "syoryuMode (Stage1 only)", new Vector2(200, 200), button[5].color);
-			sprite.DrawString(game.pumpDemi, "empty", new Vector2(200, 220), button[6].color);
-			sprite.DrawString(game.pumpDemi, "empty", new Vector2(200, 240), button[7].color);
-			sprite.DrawString(game.pumpDemi, "empty", new Vector2(200, 260), button[8].color);
-			sprite.DrawString(game.pumpDemi, "empty", new Vector2(200, 280), button[9].color);
+			sprite.DrawString(game.Arial, "Debug Options", new Vector2(250, 30), Color.Orange);
+			sprite.DrawString(game.Arial2, "change on/off", new Vector2(200, 70), Color.Orange);
+			sprite.DrawString(game.Arial2, "inDebugMode", new Vector2(200, 100), button[0].color);
+			sprite.DrawString(game.Arial2, "isMuted", new Vector2(200, 120), button[1].color);
+			sprite.DrawString(game.Arial2, "visibleSword", new Vector2(200, 140), button[2].color);
+			sprite.DrawString(game.Arial2, "score", new Vector2(200, 160), button[3].color);
+			sprite.DrawString(game.Arial2, "Back", new Vector2(200, 180), button[4].color);
+			sprite.DrawString(game.Arial2, "syoryuMode (Stage1 only)", new Vector2(200, 200), button[5].color);
+			sprite.DrawString(game.Arial2, "empty", new Vector2(200, 220), button[6].color);
+			sprite.DrawString(game.Arial2, "empty", new Vector2(200, 240), button[7].color);
+			sprite.DrawString(game.Arial2, "empty", new Vector2(200, 260), button[8].color);
+			sprite.DrawString(game.Arial2, "empty", new Vector2(200, 280), button[9].color);
 		}
 	}
 }

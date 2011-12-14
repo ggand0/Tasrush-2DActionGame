@@ -68,25 +68,26 @@ namespace _2DActionGame
 		{
 		}
 		public Terrain(Stage stage, float x, float y, int width, int height)
-			: base(stage, x, y, width, height)
+			: this(stage, x, y, width, height, 0)
 		{
 		}
 		public Terrain(Stage stage, float x, float y, int width, int height, int type)
 			: base(stage, x, y, width, height)
 		{
 			this.type = type;
+			activeDistance = 1280;
 		}
 
 		public Terrain(Stage stage, float x, float y, int width, int height, Vector2 localPosition)
-			: base(stage, x, y, width, height)
+			: this(stage, x, y, width, height, null, Vector2.Zero)
 		{
-			this.localPosition = localPosition;
 		}
 		public Terrain(Stage stage, float x, float y, int width, int height, Object user, Vector2 localPosition)
 			: base(stage, x, y, width, height)
 		{
 			this.user = user;
 			this.localPosition = localPosition;
+			activeDistance = 1280;
 		}
 		#endregion
 

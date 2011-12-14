@@ -254,7 +254,7 @@ namespace _2DActionGame
                 }
             }
         }
-        public void IsHit(Object targetObject, Vector2 vec)
+        /*public void IsHit(Object targetObject, Vector2 vec)
         {
 			if (targetObject.firstTimeInAFrame) {
 				isHit = false;
@@ -311,19 +311,88 @@ namespace _2DActionGame
 						}
 				}
 			}
-        }
-        public void IsHitTwice(Object targetObject, int division)
+        }*/
+		public void IsHit(Object targetObject, Vector2 targetPos)
+		{
+			ChangeFlags(targetObject);
+
+			if (targetPos.X + targetObject.width < position.X) {
+			} else if (position.X + width < targetPos.X) {
+			} else if (targetPos.Y + targetObject.height < position.Y) {
+			} else if (position.Y + height < targetPos.Y) {
+			} else {
+				Vector2 criterionVector = targetPos + new Vector2(targetObject.width / 2, targetObject.height);
+
+				// 当たりあり
+				ChangeHitFlags(targetObject);
+
+				if (targetObject.speed.Y > 0 && !isUnder) { // targetObjectが下に移動中
+					//if(isLeftSlope && criterionVector.X > position.X &&  criterionVector.X < position.X + width) {
+					//}
+					if ((!isRightSlope && !isLeftSlope && targetPos.X + targetObject.width > position.X && targetPos.X < position.X + width)
+						|| (!isLeftSlope && isRightSlope && criterionVector.X > position.X && targetPos.X < position.X + width)
+						|| (!isRightSlope && isLeftSlope && targetPos.X + targetObject.width > position.X && criterionVector.X < position.X + width)
+						|| (isLeftSlope && isRightSlope && criterionVector.X > position.X && criterionVector.X < position.X + width)) {
+						//座標を指定しないとBlockに接してジャンプしたときにｷﾞﾘｷﾞﾘで乗ってしまう
+						// ブロックの上端
+						if (targetObject.position.Y + targetObject.height - position.Y < maxLength) {
+							targetObject.speed.Y = 0;
+							targetObject.position.Y = position.Y - targetObject.height;  // 上に補正
+
+							//if (targetObject is Rival) { }
+							targetObject.isOnSomething = true;
+							targetObject.jumpCount = 0;      // Playerに限定したかったが諦めた
+							targetObject.isJumping = false;　// 着地したらJumpできるように
+							targetPos.X += this.speed.X;  // これで慣性を再現できるか！？
+
+							if (type == 0) targetObject.friction = defFriction;
+							else if (type == 1) targetObject.friction = .05f;
+							targetObject.isOnSomething = true;
+							ontop = true;
+							isUnderSomeone = true;
+						}
+					}
+				} else if (targetObject.speed.Y < 0 && !isOn) {// 上に移動中
+					if (targetObject.position.X + targetObject.width > position.X && targetPos.X < position.X + width)
+						// ブロックの下端
+						if (position.Y + height - targetPos.Y < maxLength) {
+							targetObject.speed.Y = 0;
+							targetObject.position.Y = position.Y + height;   // 下に補正
+						}
+				}
+				// 右に移動中
+				if (targetObject.speed.X - speed.X > 0 && !isRight && !isRightSlope) {
+					if (targetObject.position.Y > position.Y - targetObject.height && targetPos.Y < position.Y + height)
+						// ブロックの左端
+						if ((targetPos.X + targetObject.width) - position.X < maxLength) {
+							targetObject.position.X = position.X - targetObject.width;  // 左に補正
+							onleft = true;
+							if (targetObject is Player) (targetObject as Player).isHitLeftSide = true;
+						}
+				} else if (targetObject.speed.X - speed.X < 0 && !isLeft && !isLeftSlope) {// 左に移動中
+					if (targetObject.position.Y + targetObject.height > position.Y && targetPos.Y < position.Y + height)
+						// ブロックの右端
+						if ((position.X + width) - targetPos.X < maxLength) {
+							targetObject.position.X = position.X + width;   // 右に補正
+							onright = true;
+						}
+				}
+			}
+		}
+        public void IsHitDetailed(Object targetObject, int division)
         {
-            if (targetObject.locus.Count >= 2) {
-                locusVec = targetObject.locus[1] - targetObject.locus[0];
-                for (int i = 0; i <= division; i++) locusVectors[i] = targetObject.locus[0] +  i * (locusVec / division);
-            
-                foreach(Vector2 lV in locusVectors) {
-                    IsHit(targetObject, lV);
-                    if (targetObject.isHit) break;
-                }
-            }
-            else IsHit(targetObject);
+			if (targetObject.locus.Count >= 2) {
+				if (targetObject is Player && targetObject.speed.X > 0) { }
+				locusVec = targetObject.locus[1] - targetObject.locus[0];
+				for (int i = 0; i <= division; i++) locusVectors[i] = targetObject.locus[0] + i * (locusVec / division);
+
+				foreach (Vector2 lv in locusVectors) {
+					IsHit(targetObject, lv);// わかった。当たってるかどうかだけ軌跡を使って、当たってたら”現在の情報を使って”補正すればよい
+					if (targetObject.isHit) break;
+				}
+			} else {
+				IsHit(targetObject);
+			}
         }
         public void IsHitVec(Object targetObject)
         {

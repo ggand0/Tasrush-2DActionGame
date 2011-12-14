@@ -622,7 +622,6 @@ namespace _2DActionGame
 
 		}
 		public override void Load()
-
 		{
 			#region Terrain
 			/*foreach(Terrain terrain in dynamicTerrains) {
@@ -777,8 +776,7 @@ namespace _2DActionGame
 			Collide();											// CollisionDetection(Terrain、Weapon等)
 			ScrollUpdate();										// スクロール時の座標変換(画面上のすべてのオブジェクトについて)
 			PlayBGM();											// BGM管理
-			//if (!player.isThrusting)
-				damageControl.Update2();	// WeaponとEnemyのダメージ判定の調整
+			damageControl.Update2();	// WeaponとEnemyのダメージ判定の調整
 
 			// maxCombo
 			/*for (int i = 0; i < inComboObjects.Count; i++) {  // 列要素を比較
@@ -841,8 +839,7 @@ namespace _2DActionGame
 			// CollisionDetection(Terrain、Weapon等)
 			Collide();
 
-			//if (!player.isThrusting)
-				damageControl.Update2();                //sword.DamageUpdate();　 // WeaponとEnemyのダメージ判定の調整
+			damageControl.Update2();                //sword.DamageUpdate();　 // WeaponとEnemyのダメージ判定の調整
 			// スクロール時の座標変換(画面上のすべてのオブジェクトについて)
 			ScrollUpdate();
 
@@ -857,8 +854,6 @@ namespace _2DActionGame
 			gameTimeTAS++;
 			
 		}
-		//private int gameStatus.comboCountVisibleTime;
-		//private int gameStatus.maxComboCountVisibleTime = 60;
 		private void UpdateUICalculate()
 		{
 			for (int i = 0; i < inComboObjects.Count; i++)    // 列要素を比較
@@ -874,7 +869,6 @@ namespace _2DActionGame
 
 			gameStatus.comboCountVisibleTime++;
 		}
-
 		private void UpdateTimeCoef()
 		{
 			// Update
@@ -898,10 +892,10 @@ namespace _2DActionGame
 			damagedCharacters.Clear();
 			damagedObjects.Clear();
 			attackedObjects.Clear();
-			//inComboObjects.Clear(); ここのせいでmaxCOmboCountがすぐ0になるようだ
-			foreach (Weapon weapon in weapons)
+			foreach (Weapon weapon in weapons) {
 				if (weapon.isBeingUsed || (weapon is Turret && (weapon as Turret).isVisible))
 					activeWeapons.Add(weapon);
+			}
 			foreach (Object obj in objects) {
 				obj.firstTimeInAFrame = true;
 				obj.isFirstTimevsCB = true;
@@ -909,7 +903,7 @@ namespace _2DActionGame
 			/*foreach (Bullet bul in bullets)
 				bul.isHit = false;*/
 			#endregion
-			#region staticTerrain/Character, dynamicTerrain, Bullet?
+			#region staticTerrain/Character, dynamicTerrain
 			foreach (Terrain terrain in activeStaticTerrains) {
 				if (terrain.isOn && terrain.isUnder && terrain.isRight && terrain.isLeft || !terrain.isAlive) continue;// 完全に埋もれてるのは除外
 				//if (terrain.user != null && terrain.isBeingUsed) continue;
@@ -926,9 +920,9 @@ namespace _2DActionGame
 						if (terrain is Slope) (terrain as Slope).IsHitLite(character);
 						//else if (terrain is SnowBall) CollisionDetection.RectangleCross(terrain, character, terrain.degree, character.degree);
 						else {
-							/*if (terrain is Block) (terrain as Block).IsHitTwice(character, 3);
-							else terrain.IsHit(character);*/
-							terrain.IsHit(character);
+							if (terrain is Block && !(terrain is DamageBlock)) (terrain as Block).IsHitDetailed(character, 3);
+							else terrain.IsHit(character);/**/
+							//terrain.IsHit(character);
 						}
 					}
 				foreach (Weapon obstacle in activeWeapons)
@@ -952,16 +946,11 @@ namespace _2DActionGame
 					//if (terrain.user != null && terrain.user == character || terrain.user.user != null && terrain.user.user == chareacter) continue; 
 					// 何というハードコーディング（mapObejects/Fuujin）
 					if (terrain.user != null && terrain.user == character || terrain.user != null && terrain.user.user != null && terrain.user.user == character) continue;
-					if (character is Player) { }// MpaObjectsは当たり判定もそれぞれやる必要がある！
-
-					if (terrain is SnowBall) {
-						CollisionDetection.RectangleCross(terrain, character, terrain.degree, character.degree);
-					} else if (!(character is Player && game.inDebugMode)) {
-						if (terrain is MapObjects) { }
+					if (!(character is Player && game.inDebugMode)) {
 						terrain.IsHit(character);
 					}
 
-					// 11/10/1 Player.isDamagedだがdamageFromAtackingがtrueで到達市しあにバグ
+					// 11/10/1 Player.isDamagedだがdamageFromAtackingがtrueで到達バグ
 					if (character.isDamaged && !character.damageFromAttacking && !character.damageFromTouching) {
 						// Weaponから攻撃を受けてisDamaged=trueのときもここに到達してしまうのが問題→dFAと共にdObjectをObjectに入れる？ // 条件追加したら、雪玉と接触してる敵がどこでも剣の攻撃を受けるようになって改悪
 						character.damageFromTouching = true;
@@ -981,12 +970,9 @@ namespace _2DActionGame
 						} else {
 							CollisionDetection.RectangleCross(weapon, character, weapon.degree, character.degree);
 						}
-
-					if (weapon is Sword && character is Fuujin && character.isDamaged) { }
-					if (weapon is Sword && character is ShootingEnemy && character.isDamaged) { }// ここには到達するのでshootingEnemyでもFuujinと同じことが起きているようだ...
 					// Fuujin.damageFromAttacking == trueで剣での攻撃が"damageControlに感知されないまま"isDamaged状態が続いて毎フレHPが減るｗ
 					if (character.isDamaged && !character.damageFromAttacking && !character.damageFromTouching && !character.damageFromThrusting) {
-						// character==weapon.userなら無視 12/27:別の場所でisDamaged=trueになったため当たり判定せずにListに追加しちゃってる状況らしい.(雪玉に当たった)
+						// character==weapon.userなら無視 10/12/27:別の場所でisDamaged=trueになったため当たり判定せずにListに追加しちゃってる状況らしい.(雪玉に当たった)
 						if (character == weapon.user) continue;
 						else {
 							if (weapon is Sword && weapon.user is Player) player.AirSlashReflection(Player.defReflectSpeed);//8, -8
@@ -1046,7 +1032,7 @@ namespace _2DActionGame
 
 				// Bulletを跳ね返せるように。
 				if (weapon is Sword) {
-					foreach (Bullet bullet in activeBullets)
+					foreach (Bullet bullet in activeBullets)// activeBulletsだった！これが原因だな。道理で全く判定されなかったわけだ
 						if (!(bullet is Beam) && !(bullet is Thunder) && bullet.isShot && weapon.isBeingUsed) {
 							CollisionDetection.RectangleCrossDetailed(weapon, bullet, weapon.degree, bullet.degree, 16);
 							if (bullet.isDamaged) {

@@ -138,12 +138,10 @@ namespace _2DActionGame
 		/// <param name="targetObject"></param>
 		private void UpdateStageList(Object targetObject)
 		{
-			if (targetObject is Player) { }
 			if (targetObject.distanceToCamara < targetObject.activeDistance) {	// ==画面内に表示されているオブジェクト
 				targetObject.isActive = true;
 				stage.activeObjects.Add(targetObject);							// まず大元のListに追加
 
-				if (targetObject is Player) { }
 				if (targetObject is Character) {								// 以下、それぞれ派生クラスのListに追加していく
 					stage.activeCharacters.Add(targetObject as Character);
 				} else if (targetObject is Terrain) {
@@ -151,15 +149,15 @@ namespace _2DActionGame
 					if (IsDynamicTetrrain(targetObject)) {
 						stage.activeDynamicTerrains.Add(targetObject as Terrain);
 
-						if (targetObject is SnowBall
-							|| (targetObject is Block && (targetObject as Block).user != null))
+						if (/*targetObject is SnowBall
+							|| */(targetObject is Block && (targetObject as Block).user != null))
 							stage.activeDynamicTerrains1.Add(targetObject as Terrain);
 						else
 							stage.activeDynamicTerrains2.Add(targetObject as Terrain);
 					} else
 						stage.activeStaticTerrains.Add(targetObject as Terrain);
-				} else if (targetObject is Bullet && ((((targetObject as Bullet).turret != null && (targetObject as Bullet).turret.isBeingUsed)
-					  || (targetObject as Bullet).turret == null)))
+				} else if (targetObject is Bullet && (targetObject as Bullet).isShot/*((((targetObject as Bullet).turret != null && (targetObject as Bullet).turret.isBeingUsed)// これが原因
+					  || (targetObject as Bullet).turret == null))*/)
 					stage.activeBullets.Add(targetObject as Bullet);
 			} else {
 				targetObject.isActive = false;
