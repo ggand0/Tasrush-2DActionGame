@@ -315,12 +315,16 @@ namespace _2DActionGame
 				HP--;
 
 				totalHits += 1;
+				isEffected = true;
 				damageEffected = true;
 				time = 0;   //raivalでcomboで使ってるtimeと同じだから干渉しないかどうか...
 				delayTime = 0;
 				inDmgMotion = true;
 				blinkCount = 0;
 				e = 0;
+				// ４方向だけ差を出して妥協
+				effectPos = new Vector2(position.X + width / 2 > stage.player.position.X + stage.player.width / 2 ? width/4 : width * 3/4
+					, position.Y + height/2 > stage.player.position.Y + stage.player.height/2 ? height/4 : height * 3/4);
 
 				if (time < deathComboTime) {
 					comboCount++;

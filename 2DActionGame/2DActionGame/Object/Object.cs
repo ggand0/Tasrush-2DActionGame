@@ -140,6 +140,11 @@ namespace _2DActionGame
 		/// WayPointsの最後の要素の位置まで到達したらtrue
 		/// </summary>
 		protected bool hasMoved;
+		/// <summary>
+		/// 交点にエフェクトを描画する処理を実装するのが間に合わないので、
+		/// これの値をそれぞれのObjectがそれに近い位置に更新して使う
+		/// </summary>
+		public Vector2 effectPos { get; protected set; }
 		internal bool hasPlayedSoundEffect;
 		public bool isEffected { get; set; }
 		public bool damageEffected { get; set; }

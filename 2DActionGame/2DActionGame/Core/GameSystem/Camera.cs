@@ -33,6 +33,7 @@ namespace _2DActionGame
 
 		public void ScrollUpdate(Object targetObject)
 		{
+			if (targetObject is Weapon) return;// 11/12/15:WeaponはisBeingUsedのみに依存させることにした
 			this.speed.X = stage.ScrollSpeed;
 			distanceToPlayer = (stage.player.position.X - this.position.X);
 			if (stage.boss != null) distanceToBoss = stage.boss.position.X - position.X;
@@ -107,7 +108,7 @@ namespace _2DActionGame
 		private void EdgeScrollUpdate(Object targetObject)
 		{
 			if (targetObject is ScrollingBackground) {
-				(targetObject as ScrollingBackground).ScrollUpdateBoss(stage.player.position);
+				(targetObject as ScrollingBackground).ScrollUpdateBoss(this.position);//stage.player.position);
 			} else {
 				targetObject.ScrollUpdate(this.position, true);//stage.player.position
 			}

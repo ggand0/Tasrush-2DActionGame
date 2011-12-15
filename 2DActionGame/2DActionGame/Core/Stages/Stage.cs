@@ -333,9 +333,9 @@ namespace _2DActionGame
 						mapDatas[mapDatas.Count - 1].devided2[i, j] = input_tmp[j];                                              // 次にカンマで分割：一時的な配列に入れた後に二次元配列の列へ代入
 					}
 				}
-
-			AddMapData(mapDatas[mapDatas.Count - 1], x, y);
 			sr.Close();
+			AddMapData(mapDatas[mapDatas.Count - 1], x, y);
+			//sr.Close();
 		}
 		/// <summary>
 		/// LoadMapDataで読み取ったマップの情報を元にStageのListにObjectを追加していく。
@@ -763,9 +763,9 @@ namespace _2DActionGame
 			/*foreach (Object obj in activeObjects) {
 				if (!(obj is Weapon)) obj.Update();//&& !(obj is Bullet)
 			}
-			foreach (Weapon weapon in activeWeapons) weapon.Update();*/
+			*/
 			foreach (Object obj in activeObjects) obj.Update();
-
+			foreach (Weapon weapon in activeWeapons) weapon.Update();
 			// Reverse用のLogをとる←色々Update終わったあとにLog取らせることに
 			// 注意！極力UpdateReverseでのreverse.Updateと同タイミングに置くこと！！
 			reverse.UpdateLog();
@@ -831,7 +831,7 @@ namespace _2DActionGame
 
 			// Update
 			foreach (Object obj in activeObjects) obj.Update();
-
+			foreach (Weapon weapon in activeWeapons) weapon.Update();
 			//Reverse用のLogをとる←色々Update終わったあとにLog取らせることに
 			//*注意！極力UpdateReverseでのreverse.Updateと同タイミングに置くこと！！
 			reverse.UpdateLog();
@@ -1045,33 +1045,33 @@ namespace _2DActionGame
 			}
 			#endregion
 			#region Bullet/Chracter
-			if (!game.inDebugMode) {
-				foreach (Bullet bullet in activeBullets) {
-					if (bullet.isShot) {//CollisionDetection.RectangleDetectionLite(bullet ,player, 0);   // 引数の順番に注意！:targetObject.isDamaged = trueの仕様 のせたくないならLiteを用いる
-						foreach (Character character in activeCharacters) {
-							//if (bullet.isHostile &&bullet.turret.user != character || !bullet.isHostile) {
-							if ((bullet.turret.user == character && !bullet.isHostile || bullet.isHostile) && (bullet.isHostile && character is Player || !bullet.isHostile && character is Enemy)) {
-									CollisionDetection.RectangleCross(bullet, character, bullet.degree, character.degree);// メソッド内でtargetObject.isDmaged=trueにされる
-								} /*else if (!bullet.isHostile && character is Enemy) {
-									CollisionDetection.RectangleCross(bullet, character, bullet.degree, character.degree);
-								}*/
+			foreach (Bullet bullet in activeBullets) {
+				if (bullet.isShot) {//CollisionDetection.RectangleDetectionLite(bullet ,player, 0);   // 引数の順番に注意！:targetObject.isDamaged = trueの仕様 のせたくないならLiteを用いる
+					foreach (Character character in activeCharacters) {
+						//if (bullet.isHostile &&bullet.turret.user != character || !bullet.isHostile) {
 
-								if (character.isDamaged &&  !character.damageFromAttacking) {// 条件でdFAを入れてなかったからdamagesに追加されまくってたorz
-									if (character is Fuujin) { }// わかった、dFAは攻撃Object側のisAttacking側に依存している。Bulletにはそれの管理機構がないせいかも←Bulletの場合はisShotで管理してた
-
-									adObjects.Add(new Object2(bullet, character));
-									character.damageFromAttacking = true;
-								}
+						// 11/12/15 左の条件が要らなさそうだったのでアウトしてみた
+						if (/*(bullet.turret.user == character && !bullet.isHostile || bullet.isHostile) && */(bullet.isHostile && character is Player && !game.inDebugMode || !bullet.isHostile && character is Enemy)) {
+							CollisionDetection.RectangleCross(bullet, character, bullet.degree, character.degree);// メソッド内でtargetObject.isDmaged=trueにされる
+						} /*else if (!bullet.isHostile && character is Enemy) {
+								CollisionDetection.RectangleCross(bullet, character, bullet.degree, character.degree);
+							}*/
+						if (!bullet.isHostile && character is Fuujin && character.isDamaged) { }
+						if (character.isDamaged && !character.damageFromAttacking) {// 条件でdFAを入れてなかったからdamagesに追加されまくってたorz
+							if (character is Fuujin) { }// わかった、dFAは攻撃Object側のisAttacking側に依存している。Bulletにはそれの管理機構がないせいかも←Bulletの場合はisShotで管理してた
+							//bullet.isCollideWith(character);
+							adObjects.Add(new Object2(bullet, character));
+							character.damageFromAttacking = true;
 						}
 					}
-					/*if (player.isDamaged) {
-						adObjects.Add(new Object2(bullet, player));
-						player.damageFromTouching = true;           // FromAttackingだとFuujinの１つの攻撃パターン中１回しか当たらないから...
-						break;  // しないと当たってるのにfalseになる
-					}*/
 				}
-			}
+				/*if (player.isDamaged) {
+					adObjects.Add(new Object2(bullet, player));
+					player.damageFromTouching = true;           // FromAttackingだとFuujinの１つの攻撃パターン中１回しか当たらないから...
+					break;  // しないと当たってるのにfalseになる
+				}*/
 
+			}
 			if (adObjects.Count > 0) { }
 			if (!game.inDebugMode) {
 				foreach (Character character in activeCharacters) {

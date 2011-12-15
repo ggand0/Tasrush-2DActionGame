@@ -954,7 +954,8 @@ namespace _2DActionGame
 			}
 		}
 		private static void CalculateCrossPoint1(Object my_object, Object target_object)
-		{   /*
+		{   
+			/*
              * Effect発生箇所用に交差点を算出する
              * 交差判定に倣っての直線の連立はしない
              * ベクトルを2本引き片方を直線と扱ってもう一方を伸び縮みさせる
@@ -1057,7 +1058,6 @@ namespace _2DActionGame
 			targetPositionVector[2] = targetPositionVector[0] + new Vector2(targetObject.width, targetObject.height);
 			targetPositionVector[3] = targetPositionVector[0] + new Vector2(0, targetObject.height);
 		}
-
 		#endregion
 		#region Rectangle, Point
 		/// <summary>

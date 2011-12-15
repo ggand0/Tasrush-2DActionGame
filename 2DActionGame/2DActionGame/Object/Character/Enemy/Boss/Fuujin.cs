@@ -226,10 +226,13 @@ namespace _2DActionGame
 		/// 風(DamageObject)を射撃
 		/// </summary>
 		/// <param name="movementType">0:tornade,1:tornadeL</param>
-		private void AttackWithWind(int type)
+		private void AttackWithWind(int type)// 4, 11→5じゃね...?
 		{
 			if (isStartingAttack) {
-				obstacleTornadeSmall.isBeingUsed = true;
+				if (type == 0) obstacleTornadeSmall.isBeingUsed = true;
+				else obstacleTornadeLarge.isBeingUsed = true;
+
+
 				isStartingAttack = false;
 				isAttacking = true;
 				usingWindB = true;
@@ -241,18 +244,46 @@ namespace _2DActionGame
 						obstacleTornadeSmall.MovePattern2(obstacleTornadeSmall.trapSet
 							, defaultPosition + new Vector2(100, 100)
 							, Vector2.Zero
-							, defaultPosition + new Vector2(-750, 100), 1, 5);//3
+							, defaultPosition + new Vector2(-400, 100), 1, 5);//3 // -750,100
 					break;
 				case 1:
-					if (obstacleTornadeSmall.isBeingUsed)
-						obstacleTornadeSmall.MovePattern2(obstacleTornadeSmall.trapSet
+					if (obstacleTornadeLarge.isBeingUsed)
+						obstacleTornadeLarge.MovePattern2(obstacleTornadeLarge.trapSet
 							, defaultPosition + new Vector2(100, -32)
 							, defaultPosition + new Vector2(-600, -32)
 							, defaultPosition + new Vector2(-400, -32), 1, 5);//4
 					break;
 			}
 
-			EndSkill(true, 1, type);
+			//EndSkill(true, 1, type);
+			if (obstacleTornadeSmall.isEnd) {
+				isAttacking = false;
+				usingWindB = false;
+				obstacleTornadeSmall.isEnd = false;
+				obstacleTornadeSmall.isBeingUsed = false;
+				obstacleTornadeSmall.attackCounter = 0;
+				attackCounter = 0;
+				/*if (goWait) {
+					isWaiting = true;
+					wind = false;
+				}*/
+				isWaiting = true;
+				wind = false;
+
+				isEnds[5] = true;
+			}
+			if (obstacleTornadeLarge.isEnd) {
+				isAttacking = false;
+				usingWindB = false;
+				obstacleTornadeLarge.isEnd = false;
+				obstacleTornadeLarge.isBeingUsed = false;
+				obstacleTornadeLarge.attackCounter = 0;
+				attackCounter = 0;
+				isWaiting = true;
+				wind = false;
+
+				isEnds[6] = true;
+			}
 			/*if (endBeforeNext) {
 				EndSkill(true, 1, type);
 
@@ -318,7 +349,7 @@ namespace _2DActionGame
 				isEnds[3] = true;
 			}
 		}
-		private void DropIciclesInTurn()//bool endBeforeNext, int timeToMove)
+		private void DropIciclesInTurn()// 11
 		{
 			if (isStartingAttack) {
 				obstacleIcicleRandom.isBeingUsed = true;
@@ -428,7 +459,7 @@ namespace _2DActionGame
 				isEnds[2] = true;
 			}
 		}
-		private void AttackWithCutterBurst()
+		private void AttackWithCutterBurst()// 8
 		{
 			if (isStartingAttack) {
 				isStartingAttack = false;
@@ -439,7 +470,7 @@ namespace _2DActionGame
 				cutterTurret1WayBurst.Inicialize();
 			}
 
-			if (cutterTurret1WayBurst.isEnd || attackCounter > resWaitTime) {
+			if (cutterTurret1WayBurst.isEnd || attackCounter > 1000) {// 240 // 320
 				isWaiting = true;
 				waitCounter = 0;
 				attackCounter = 0;
@@ -526,6 +557,8 @@ namespace _2DActionGame
 			attackPosition = new Vector2(defaultPosition.X - 500, defaultPosition.Y);
 			animation = new Animation(380, 310);
 			resWaitTime = 240;
+			bindPos = new Vector2(50, 50);
+			//bindSize = new Vector2(260, 260);
 			//animation2 = new Animation(210, 210);
 
 			obstacles = new List<Obstacle>();
@@ -535,8 +568,12 @@ namespace _2DActionGame
 			obstacleTornadeSmall = new Obstacle(stage, this, x, y, 32, 32, 2, 3);
 			obstacleTornadeLarge = new Obstacle(stage, this, x, y, 32, 32, 2, 4);
 
-			cutterTurret5Way = new Turret(stage, this, new Vector2(150, 100), 32, 32, 0, 5, 5, false, true, 0, 4);
-			cutterTurret1WayBurst = new Turret(stage, this, new Vector2(150, 100), 32, 32, 0, 1, 10, false, true, 0, 4, 10, 320, 10);
+			// !reuseBullet版
+			//cutterTurret5Way = new Turret(stage, this, new Vector2(150, 100), 32, 32, 0, 5, 5, false, true, 0, 4);
+			//cutterTurret1WayBurst = new Turret(stage, this, new Vector2(150, 100), 32, 32, 0, 1, 10, false, true, 0, 4, 10, 320, 10);
+			cutterTurret5Way = new Turret(stage, this, new Vector2(150, 100), 32, 32, 0, 5, 5, false, true, 0, 4, 10, 60, 10, Vector2.Zero, false, false);
+			cutterTurret1WayBurst = new Turret(stage, this, new Vector2(150, 100), 32, 32, 0, 1, 10, false, true, 0, 4, 10, 320, 10, Vector2.Zero, false, false);
+			cutterTurret1WayBurst.isMarked = true;
 			cutterTurretAlternate = new Turret(stage, this, new Vector2(150, 100), 32, 32, 0, 5, 2, false, true, 0, 4, 5, 60, 10, Vector2.Zero, false, true, new int[] { 5, 1 });
 			// shootInterval == 120だと、連発した時にPlayerを最初しか上手く追尾しない?
 
@@ -574,7 +611,7 @@ namespace _2DActionGame
 			if (game.isHighLvl) attackPatternNum = 0;
 			else attackPatternNum = 1;
 			//attackList.Add(0);
-			attackList.Add(attackPatternNumList[attackPatternNum][0]);
+			//attackList.Add(attackPatternNumList[attackPatternNum][0]);
 
 			// delegateを使って書き換えられるかテスト
 			attackMethods.Add(attackMethodType0 = SpawnEnemy);

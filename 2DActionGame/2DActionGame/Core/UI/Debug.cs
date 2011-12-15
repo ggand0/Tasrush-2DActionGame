@@ -92,6 +92,9 @@ namespace _2DActionGame
 							spriteBatch.DrawString(game.Arial2, "player.isHitLeftSide:" + stage.player.isHitLeftSide.ToString(), new Vector2(0, 190), fontColor[1]);
 							spriteBatch.DrawString(game.Arial2, "boss.position:" + stage.boss.position.ToString(), new Vector2(0, 200), fontColor[1]);
 						}
+						for (int i = 0; i < stage.boss.attackList.Count; i++) {
+							spriteBatch.DrawString(game.Arial2, "boss.attackList:" + stage.boss.attackList[i].ToString(), new Vector2(0, 230 + i * 10), fontColor[1]);
+						}
 						break;
 					case 2:
 						// Player
@@ -115,6 +118,9 @@ namespace _2DActionGame
 							if (stage.boss is Fuujin) {
 								spriteBatch.DrawString(game.Arial2, "boss.Turret:" + (stage.boss as Fuujin).cutterTurret5Way.position.ToString(), new Vector2(0, 190), fontColor[1]);
 								spriteBatch.DrawString(game.Arial2, "boss.dFA:" + (stage.boss as Fuujin).damageFromAttacking.ToString(), new Vector2(0, 200), fontColor[1]);
+							}
+							for (int i = 0; i < stage.boss.attackList.Count; i++) {
+								spriteBatch.DrawString(game.Arial2, "boss.attackList:" + stage.boss.attackList[i].ToString(), new Vector2(0, 230 + i * 10), fontColor[1]);
 							}
 						}
 						break;

@@ -185,7 +185,7 @@ namespace _2DActionGame
 				switch (this.type) {
 					case 2:
 						switch (this.typeDetailed) {
-							case 1:
+							case 1:// Icicle
 								(trapSet[0] as MapObjects).MovePattern0(startPosition, 600, type, .20);
 								break;
 							default:

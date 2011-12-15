@@ -83,7 +83,8 @@ namespace _2DActionGame
 			this.position = turret.position;
 			this.textureType = textureType;
 			this.disappearPattern = dissapearType;
-			activeDistance = Game1.Width + 120;
+			activeDistance = stage.inBossBattle ? Game1.Width * 2 : Game1.Width + 120; ;
+			marginalDistance = stage.inBossBattle ? Game1.Width * 2 : 320;
 
 			// Load後にテクスチャのサイズから取得した方がいいよな...?
 			switch (textureType) {
@@ -256,9 +257,9 @@ namespace _2DActionGame
 		// MotionUpdate(Obj)にしないと統一できん...
 		public void isCollideWith(Object obj)
 		{
-			if (obj is Weapon && obj.user is Player) {
+			if (obj is Sword && obj.user is Player) {//obj is Weapon
 				isHostile = false;
-			} else if (obj is Weapon && obj.user is Enemy) {
+			} else if (obj is Sword && obj.user is Enemy) {
 				if (!isHostile) {
 					isEffected = true;
 					damageEffected = true;

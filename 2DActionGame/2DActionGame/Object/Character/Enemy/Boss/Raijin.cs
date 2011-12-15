@@ -485,7 +485,7 @@ namespace _2DActionGame
 				isStartingAttack = false;
 				attackCounter++;
 			}
-			//if (thunderTurrets[0].isBeingUsed && thunderTurrets[1].isBeingUsed && thunderTurrets[2].isBeingUsed) { }// 全部isBeingUsedなのにthunderが出ない
+			if (thunderTurrets[0].isBeingUsed && thunderTurrets[1].isBeingUsed && thunderTurrets[2].isBeingUsed) { }// 全部isBeingUsedなのにthunderが出ない
 			//if (thunderTurrets[0].shootNumTotal) {}
 
 			if (attackCounter % 40 == 0) { }
@@ -603,6 +603,7 @@ namespace _2DActionGame
 				thunderTurrets.Add(new Turret(stage, this, this.position, 64, 48, 2, 1, 5, false, false, 3, 3, 14, 240, 40));//...1 // 240
                 thunderTurrets[i].isVisible = true;
             }
+			thunderTurrets[0].isMarked = true;
 			thunderTurrets3Way.Add(thunderTurret);
 			thunderTurrets3Way.Add(thunderTurret2);
 			thunderTurrets3Way.Add(thunderTurret3);

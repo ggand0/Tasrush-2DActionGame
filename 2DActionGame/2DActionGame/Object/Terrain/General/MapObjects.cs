@@ -261,7 +261,7 @@ namespace _2DActionGame
 						spawnNum = 0;
 						foreach (Terrain terrain in mapObjects) {
 							terrain.position = startPosition + terrain.localPosition;
-							//terrain.isBeingUsed = true;
+							terrain.isBeingUsed = false;
 							if (terrain is Icicle) {
 								(terrain as Icicle).isFallingDown = false;
 								terrain.hasPlayedSoundEffect = false;

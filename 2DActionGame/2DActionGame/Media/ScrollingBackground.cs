@@ -65,7 +65,9 @@ namespace _2DActionGame
 		public void ScrollUpdateBoss(Vector2 criteriaPosition)
 		{
 			if (isFrontal) {
-				drawPos.X = position.X - stage.player.position.X * .10f + Player.screenPosition.X;
+				//if (texture != null) drawPos.X = stage.bossScreenEdgeLeft + stage.bossScreenEdgeLeft % texture.Width + Player.screenPosition.X/**/ - criteriaPosition.X;
+				drawPos.X = position.X - stage.player.position.X * .10f/**/ + Player.screenPosition.X;
+				//drawPos.X = position.X - stage.player.position.X + Player.screenPosition.X;
 			} else {
 				drawPos.X = position.X - stage.player.position.X * .05f + Player.screenPosition.X;
 			}
@@ -81,13 +83,6 @@ namespace _2DActionGame
         /// <param name="spriteBatch"></param>
         public override void Draw(SpriteBatch spriteBatch)
         {
-            /*spriteBatch.Begin(SpriteSortMode.FrontToBack,    // 3.1ではBlendStateクラスが無いようなので
-                       BlendState.Opaque,
-                       null,
-                       DepthStencilState.Default,
-                       null);*/
-            //spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.BackToFront, SaveStateMode.None);
-
             // DrawEffect the textures, if it is still onscreen.
 			if (stage != null && (!stage.isScrolled /*|| stage.inBossBattle*/)) {
 				if (isFrontal) {
@@ -109,7 +104,6 @@ namespace _2DActionGame
 					spriteBatch.Draw(texture, screenpos - texturesize, null, Color.White, 0, origin, 1, SpriteEffects.None, .0f);
 				}
 			}
-            //spriteBatch.End();
         }
     }
 }

@@ -28,6 +28,10 @@ namespace _2DActionGame
 		/// 攻撃が終了したらtrue、攻撃開始時にfalseに設定
 		/// </summary>
 		public bool isEnd { get; internal set; }
+		/// <summary>
+		/// デバッグ用（weaponは判別しにくいので）
+		/// </summary>
+		public bool isMarked { get; internal set; }
 
 		public Weapon()
 			: base()
@@ -47,6 +51,7 @@ namespace _2DActionGame
 			this.localPosition = localPosition;
 			this.user = user;
 			animation = new Animation(width, height);
+			activeDistance = 1280;
 		}
 
 

@@ -251,8 +251,10 @@ namespace _2DActionGame
 		}
 
 		public override void Update()
-		{
+		{	
 			if (IsBeingUsed()) {
+				if (user is Fuujin && isMarked) { }
+				if (user is Raijin && isMarked) { }
 				// Method USN0でまとめようとしたが、Manualで射撃させようとするとBeamが表示されないバグが
 				if (!shootManually) {
 					UpdateShootingN0(this.shootInterval, this.bulletInterval, shootManually);
@@ -268,6 +270,7 @@ namespace _2DActionGame
 		}
 		public override void Draw(SpriteBatch spriteBatch)
 		{
+			//if (isMarked) { }
 			if ((isBeingUsed /*&& canBeDestroyed*/ && isVisible) /*|| (canBeDestroyed && isVisible)*/) {// 壊れない&&描画したいときもあるだろうが今はこの仕様で。
 				spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, MathHelper.ToRadians(-degree), Vector2.Zero, Vector2.One, SpriteEffects.None, 0);
 			}

@@ -110,7 +110,7 @@ namespace _2DActionGame
 				Load(game.Content, "Effect\\5koma_red", 1);
 				Update(5, 0, 32, 96, 3, 5);
 
-				spriteBatch.Draw(texture, targetObject.drawPos + originVector, rect, Color.White, MathHelper.ToRadians(-degree),
+				spriteBatch.Draw(texture, targetObject.drawPos + targetObject.effectPos/* + originVector*/, rect, Color.White, MathHelper.ToRadians(-degree),
 					Vector2.Zero, 1, SpriteEffects.None, .1f);
 
 				if (poseCount >= poseNum) {

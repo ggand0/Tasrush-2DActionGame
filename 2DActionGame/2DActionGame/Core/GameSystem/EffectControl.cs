@@ -53,6 +53,7 @@ namespace _2DActionGame
 						//x.characterNumber == i)) {} // ==
 					else {
 						if (stage.activeObjects[i] is Enemy && (stage.activeObjects[i] as Enemy).deathEffected) { }
+						if (stage.activeObjects[i] is Fuujin) { }
 						effects.Add(new Effect(stage, stage.activeObjects[i], i));
 					}/**/
 				}
