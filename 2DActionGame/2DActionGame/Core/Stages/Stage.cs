@@ -765,7 +765,7 @@ namespace _2DActionGame
 			}
 			*/
 			foreach (Object obj in activeObjects) obj.Update();
-			foreach (Weapon weapon in activeWeapons) weapon.Update();
+			//foreach (Weapon weapon in activeWeapons) weapon.Update();
 			// Reverse用のLogをとる←色々Update終わったあとにLog取らせることに
 			// 注意！極力UpdateReverseでのreverse.Updateと同タイミングに置くこと！！
 			reverse.UpdateLog();
@@ -831,7 +831,7 @@ namespace _2DActionGame
 
 			// Update
 			foreach (Object obj in activeObjects) obj.Update();
-			foreach (Weapon weapon in activeWeapons) weapon.Update();
+			//foreach (Weapon weapon in activeWeapons) weapon.Update();
 			//Reverse用のLogをとる←色々Update終わったあとにLog取らせることに
 			//*注意！極力UpdateReverseでのreverse.Updateと同タイミングに置くこと！！
 			reverse.UpdateLog();

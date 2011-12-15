@@ -33,7 +33,7 @@ namespace _2DActionGame
 
 		public void ScrollUpdate(Object targetObject)
 		{
-			if (targetObject is Weapon) return;// 11/12/15:WeaponはisBeingUsedのみに依存させることにした
+			//if (targetObject is Weapon) return;// 11/12/15:WeaponはisBeingUsedのみに依存させることにした
 			this.speed.X = stage.ScrollSpeed;
 			distanceToPlayer = (stage.player.position.X - this.position.X);
 			if (stage.boss != null) distanceToBoss = stage.boss.position.X - position.X;
