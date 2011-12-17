@@ -35,6 +35,10 @@ namespace _2DActionGame
 
         public override void IsHit(Object targetObject)
         {
+			if (targetObject is Enemy) {// 敵ならBlockとして衝突判定
+				base.IsHit(targetObject);
+				return;
+			}
 			if (targetObject.firstTimeInAFrame) { //3/14 もう何かに乗ってると判断されてるなら飛ばしてもいいかもしれない
 				isHit = false;// 複数の敵と判定するので結局falseになってしまう
 				//(targetObject as Character).onConveyor = false;

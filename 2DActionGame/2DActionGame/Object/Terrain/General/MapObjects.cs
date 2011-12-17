@@ -104,6 +104,8 @@ namespace _2DActionGame
 			mapObjects.Add(new Icicle(stage, x, y, width, height, this, new Vector2(-400, 0)));
 			mapObjects.Add(new Icicle(stage, x, y, width, height, this, new Vector2(-250, 0)));
 			mapObjects.Add(new Icicle(stage, x, y, width, height, this, new Vector2(80, 0)));*/
+			mapObjects.Add(new Icicle(stage, x, y, width, height, this, new Vector2(128, 0)));
+			mapObjects.Add(new Icicle(stage, x, y, width, height, this, new Vector2(64, 0)));
 			mapObjects.Add(new Icicle(stage, x, y, width, height, this, Vector2.Zero));
 			mapObjects.Add(new Icicle(stage, x, y, width, height, this, new Vector2(-64, 0)));
 			mapObjects.Add(new Icicle(stage, x, y, width, height, this, new Vector2(-128, 0)));
@@ -142,7 +144,7 @@ namespace _2DActionGame
 					hasPlayedSoundEffect = true;
 				}
 			}
-			UpdateG();
+			UpdateCenterOfGravity();
         }
 		/// <summary>
 		/// 管理クラスなので、一括してScrollUpdate()を呼ぶ。
@@ -159,7 +161,7 @@ namespace _2DActionGame
 			}
 			base.ScrollUpdate(criteriaPosition, autoScroll);
 		}
-		private void UpdateG()
+		private void UpdateCenterOfGravity()
 		{
 			float sumX = 0, sumY = 0;
 			foreach (Terrain terrain in mapObjects) {
@@ -237,9 +239,7 @@ namespace _2DActionGame
 
 						for (int i = 0; i <= spawnIndex.Count - 1; i++) {//spawnNum; i++)
 							if (mapObjects[spawnIndex[i]] is Icicle && (mapObjects[spawnIndex[i]] as Icicle).hasFalled) {
-								(mapObjects[spawnIndex[i]] as Icicle).hasFalled = false;
-								(mapObjects[spawnIndex[i]] as Icicle).isFallingDown = false;
-								//mapObjects[spawnIndex[i]].hasPlayedSoundEffect = false;
+								(mapObjects[spawnIndex[i]] as Icicle).Initialize();
 								mapObjects[spawnIndex[i]].speed = Vector2.Zero;
 								mapObjects[spawnIndex[i]].position = startPosition + mapObjects[spawnIndex[i]].localPosition;
 								mapObjects[spawnIndex[i]].isBeingUsed = true;
@@ -322,6 +322,7 @@ namespace _2DActionGame
 						foreach (Terrain terrain in mapObjects) {
 							terrain.position = startPosition + terrain.localPosition;
 							terrain.isBeingUsed = true;
+							terrain.hasPlayedSoundEffect = false;
 						}
 					}
 

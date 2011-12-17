@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
 
 namespace _2DActionGame
 {
@@ -18,6 +19,9 @@ namespace _2DActionGame
 		protected new readonly float defFlyingOutDistance　= 300;
 		protected new readonly float defFlyingOutSpeed= -12;
 
+		private SoundEffect flyingOutSound;
+		private SoundEffectInstance flyingOutSoundInstance;
+
         public FlyingOutEnemy2(Stage stage,  float x, float y, int width, int height, int HP)
             : base(stage,x,y,width,height,HP)
         {
@@ -29,8 +33,12 @@ namespace _2DActionGame
         }
 		protected override void Load()
 		{
+			
 			base.Load();
 			texture = content.Load<Texture2D>("Object\\Character\\FlyingOutEnemy2");
+			flyingOutSound = content.Load<SoundEffect>("Audio\\SE\\wind");
+			flyingOutSoundInstance = flyingOutSound.CreateInstance();
+			flyingOutSoundInstance.Volume = .5f;
 		}
 
         public override void UpdateAnimation()
@@ -44,7 +52,9 @@ namespace _2DActionGame
         public override void MovementUpdate()
         {
             double degree;
-            distance = Math.Abs(this.position.X - stage.player.position.X);
+			distance = Math.Abs(this.position.X - stage.player.position.X);
+			/*float distanceY = Math.Abs(this.position.Y - stage.player.position.Y);
+			flyingOutDistance = defFlyingOutDistance - distanceY;*/
 
 			if (!hasFlownOut) {
 				isOnSomething = false;
@@ -53,7 +63,7 @@ namespace _2DActionGame
 				if (distance < flyingOutDistance) {
 					if (counter == 0) {
 						hasFlownOut = true;
-
+						flyingOutSoundInstance.Play();
 						// playerへの速度ベクトルを計算する
 						degree = Math.Atan2(stage.player.position.Y - position.Y, stage.player.position.X - position.X);
 						speed = 10 * Vector2.Normalize(new Vector2((float)Math.Cos(degree), (float)Math.Sin(degree)));

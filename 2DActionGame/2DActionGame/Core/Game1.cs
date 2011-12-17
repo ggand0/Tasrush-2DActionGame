@@ -36,8 +36,9 @@ namespace _2DActionGame
     /// This is the main movementType for our game. Yukkuri mite ittene!
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
-    {
-        /// <summary>
+	{
+		#region Field
+		/// <summary>
         /// ウィンドゥサイズ
         /// </summary>
 		public static readonly int Width = 640, Height = 480;
@@ -91,6 +92,7 @@ namespace _2DActionGame
 		public bool visibleSword { get; set; }
 		public bool visibleScore { get; set; }
 		public bool hasReachedCheckPoint { get; set; }
+		#endregion
 
 		private void graphics_DeviceResetting(object sender, EventArgs e)
 		{
@@ -231,7 +233,7 @@ namespace _2DActionGame
 
 			random = new Random();
 
-			isMuted = true;
+			//isMuted = true;
 			//noEnemy = true;
 			stageScores = new double[maxStageNum];
 			//scores = dummyScore.ToList<RankingStatus>();// 復号化失敗のとき用＋テスト用＋要素数確保

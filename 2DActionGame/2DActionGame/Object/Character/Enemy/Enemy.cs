@@ -79,7 +79,7 @@ namespace _2DActionGame
 			base.Update();
 
 			// HP0でフルボッコが終わったら死亡
-			if (HP <= 0 && time > deathComboTime) {
+			if (HP <= 0 && time > deathComboTime || isBlownAway && HP <= 0 && drawPos.X > Game1.Width - width) {// 吹っ飛び時の条件も加えてみた
 				if (!game.isMuted)
 					if (!hasPlayedSoundEffect) {
 						damageSound.Play(SoundControl.volumeAll, 0f, 0f);
@@ -123,9 +123,10 @@ namespace _2DActionGame
 			if (isDamaged && isAlive) {
 				if (stage.player.isCuttingUp) {
 					BlownAwayMotionUp(5, 65);
-					isBlownAway = true;
+					//isBlownAway = true;
 				} else if (stage.player.isCuttingAway) {
 					BlownAwayMotionRight(2, 60);
+					isBlownAway = true;
 				} else if (stage.player.isCuttingDown) {
 					BlownAwayMotionDown(5, 60);
 				} else if (stage.player.isAttacking3) {

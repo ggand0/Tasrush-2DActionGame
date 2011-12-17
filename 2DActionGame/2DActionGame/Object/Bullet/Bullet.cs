@@ -21,6 +21,8 @@ namespace _2DActionGame
 		private SoundEffect reflectSound;
 		private ShootingEnemy shootingEnemy;
 		private Boss boss;
+		private SoundEffect shootSound;
+		private SoundEffectInstance shootSoundInstance;
 		//protected int damageTime;
 		protected int textureType;
 		/// <summary>
@@ -72,10 +74,10 @@ namespace _2DActionGame
 		{
 		}
 		public Bullet(Stage stage, Turret turret, int width, int height, int textureType)
-			: this(stage, turret, width, height, textureType, 0)
+			: this(stage, turret, width, height, textureType, 0, "")
 		{
 		}
-		public Bullet(Stage stage, Turret turret, int width, int height, int textureType, int dissapearType)
+		public Bullet(Stage stage, Turret turret, int width, int height, int textureType, int dissapearType, string seName)
 			: base(stage, width, height)
 		{
 			this.turret = turret;
@@ -107,6 +109,11 @@ namespace _2DActionGame
 					break;
 			}
 			animation = new Animation(this.width, this.height);
+			if (seName != "") {
+				shootSound = game.Content.Load<SoundEffect>("Audio\\SE\\" + seName);
+				shootSoundInstance = shootSound.CreateInstance();
+				shootSoundInstance.Volume = .5f;
+			}
 			isHostile = true;
 
 			Load();
@@ -135,7 +142,6 @@ namespace _2DActionGame
 
 			reflectSound = content.Load<SoundEffect>("Audio\\SE\\magic");
 		}
-
 		public override void Update()
 		{
 			if (IsBeingUsed() && IsActive()) {
@@ -183,6 +189,7 @@ namespace _2DActionGame
 			if (isShot) {
 				if (counter == 0) {
 					this.position = shootPosition;		// TUrretで全部やるならここのブロック要らないよな
+					if (shootSoundInstance != null) shootSoundInstance.Play();
 				}
 
 				movedDistance += Math.Abs(speed.X);     // 加算して距離を計る(4dP2)

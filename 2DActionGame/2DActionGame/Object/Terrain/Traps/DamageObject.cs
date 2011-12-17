@@ -75,6 +75,7 @@ namespace _2DActionGame
 		/// <param name="targetObject"></param>
 		public override void IsHit(Object targetObject)
 		{
+			
 			/*if (firstTimeInAFrame)// 1人or1匹でも触れていたらisHit=trueのままでいい
 				isHit = false;
 			targetObject.isHit = false;*/

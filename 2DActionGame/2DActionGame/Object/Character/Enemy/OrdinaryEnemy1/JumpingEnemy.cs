@@ -18,6 +18,7 @@ namespace _2DActionGame
 		public readonly float defSpeed;//-2.5f
 		public readonly float jumpSpeed;//-10
 		public new readonly byte defMovePattern = 1;
+		public static readonly byte maxSoundEffectNum = 3;
 
 		private SoundEffect jumpSound;
 		/// <summary>
@@ -28,7 +29,12 @@ namespace _2DActionGame
 		/// 分裂しているか否か：テクスチャのLoad時に用いる
 		/// </summary>
         public bool isDerived { get; set; }
-		
+		public bool canPlayse { get; set; }
+
+		public int JumpingEnemyNumInScreen()
+		{
+			return stage.activeCharacters.FindAll((x) => x is JumpingEnemy).Count;
+		}
 
         public JumpingEnemy(Stage stage,  float x, float y, int width, int height, int HP)
             : this(stage, x, y, width, height, HP, null)
@@ -62,6 +68,7 @@ namespace _2DActionGame
         public override void Update()
         {
 			if (isMovingAround && IsActive()) {
+				//canPlayse = JumpingEnemyNumInScreen() <= maxSoundEffectNum;				
 				MovementUpdate(jumpSpeed, 40, defSpeed);
 			}
             base.Update();
@@ -118,7 +125,7 @@ namespace _2DActionGame
                 speed.Y = jumpSpeed;// 40, -10, 2
                 isJumping = true;
 				jumpNum++;
-                if (!game.isMuted) jumpSound.Play(SoundControl.volumeAll, 0f, 0f);
+                if (!game.isMuted && canPlayse) jumpSound.Play(SoundControl.volumeAll, 0f, 0f);
 			} else if (isOnSomething && jumpNum % jumpTime != 0) {
 				isJumping = false;
 			}

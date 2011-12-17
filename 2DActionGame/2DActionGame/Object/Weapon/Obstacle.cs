@@ -69,7 +69,7 @@ namespace _2DActionGame
 					trapSet.Add(new DamageBlock(stage, x, y, 32, 32, this, new Vector2(0, 32)));
 					trapSet.Add(new Block(stage, x, y, 32, 32, 0, this, new Vector2(32, 0)));
 					trapSet.Add(new Block(stage, x, y, 32, 32, 0, this, new Vector2(32, 32)));
-					trapSet[0].isOn = true;
+					trapSet[0].isOn = true;// 内側の辺の当たり判定フラグを消す
 					trapSet[1].isOn = true;
 					trapSet[2].isUnder = true;
 					trapSet[3].isUnder = true;
@@ -146,7 +146,6 @@ namespace _2DActionGame
 			}
 			attackCounter++;
 		}
-
 		/// <summary>
 		/// SPからspeed0で飛び出した後speed1でEPに移動させるパターン.Stageの地形の高さに沿って移動。
 		/// </summary>
@@ -202,7 +201,6 @@ namespace _2DActionGame
 				if ((trapSet[0] as MapObjects).isEnd) isEnd = true;
 			}
 		}
-
 		/// <summary>
 		/// trapSetを全て同様に移動させる。引数はbaseと同様。
 		/// </summary>

@@ -741,31 +741,34 @@ namespace _2DActionGame
 		}
 		private void UpdateNormal()
 		{
+			int jumpingEnemyCount = 0;
+
 			if (player.position.X > 13000 && !game.hasReachedCheckPoint) {
 				game.hasReachedCheckPoint = true;
 				game.tmpScore = game.stageScores[game.stageNum - 1];
 			}
-
 			if (isPausing) PushScene(new PauseMenu(this));
-			//if (gameTimeNormal % 60 == 0) GC.Collect();
-
 			if (unitToAdd.Count > 0) AddUnits();				// 新たにObjectが発生したらリストに追加する
 
 			// BackGround
 			double elapsed = game.dt;//(float)gameTime.ElapsedGameTime.TotalSeconds;
 			scrollingBackGround.Update(1/*elapsed * 100*/);
 			frontalScrollingBackGround.Update(2);
-
 			// TimeCoef
 			UpdateTimeCoef();
-
 			// ObjectのUpdate
 			/*foreach (Object obj in activeObjects) {
 				if (!(obj is Weapon)) obj.Update();//&& !(obj is Bullet)
 			}
 			*/
-			foreach (Object obj in activeObjects) obj.Update();
-			//foreach (Weapon weapon in activeWeapons) weapon.Update();
+			foreach (Object obj in activeObjects) {
+				if (obj is JumpingEnemy) {
+					jumpingEnemyCount++;
+					(obj as JumpingEnemy).canPlayse = jumpingEnemyCount <= JumpingEnemy.maxSoundEffectNum;
+				}
+				obj.Update();
+			}
+
 			// Reverse用のLogをとる←色々Update終わったあとにLog取らせることに
 			// 注意！極力UpdateReverseでのreverse.Updateと同タイミングに置くこと！！
 			reverse.UpdateLog();
@@ -776,15 +779,7 @@ namespace _2DActionGame
 			Collide();											// CollisionDetection(Terrain、Weapon等)
 			ScrollUpdate();										// スクロール時の座標変換(画面上のすべてのオブジェクトについて)
 			PlayBGM();											// BGM管理
-			damageControl.Update2();	// WeaponとEnemyのダメージ判定の調整
-
-			// maxCombo
-			/*for (int i = 0; i < inComboObjects.Count; i++) {  // 列要素を比較
-				if (gameStatus.maxComboCount < (inComboObjects[i] as Enemy).comboCount)
-					gameStatus.maxComboCount = (inComboObjects[i] as Enemy).comboCount;
-				//if (!(inComboObjects[i] as Enemy).isWinced) inComboObjects.RemoveAt(i);
-			}
-			if (inComboObjects.Count == 0) gameStatus.maxComboCount = 0;*/
+			damageControl.Update2();							// WeaponとEnemyのダメージ判定の調整
 			UpdateUICalculate();
 		}
 		private void UpdateReverse()

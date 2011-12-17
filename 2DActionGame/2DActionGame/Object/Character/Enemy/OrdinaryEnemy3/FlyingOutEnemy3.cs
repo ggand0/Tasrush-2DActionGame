@@ -64,7 +64,7 @@ namespace _2DActionGame
 				}
 
 				// 元の位置に戻って初期化する
-				if (Vector2.Distance(position, defPos) <= 5 && hasReached) {
+				if (Vector2.Distance(position, defPos) <= speed.Y && hasReached) {//<= 5
 					hasFlownOut = false;
 					hasReached = false;
 					isOnSomething = false;

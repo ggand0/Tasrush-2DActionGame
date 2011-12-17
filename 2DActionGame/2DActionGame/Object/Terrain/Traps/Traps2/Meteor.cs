@@ -5,11 +5,14 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Audio;
 
 namespace _2DActionGame
 {
     public class Meteor : DamageObject//Terrain
     {
+		private SoundEffect flyingOutSound;
+		private SoundEffectInstance flyingOutSoundInstance;
         public Meteor(Stage stage, float x, float y, int width, int height, Object user, Vector2 localPosition)
             : base(stage, x, y, width, height)//, user, localPosition)
         {
@@ -28,6 +31,9 @@ namespace _2DActionGame
 			base.Load();
 			texture = game.Content.Load<Texture2D>("Object\\Terrain\\Meteor01");
 			texture2 = game.Content.Load<Texture2D>("Object\\Terrain\\Meteor02");
+			flyingOutSound = content.Load<SoundEffect>("Audio\\SE\\wind");
+			flyingOutSoundInstance = flyingOutSound.CreateInstance();
+			flyingOutSoundInstance.Volume = .5f;
 		}
         public void Load(ContentManager content, string texture_name, ref Texture2D texture)
         {
@@ -36,6 +42,10 @@ namespace _2DActionGame
 
         public override void Update()
         {
+			if (speed.Length() > 0 && !hasPlayedSoundEffect) {
+				flyingOutSoundInstance.Play();
+				hasPlayedSoundEffect = true;
+			}
             time++;
         }
 

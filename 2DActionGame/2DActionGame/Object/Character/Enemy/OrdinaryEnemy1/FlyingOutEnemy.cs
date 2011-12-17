@@ -55,7 +55,6 @@ namespace _2DActionGame
 		{
 			if (IsActive()) {
 				if (isMovingAround) MovementUpdate();
-				
 			}
 			base.Update();
 		}
@@ -91,7 +90,6 @@ namespace _2DActionGame
 				counter = 0;
 			}
 		}
-
 		public override void MotionUpdate()
 		{
 			//base.MotionUpdate(); Enemyのも入っちゃう
@@ -101,9 +99,10 @@ namespace _2DActionGame
 				if (hasFlownOut) {
 					if (stage.player.isCuttingUp) {
 						BlownAwayMotionUp(5, 65);
-						isBlownAway = true;
+						//isBlownAway = true;
 					} else if (stage.player.isCuttingAway) {
 						BlownAwayMotionRight(2, 60);
+						isBlownAway = true;
 					} else if (stage.player.isCuttingDown) {
 						BlownAwayMotionDown(5, 60);
 					} else if (stage.player.isAttacking3) {

@@ -51,9 +51,8 @@ namespace _2DActionGame
 			this.localPosition = localPosition;
 			this.user = user;
 			animation = new Animation(width, height);
-			activeDistance = 1280;
+			activeDistance = user is Boss ? 1280 : 640;
 		}
-
 
 		public virtual void Initialize()
 		{

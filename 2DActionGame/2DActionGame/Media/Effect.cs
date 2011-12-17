@@ -30,7 +30,7 @@ namespace _2DActionGame
 		/// </summary>
 		private readonly int deathEffectDelayTime = 47;
 		private readonly int deathEffectMaxSize = 71;
-		private readonly int bossExplosionEffectTime = 360;//180;
+		private readonly int bossExplosionEffectTime = 180;//360;//180;
 		private readonly int dashEffectTime = 25;
 		private readonly int stageScreenEffectTime = 41;
 

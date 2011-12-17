@@ -314,6 +314,7 @@ namespace _2DActionGame
         }*/
 		public void IsHit(Object targetObject, Vector2 targetPos)
 		{
+			//if (targetObject is FlyingOutEnemy3 && (targetObject as FlyingOutEnemy3).hasFlownOut) { }
 			ChangeFlags(targetObject);
 
 			if (targetPos.X + targetObject.width < position.X) {

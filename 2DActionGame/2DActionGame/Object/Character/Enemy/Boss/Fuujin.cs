@@ -160,7 +160,7 @@ namespace _2DActionGame
 			}
 
 			if (isEndingAttack) speed = baseVector;
-			if (isEndingAttack && distanceD < 5) {
+			if (isEndingAttack && distanceD < Movespeed) {// 5
 				speed = Vector2.Zero;
 				isEndingAttack = false;
 				isAttacking = false;
@@ -324,7 +324,7 @@ namespace _2DActionGame
 		/// <summary>
 		/// 上からメテオを順に降らせて攻撃するパターン。
 		/// </summary>
-		private void AttackWithMeteo()
+		private void AttackWithMeteo()// 3
 		{
 			if (isStartingAttack) {
 				obstacleMeteor.isBeingUsed = true;
@@ -333,9 +333,14 @@ namespace _2DActionGame
 
 			if (obstacleMeteor.isBeingUsed) {
 				obstacleMeteor.MovePattern2(obstacleMeteor.trapSet
+					, defaultPosition + new Vector2(50, -100)
+					, defaultPosition + new Vector2(50, -100)
+					, defaultPosition + new Vector2(-500, 500), 1, 10);
+				// old
+				/*obstacleMeteor.MovePattern2(obstacleMeteor.trapSet
 					, defaultPosition + new Vector2(50, -50)
 					, defaultPosition + new Vector2(50, -50)
-					, defaultPosition + new Vector2(-400, 500), 1, 10);
+					, defaultPosition + new Vector2(-400, 500), 1, 10);*/
 			}
 
 			if (obstacleMeteor.isEnd) {// || attackCounter > resWaitTime) {
@@ -554,7 +559,7 @@ namespace _2DActionGame
 		{
 			this.defaultPosition = position;
 			tmpPosition = defaultPosition + new Vector2(-100, -200);
-			attackPosition = new Vector2(defaultPosition.X - 500, defaultPosition.Y);
+			attackPosition = new Vector2(defaultPosition.X - 720, defaultPosition.Y);// new Vector2(defaultPosition.X - 500, defaultPosition.Y);
 			animation = new Animation(380, 310);
 			resWaitTime = 240;
 			bindPos = new Vector2(50, 50);
@@ -574,12 +579,13 @@ namespace _2DActionGame
 			cutterTurret5Way = new Turret(stage, this, new Vector2(150, 100), 32, 32, 0, 5, 5, false, true, 0, 4, 10, 60, 10, Vector2.Zero, false, false);
 			cutterTurret1WayBurst = new Turret(stage, this, new Vector2(150, 100), 32, 32, 0, 1, 10, false, true, 0, 4, 10, 320, 10, Vector2.Zero, false, false);
 			cutterTurret1WayBurst.isMarked = true;
-			cutterTurretAlternate = new Turret(stage, this, new Vector2(150, 100), 32, 32, 0, 5, 2, false, true, 0, 4, 5, 60, 10, Vector2.Zero, false, true, new int[] { 5, 1 });
+			cutterTurretAlternate = new Turret(stage, this, new Vector2(150, 100), 32, 32, 0, 5, 2, false, true, 0, 4, 10, 60, 10, Vector2.Zero, false, true, new int[] { 5, 1 });// bulSpeed 5→10
 			// shootInterval == 120だと、連発した時にPlayerを最初しか上手く追尾しない?
 
 			obstacles.Add(obstacleMeteor);
 			obstacles.Add(obstacleIcicleRandom);
 			obstacles.Add(obstacleTornadeSmall);
+			obstacles.Add(obstacleTornadeLarge);
 			foreach (Obstacle obs in obstacles) weapons.Add(obs);
 			turrets.Add(cutterTurret5Way);
 			weapons.Add(cutterTurret5Way);

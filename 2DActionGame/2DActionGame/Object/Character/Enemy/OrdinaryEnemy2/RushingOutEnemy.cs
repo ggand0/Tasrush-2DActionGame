@@ -92,10 +92,10 @@ namespace _2DActionGame
 				}
 			}
         }
-        
-
         public override void Draw(SpriteBatch spriteBatch)
         {
+			if (drawPos.X > 600) { }//639
+			if (speed.X > 0) { }//15.6
 			if (IsActive() && IsBeingUsed()) {
 				//base.DrawDamageBlink(spriteBatch, Color.Red, .60f);
 				spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, MathHelper.ToRadians(-degree), new Vector2(width / 2, height / 2), 1, SpriteEffects.None, 0);

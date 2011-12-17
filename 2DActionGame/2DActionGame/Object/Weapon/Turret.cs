@@ -39,6 +39,7 @@ namespace _2DActionGame
 		/// </summary>
 		private List<Vector2> shootPositions;
 		private SoundEffect damageSound, hitSound;
+
 		private Vector2 shootPosition;
 		private int timeInterval;
 		private int bulletCounter;
@@ -92,6 +93,7 @@ namespace _2DActionGame
 		/// 射撃した弾を回収して次の射撃に使うか。まだ使ってない
 		/// </summary>
 		public bool reuseBullets { get; private set; }
+		public string seName = "";//{ get; private set; }
 		public List<Bullet> hasShotBullets = new List<Bullet>();
 
 		/// <summary>
@@ -196,6 +198,50 @@ namespace _2DActionGame
 
 			if (bullets.Count <= 0) throw new Exception("No bullets to shoot in this turret.");
 		}
+		public Turret(Stage stage, Object user, Vector2 defPosition, int width, int height, int bulletType, int shootPattern, int bulletNum,
+			bool shootManually, bool isSubsidiary, int textureType, int bulletTextureType
+			, float bulletSpeed, int shootInterval, int bulletInterval, Vector2 bulletSpeed1D, bool reuseBullet, bool customPattern, string seName, params int[] patternIndexes)																						// Raijin.thnderTurret, Raijin.thnderTurrets, Raijin.thnderTurret8Way
+			: base(stage, defPosition.X, defPosition.Y, width, height, user)
+		{
+			// type0:bullet、type1:beam、type3:else
+			shootPositions = new List<Vector2>();
+			shootPositions.Add(shootPosition);
+			//this.shootPosition = shootPosition;
+			isVisible = false;//true;//
+			//reuseBullets = true;
+			this.shootInterval = shootInterval;
+			this.bulletInterval = bulletInterval;
+			this.defaultPosition = defPosition;
+			this.bulletType = bulletType;
+			this.shootPattern = shootPattern;
+			this.bulletNumber = bulletNum;
+			if (isSubsidiary) {
+				this.position = user.position + defPosition/**/;					// (isSubsidiaryで呼び出すとこの時点でdefPosition = shootPositionである)
+			} else {
+				this.position = defPosition;
+			}
+			this.shootManually = shootManually;
+			this.isSubsidiary = isSubsidiary;
+			this.canBeDestroyed = canBeDestroyed;
+			this.HP = HP;
+			this.textureType = textureType;
+			this.bulletTextureType = bulletTextureType;
+			this.bulletSpeed1D = bulletSpeed;
+			this.bulletSpeed = bulletSpeed1D;
+			this.reuseBullets = reuseBullet;
+			this.customShootPattern = customPattern;
+			for (int i = 0; i < patternIndexes.Length; i++) this.shootPatternLoop.Add(patternIndexes[i]);
+
+			bullets = new List<Bullet>();
+			animation = new Animation(width, height);
+			//playSE = true;
+			this.seName = seName;
+			
+			AddBullets();
+			Load();
+
+			if (bullets.Count <= 0) throw new Exception("No bullets to shoot in this turret.");
+		}
 		#endregion
 
 		protected override void Load()
@@ -234,7 +280,7 @@ namespace _2DActionGame
 				case 0:
 					for (int i = 0; i < bulletNumber; i++)
 						if (reuseBullets) bullets.Add(new Bullet(stage, this, 16, 16, bulletTextureType));
-						else bullets.Add(new Bullet(stage, this, 16, 16, bulletTextureType, 3));
+						else bullets.Add(new Bullet(stage, this, 16, 16, bulletTextureType, 3, this.seName));
 					break;
 				case 1:
 					for (int i = 0; i < bulletNumber; i++)
@@ -569,6 +615,10 @@ namespace _2DActionGame
 					bul.counter = 0;
 					bul.isHostile = true;
 					if (!shootInTurn) bul.isShot = true;
+					/*if (shootSound != null) {
+						shootSoundInstance.Stop();
+						shootSoundInstance.Play();
+					}*/
 				}
 				shootNumTotal++;
 			}
