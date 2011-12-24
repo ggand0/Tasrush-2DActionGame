@@ -189,7 +189,7 @@ namespace _2DActionGame
 			if (isShot) {
 				if (counter == 0) {
 					this.position = shootPosition;		// TUrretで全部やるならここのブロック要らないよな
-					if (shootSoundInstance != null) shootSoundInstance.Play();
+					if (shootSoundInstance != null && !game.isMuted) shootSoundInstance.Play();
 				}
 
 				movedDistance += Math.Abs(speed.X);     // 加算して距離を計る(4dP2)

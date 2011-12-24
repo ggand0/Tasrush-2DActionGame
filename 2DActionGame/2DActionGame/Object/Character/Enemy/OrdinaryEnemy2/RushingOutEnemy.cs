@@ -54,13 +54,13 @@ namespace _2DActionGame
 				isOnSomething = false;
 				gravity = 0;
 				if (distance < flyingOutDistance) {
-					if (counter == 0) {
+					if (flowCount == 0) {
 						hasFlownOut = true;
 						speed.Y = flyingOutSpeed;
 						gravity = defGravity;
 						if (!game.isMuted) splashSound.Play(SoundControl.volumeAll, 0f, 0f);
 					}
-					counter++;
+					flowCount++;
 				}
 			} else if (hasFlownOut) {
 				if (Math.Abs(speed.Y) < 5) {// 頂点付近 : 回転させる
@@ -74,7 +74,7 @@ namespace _2DActionGame
 					hasFlownOut = false;
 					//degree = 0;   // 1frameで回転して不自然な動きになるので終了処理としてもう１段階必要だ.
 					hasReached = false;
-					counter = 0;
+					flowCount = 0;
 					speed = Vector2.Zero;
 					gravity = 0;// 一応
 					isEndingAttack = true;
@@ -94,6 +94,7 @@ namespace _2DActionGame
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
+			if (game.inDebugMode && IsActive()) spriteBatch.DrawString(game.Arial, this.drawPos.ToString(), new Vector2(320, 48), Color.Orange);
 			if (drawPos.X > 600) { }//639
 			if (speed.X > 0) { }//15.6
 			if (IsActive() && IsBeingUsed()) {

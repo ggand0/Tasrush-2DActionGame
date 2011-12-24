@@ -264,9 +264,9 @@ namespace _2DActionGame
 				bullet.movedDistance = 0;
 				if (bullet is Thunder) (bullet as Thunder).Inicialize();
 			}
-			bulletCounter = 0;
-			timeInterval = 0;
-			counter = 0;
+			bulletCounter = timeInterval = counter = 0;
+			shootNum = shootCounter = 0;
+			
 			hasShot = false;
 			turnsRight = true;
 			if (isSubsidiary) position = user.position + shootPosition;

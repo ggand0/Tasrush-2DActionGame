@@ -28,6 +28,7 @@ namespace _2DActionGame
 		protected float flyingOutDistance;
 		protected float flyingOutSpeed;
 		public bool hasFlownOut { get; protected set; }
+		protected int flowCount;
 
 		public FlyingOutEnemy(Stage stage, float x, float y, int width, int height, int HP)
 			: base(stage, x, y, width, height, HP)
@@ -75,10 +76,10 @@ namespace _2DActionGame
 				gravity = 0;												// 落ちても困る
 
 				if (distance < flyingOutDistance) {
-					if (counter == 0) {
+					if (flowCount == 0) {
 						speed.Y = flyingOutSpeed;
 					}
-					counter++;
+					flowCount++;
 				}
 				if (position.Y <= defPos.Y - 32) {
 					hasFlownOut = true;
@@ -87,7 +88,7 @@ namespace _2DActionGame
 			} else if (hasFlownOut && isOnSomething) {						// 飛び出し着地後の歩く処理
 				//RoundTripMotion(defPos, moveDistance, defSpeed);
 				this.speed.X = -defSpeed;
-				counter = 0;
+				flowCount = 0;
 			}
 		}
 		public override void MotionUpdate()
@@ -148,9 +149,9 @@ namespace _2DActionGame
 			if (delayTime < motionDelayTime) {
 				if (stage.player.normalComboCount < 3) {
 					speed.Y = 0;
-					if (isAlive) gravity = 0;
-					else gravity = defGravity;
+					gravity = isAlive ? 0 : defGravity;
 				}
+
 				isMovingAround = false;
 				isInDamageMotion = true;
 				isWinced = true;

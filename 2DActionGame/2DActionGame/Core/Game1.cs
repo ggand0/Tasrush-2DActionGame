@@ -233,7 +233,7 @@ namespace _2DActionGame
 
 			random = new Random();
 
-			//isMuted = true;
+			isMuted = true;
 			//noEnemy = true;
 			stageScores = new double[maxStageNum];
 			//scores = dummyScore.ToList<RankingStatus>();// 復号化失敗のとき用＋テスト用＋要素数確保

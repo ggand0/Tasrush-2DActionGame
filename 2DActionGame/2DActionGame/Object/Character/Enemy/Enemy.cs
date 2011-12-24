@@ -76,8 +76,7 @@ namespace _2DActionGame
 
 		public override void Update()
 		{
-			base.Update();
-
+			//base.Update();
 			// HP0でフルボッコが終わったら死亡
 			if (HP <= 0 && time > deathComboTime || isBlownAway && HP <= 0 && drawPos.X > Game1.Width - width) {// 吹っ飛び時の条件も加えてみた
 				if (!game.isMuted)
@@ -86,6 +85,9 @@ namespace _2DActionGame
 						hasPlayedSoundEffect = true;
 					}
 				isAlive = false;
+				isMovingAround = false;
+				speed = Vector2.Zero;
+				gravity = 0;
 			}
 			if (!isAlive && counter == 0) {
 				isEffected = true;
@@ -95,10 +97,12 @@ namespace _2DActionGame
 			if (time > deathComboTime) {
 				comboCount = 0;
 			}
-			MotionDelay();
+			if (IsActive()) MotionDelay();
 
 			time++;
 			delayTime++;
+
+			base.Update();
 		}
 		public override void UpdateAnimation()
 		{

@@ -1337,8 +1337,10 @@ namespace _2DActionGame
 						spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, 0, Vector2.Zero, 1, SpriteEffects.FlipHorizontally, 0);
 					}
 				} else {// 点滅させる
-					if (blinkCount % 5 == 0) e += 60f;//30f;//.02f;
-					dColor = (float)Math.Sin(e * 8) / 2.0f + 0.5f;
+					if (!stage.isPausing) {
+						if (blinkCount % 5 == 0) e += 60f;//30f;//.02f;
+						dColor = (float)Math.Sin(e * 8) / 2.0f + 0.5f;
+					}
 
 					spriteBatch.Draw(texture, drawPos, animation.rect, Color.Red * dColor);
 					blinkCount++;
