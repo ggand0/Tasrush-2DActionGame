@@ -75,13 +75,23 @@ namespace _2DActionGame
             score_prev = 0;
         }
 
-        private void RegenerateTAS()
+        public void RegenerateTAS()
         {
-            if (game.stageScores[game.stageNum-1] > score_prev) {
-                //(game.score - score_prev) * (stage.player.MAXTAS / 50) が基本的なTASの回復量。
+            //時間回復
+            if(stage.player.TASpower < stage.player.MAXTAS) {
+                if (game.isHighLvl) {
+                    stage.player.TASpower += 1;
+                } else {
+                    stage.player.TASpower += 2;
+                }
+            }
 
-				if (stage.player.TASpower + (int)(game.stageScores[game.stageNum - 1] - score_prev) * (stage.player.MAXTAS / 50) < stage.player.MAXTAS) {
-					stage.player.TASpower = stage.player.TASpower + (int)(game.stageScores[game.stageNum - 1] - score_prev) * 12;
+            //Score依存回復
+            if (game.stageScores[game.stageNum-1] > score_prev) {
+                //(game.score - score_prev) * (stage.player.MAXTAS / 150) が基本的なTASの回復量。
+
+				if (stage.player.TASpower + (int)(game.stageScores[game.stageNum - 1] - score_prev) * (stage.player.MAXTAS / 150) < stage.player.MAXTAS) {
+					stage.player.TASpower += (int)(game.stageScores[game.stageNum - 1] - score_prev) * (stage.player.MAXTAS / 150);
                 } else {
                     stage.player.TASpower = stage.player.MAXTAS;
                 }
@@ -90,7 +100,6 @@ namespace _2DActionGame
         }
         public void UpdateLog()
         {
-            RegenerateTAS();
             if (!isReversed) {
                 //現在の座標を取得
                 nowlogdata.playerVector = stage.player.position;
@@ -146,7 +155,7 @@ namespace _2DActionGame
                         stage.player.position = reverseLog[frameNumber - 1].playerVector;
                         stage.camera.position = reverseLog[frameNumber - 1].cameraVector;
                         for (int i = 0; i < reverseLog[frameNumber - 1].fallingBlocksRange - 1; ++i) {
-                            if (stage.dynamicTerrains[i] is CollapsingBlock) {
+                            if (stage.dynamicTerrains[i] is CollapsingBlock && !(stage.dynamicTerrains[i] is Icicle)) {
                                 stage.dynamicTerrains[i].speed.Y = reverseLog[frameNumber - 1].FallingBlocks[i].speed.Y;
                                 stage.dynamicTerrains[i].position = reverseLog[frameNumber - 1].FallingBlocks[i].vector;
                                 stage.dynamicTerrains[i].counter = reverseLog[frameNumber - 1].FallingBlocks[i].counter;
@@ -158,7 +167,7 @@ namespace _2DActionGame
                         stage.player.position = (stage.player.position + reverseLog[frameNumber - 1].playerVector) / 2;
                         stage.camera.position = (stage.camera.position + reverseLog[frameNumber - 1].cameraVector) / 2;
                         for (int i = 0; i < reverseLog[frameNumber - 1].fallingBlocksRange - 1; ++i) {
-                            if (stage.dynamicTerrains[i] is CollapsingBlock) {
+                            if (stage.dynamicTerrains[i] is CollapsingBlock && !(stage.dynamicTerrains[i] is Icicle)) {
                                 stage.dynamicTerrains[i].position = (stage.dynamicTerrains[i].position + reverseLog[frameNumber - 1].FallingBlocks[i].vector) / 2;
                             }
                         }

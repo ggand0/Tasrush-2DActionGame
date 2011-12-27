@@ -771,6 +771,7 @@ namespace _2DActionGame
 
 			// Reverse用のLogをとる←色々Update終わったあとにLog取らせることに
 			// 注意！極力UpdateReverseでのreverse.Updateと同タイミングに置くこと！！
+            reverse.RegenerateTAS();
 			reverse.UpdateLog();
 
 			//後処理
