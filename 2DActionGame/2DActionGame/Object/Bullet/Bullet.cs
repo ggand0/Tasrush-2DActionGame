@@ -188,8 +188,8 @@ namespace _2DActionGame
 		{
 			if (isShot) {
 				if (counter == 0) {
-					this.position = shootPosition;		// TUrretで全部やるならここのブロック要らないよな
-					if (shootSoundInstance != null) shootSoundInstance.Play();
+					//this.position = shootPosition;		// TUrretで全部やるならここのブロック要らないよな←この１行のせいで射撃位置がずれてる気がする
+					if (shootSoundInstance != null && !game.isMuted) shootSoundInstance.Play();
 				}
 
 				movedDistance += Math.Abs(speed.X);     // 加算して距離を計る(4dP2)
@@ -281,9 +281,9 @@ namespace _2DActionGame
 		{
 			if (IsBeingUsed()) {
 				if (textureType == 4) {// 角度の計算が必要なタイプのテクスチャなら
-					spriteBatch.Draw(texture, drawPos, animation.rect, Color.Red, -rot - (float)Math.PI, Vector2.Zero, 1, SpriteEffects.None, 0f);
+					spriteBatch.Draw(texture, drawPos, animation.rect, Color.Red, -rot - (float)Math.PI, new Vector2(width / 2, height / 2), 1, SpriteEffects.None, 0f);// originは中心の方が良さそう(Vector2.Zero→new Vector2(width/2, height/2))
 				} else {
-					spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, -rot, Vector2.Zero, 1, SpriteEffects.None, 0f);
+					spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, -rot, new Vector2(width / 2, height / 2), 1, SpriteEffects.None, 0f);
 				}
 			}
 		}

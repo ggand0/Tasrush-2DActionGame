@@ -61,19 +61,19 @@ namespace _2DActionGame
 				gravity = 0;
 
 				if (distance < flyingOutDistance) {
-					if (counter == 0) {
+					if (flowCount == 0) {
 						hasFlownOut = true;
-						flyingOutSoundInstance.Play();
+						if (!game.isMuted) flyingOutSoundInstance.Play();
 						// playerへの速度ベクトルを計算する
 						degree = Math.Atan2(stage.player.position.Y - position.Y, stage.player.position.X - position.X);
 						speed = 10 * Vector2.Normalize(new Vector2((float)Math.Cos(degree), (float)Math.Sin(degree)));
 					}
-					counter++;
+					flowCount++;
 				}
 			} else if (hasFlownOut && isOnSomething) {
                 isAlive = false;
                 HP = -1;
-                counter = 0;
+                flowCount = 0;
             }
         }
     }

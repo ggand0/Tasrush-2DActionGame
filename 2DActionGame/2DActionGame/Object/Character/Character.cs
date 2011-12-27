@@ -45,13 +45,14 @@ namespace _2DActionGame
 		/// 透過処理時に使用。名前変えたい
 		/// </summary>
 		protected float e;
-		protected bool inDmgMotion;
+        public bool inDmgMotion { get; protected set; }
 		protected virtual void DrawDamageBlink(SpriteBatch spriteBatch, Color color, float blinkSpeed)
 		{
 			if (blinkCount % 5 == 0) e += blinkSpeed;
 			dColor = (float)Math.Sin(e * 8) / 2.0f + 0.5f;
 
-			spriteBatch.Draw(texture, drawPos, animation.rect, Color.Red * dColor);
+			spriteBatch.Draw(texture, drawPos, animation.rect, color/*Color.Red*/ * dColor);
+            //spriteBatch.Draw(texture, drawPos, animation.rect, Color.Red);
 			blinkCount++;
 
 			if (blinkCount > 20) inDmgMotion = false;

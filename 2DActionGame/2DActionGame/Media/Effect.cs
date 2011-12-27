@@ -32,7 +32,7 @@ namespace _2DActionGame
 		private readonly int deathEffectMaxSize = 71;
 		private readonly int bossExplosionEffectTime = 180;//360;//180;
 		private readonly int dashEffectTime = 25;
-		private readonly int stageScreenEffectTime = 41;
+		private readonly int stageScreenEffectTime = 41;//41;
 
 		private Stage stage;
 		private Vector2 originVector;
@@ -362,23 +362,25 @@ namespace _2DActionGame
 			if (stageNum != 0 && stageNum != 5) {// debug stage以外なら
 				if (!fadeOut && time < effectTime) {
 					spriteBatch.Draw(textures[2], Vector2.Zero, Color.White);//new Vector2(0, 200)
-				}
-				if (time >= effectTime && !fadeOut) {
+				} else if (time >= effectTime && !fadeOut) {
 					fadeOut = true;
 					time = 0;
-					dColor = 1f;
+					dColor = 1.0f;
 				}
+
 				if (fadeOut && time < stageScreenEffectTime) {
-					if (dColor > .5f || time % 2 == 0) dColor += -.05f;
-					if (dColor <= 0) dColor = 0;
-					spriteBatch.Draw(textures[2], Vector2.Zero, new Color(255, 255, 255, dColor));
+					if (!stage.isPausing) {
+						if (/*dColor > .5f || */time % 2 == 0) dColor -= .1f;
+						if (dColor <= 0) dColor = 0;
+					}
+
+					spriteBatch.Draw(textures[2], Vector2.Zero, Color.White * dColor);//new Color(255, 255, 255, dColor));
 				} else if (fadeOut && time >= stageScreenEffectTime) {
 					time = 0;
 					fadeOut = false;
 					stage.hasEffectedBeginning = true;
 				}
 			}
-
 			time++;
 		}
 	}

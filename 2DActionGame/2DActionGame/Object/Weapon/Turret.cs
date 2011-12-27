@@ -264,9 +264,9 @@ namespace _2DActionGame
 				bullet.movedDistance = 0;
 				if (bullet is Thunder) (bullet as Thunder).Inicialize();
 			}
-			bulletCounter = 0;
-			timeInterval = 0;
-			counter = 0;
+			bulletCounter = timeInterval = counter = 0;
+			shootNum = shootCounter = 0;
+			
 			hasShot = false;
 			turnsRight = true;
 			if (isSubsidiary) position = user.position + shootPosition;
@@ -495,7 +495,8 @@ namespace _2DActionGame
 		/// <param name="shootInterval">射撃間隔</param>
 		/// <param name="bulletInterval">>1回の射撃における弾の間隔</param>
 		public void UpdateShootingN0(int shootInterval, int bulletsInterval, bool isManual)
-		{
+		{//2971,144 2867,177
+			if (hasShot && bullets[0].position.X - position.X > 50) { }
 			// 初期化
 			switch (shootPattern) {
 				default:
@@ -505,6 +506,7 @@ namespace _2DActionGame
 					InicializeShootingN0(false, isManual);
 					break;
 			}
+			if (hasShot && bullets[0].position.X - position.X > 50) { }
 			#region shoot
 			// bulletsの挙動を管理する。最初の１フレームだけだったり毎フレームだったり
 			if (hasShot) {
@@ -565,6 +567,7 @@ namespace _2DActionGame
 				shootCounter++;
 			}
 			timeInterval++;
+			if (hasShot && bullets[0].position.X - position.X > 50) { }
 			#endregion
 			#region ending
 			// bulletが自然にexpireするようにしなきゃ... hasShotは単に全弾撃ち終わった意味にしたい
@@ -576,7 +579,7 @@ namespace _2DActionGame
 				if (reuseBullets) {
 					foreach (Bullet bul in bullets) {
 						bul.isHostile = true;// 終了する時にも一応
-						bul.position = position + defaultPosition;
+						bul.position = position/* + defaultPosition*/;
 						bul.EndFlying();
 					}
 				} else {
@@ -601,36 +604,29 @@ namespace _2DActionGame
 		{
 			// １回の射撃の開始
 			if (!immediate && timeInterval % shootInterval == 0 || immediate) {
-				// 弾を使いまわさない場合はnewし直す。既に射撃した弾はStageが後処理する
-				/*if (!reuseBullets) {
-					AddBullets();
-				}*/
 				hasShot = true;
 				isEnd = false;
 				shootNum = 0;
 				bulletCounter = shootCounter = 0;
 				foreach (Bullet bul in bullets) {
-					bul.position = position + defaultPosition;
+					bul.position = position/* + defaultPosition*/;
 					bul.hasFlied = bul.isShot = bul.isEnd = false;
 					bul.counter = 0;
 					bul.isHostile = true;
 					if (!shootInTurn) bul.isShot = true;
-					/*if (shootSound != null) {
-						shootSoundInstance.Stop();
-						shootSoundInstance.Play();
-					}*/
 				}
-				shootNumTotal++;
+				if (bullets[0].position.X - position.X > 50) { }
+				shootNumTotal++; // {bul[0]:(1531, 179) this:(1515,163)} // 11/12/26 ここまでは正常な位置にいるように思える...たまたまだろうか？
 			}
 
 			// 1射撃の中での１弾目の射撃開始
-			if (hasShot && timeInterval % bulletInterval == 0 && shootNum <= bulletNumber/* + 1*/) {// bulletが1個だとsIが長いせいで1回の射撃で2回よばれてるな...? shootNum < bulletNumberを追加
+			if (hasShot && timeInterval % bulletInterval == 0 && shootNum <= bulletNumber) {
 				if (shootInTurn) {
 					if (bulletCounter < bulletNumber) {
 						bullets[bulletCounter].isShot = true;
 						bullets[bulletCounter].counter = 0;
 					}
-					if (bulletCounter /*+ 1*/ < bulletNumber || bulletNumber == 1 && bulletCounter == 0/**/) bulletCounter++;// 2弾目が打たれないのはここでbC++されないでNeedIni(bullet)を通れないから
+					if (bulletCounter < bulletNumber || bulletNumber == 1 && bulletCounter == 0) bulletCounter++;
 				}
 				shootNum++;
 			}

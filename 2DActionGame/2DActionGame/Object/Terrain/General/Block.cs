@@ -10,6 +10,10 @@ namespace _2DActionGame
 {
     public class Block : Terrain
     {
+        /// <summary>
+        /// デバッグ用
+        /// </summary>
+        private bool isMarked;
 		/// <summary>
 		/// 辺の数
 		/// </summary>
@@ -323,9 +327,10 @@ namespace _2DActionGame
 			} else if (position.Y + height < targetPos.Y) {
 			} else {
 				Vector2 criterionVector = targetPos + new Vector2(targetObject.width / 2, targetObject.height);
-
+                if (targetObject is Player) { }
 				// 当たりあり
 				ChangeHitFlags(targetObject);
+                if (targetObject is Player && (targetObject as Player).inDmgMotion) { }
 
 				if (targetObject.speed.Y > 0 && !isUnder) { // targetObjectが下に移動中
 					//if(isLeftSlope && criterionVector.X > position.X &&  criterionVector.X < position.X + width) {
@@ -340,7 +345,8 @@ namespace _2DActionGame
 							targetObject.speed.Y = 0;
 							targetObject.position.Y = position.Y - targetObject.height;  // 上に補正
 
-							//if (targetObject is Rival) { }
+							if (targetObject is Player) { }
+                            if (targetObject is Player && (targetObject as Player).inDmgMotion) { }
 							targetObject.isOnSomething = true;
 							targetObject.jumpCount = 0;      // Playerに限定したかったが諦めた
 							targetObject.isJumping = false;　// 着地したらJumpできるように
@@ -382,14 +388,19 @@ namespace _2DActionGame
 		}
         public void IsHitDetailed(Object targetObject, int division)
         {
+            if (targetObject is Player) { }
+
 			if (targetObject.locus.Count >= 2) {
 				if (targetObject is Player && targetObject.speed.X > 0) { }
 				locusVec = targetObject.locus[1] - targetObject.locus[0];
+                for (int i = 0; i < locusVectors.Length; i++) locusVectors[i] = new Vector2();
 				for (int i = 0; i <= division; i++) locusVectors[i] = targetObject.locus[0] + i * (locusVec / division);
+                if (targetObject is Player && (targetObject as Player).isInDamageMotion && Math.Abs(locusVectors[0].Y - locusVectors[1].Y) > 10) { }
+                if (targetObject is Player && (targetObject as Player).inDmgMotion) { }
 
 				foreach (Vector2 lv in locusVectors) {
 					IsHit(targetObject, lv);// わかった。当たってるかどうかだけ軌跡を使って、当たってたら”現在の情報を使って”補正すればよい
-					if (targetObject.isHit) break;
+					if (targetObject.isHit || targetObject.isOnSomething) break;
 				}
 			} else {
 				IsHit(targetObject);

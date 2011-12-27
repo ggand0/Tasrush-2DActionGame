@@ -35,7 +35,7 @@ namespace _2DActionGame
             thread = new Thread(stage, x, y - 150, 2, 150, 45, 150);// lengthは適当.あとで追加
             stage.dynamicTerrains.Add(thread);
 
-            turret = new Turret(stage, this, new Vector2(width/2, height/2), 8, 8, 0, 5, 2, false, true, 0, 3);
+            turret = new Turret(stage, this, Vector2.Zero/*new Vector2(width/2, height/2)*/, 8, 8, 0, 5, 2, false, true, 0, 3, 5, 180, 20, Vector2.Zero, false, false);
 			//turret = new Turret(stage, this, new Vector2(width / 2, height / 2), 8, 8, 0, 5, 2, false, true, 0, 3, 2, 120, 20, Vector2.Zero, false, false); // こっちに変えても発射位置の問題は直らなかった
 			stage.weapons.Add(turret);
             turret.isBeingUsed = true;
@@ -67,6 +67,15 @@ namespace _2DActionGame
 				base.Update();
 			} else {
 				turret.isAlive = false;
+			}
+        }
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+			if (game.inDebugMode) {
+				spriteBatch.DrawString(game.Arial2, "t.pos : " + turret.position.ToString(), new Vector2(300, 50), Color.White);
+				spriteBatch.DrawString(game.Arial2, "b[0].pos : " + turret.bullets[0].position.ToString(), new Vector2(300, 100), Color.White);
+				spriteBatch.DrawString(game.Arial2, "this.pos : " + position.ToString(), new Vector2(300, 150), Color.White);
 			}
         }
 

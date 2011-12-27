@@ -51,11 +51,11 @@ namespace _2DActionGame
 				gravity = 0;
 
 				if (distance < flyingOutDistance) {
-					if (counter == 0) {
+					if (flowCount == 0) {
 						hasFlownOut = true;
 						speed.Y = flyingOutSpeed;
 					}
-					counter++;
+					flowCount++;
 				}
 			} else if (hasFlownOut) {
 				gravity = defGravity;
@@ -71,7 +71,7 @@ namespace _2DActionGame
 					gravity = 0;
 					speed = Vector2.Zero;
 					position = defPos;
-					counter = 0;
+					flowCount = 0;
 				}
 			}
         }

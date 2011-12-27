@@ -135,7 +135,7 @@ namespace _2DActionGame
 		/// メイン攻撃パターンメソッドがサブ攻撃パターンが終了したかどうか判断するためのフラグ
 		/// </summary>
 		private bool isShootingTornade, isShootingThunder;
-
+		#endregion
 		/// <summary>
 		/// Easy用のメインパターン（これをループ）
 		/// </summary>
@@ -144,7 +144,7 @@ namespace _2DActionGame
 		/// Hard用のパターン
 		/// </summary>
 		private int[] attackPattern1 = { 7, 1, 9 };// hard
-		#endregion
+		
 		#region Update
 		/// <summary>
 		/// （仮想的に）キーの入力に従ってUpdateするメソッド
@@ -837,7 +837,14 @@ namespace _2DActionGame
 			}
 		}
 
+		/// <summary>
+		/// 雷攻撃などの前のジャンプを行ったかどうか
+		/// </summary>
         bool hasAttackJumped;
+		/// <summary>
+		/// 攻撃予告状態。大竜巻の前などに使用
+		/// </summary>
+		bool inAttackNotice;
 		// Hard
 		/// <summary>
 		/// InputControlCのsyuriken版
@@ -875,8 +882,6 @@ namespace _2DActionGame
 				isShootingThunder = true;
 				attackList.Add(8);
 			}
-
-
 			counter++;
 
 			// 終了処理:syurikenの終了を待って終わる
@@ -893,16 +898,20 @@ namespace _2DActionGame
 				isEnds[7] = true;
 			}
 		}
-		protected void InputControlF()// 9 1が終わってないのに9が入るｗｗ
+		/// <summary>
+		/// 大型竜巻攻撃。若干予告を入れることに。
+		/// </summary>
+		protected void InputControlF()// 9
 		{
 			if (inputCounter == 0 ) {
 				triangle = true;
+				inAttackNotice = true;
 			} else {
 				triangle = false;
 			}
-
-			if (!isShootingThunder && attackCounter > 60) {
-				//windType = 1;// 値だから参照もｋｓも無かったｗｗｗ
+			if (!isShootingThunder && attackCounter > 60) inAttackNotice = false;
+			if (!isShootingThunder && attackCounter > 90) {
+				
 				attackMethodsArgs[5] = new object[] {1};// なんというHCでしょう！
 				attackList.Add(5);
 				shootRightSide = targetInRightSide;
@@ -1291,11 +1300,19 @@ namespace _2DActionGame
 		}
 		public override void Draw(SpriteBatch spriteBatch)
 		{
-			base.Draw(spriteBatch);
+			//base.Draw(spriteBatch);
 			if (IsActive()) {
 				DrawDebugStatus(spriteBatch);
+				if (inAttackNotice) {
+					if (blinkCount % 5 == 0) e += .05f;
+					dColor = (float)Math.Sin(e * 8) / 2.0f + 0.5f;
+
+					spriteBatch.Draw(texture, drawPos, animation.rect, Color.Blue * dColor);
+					blinkCount++;
+				} else {
+					base.Draw(spriteBatch);
+				}
 			}
 		}
-		
 	}
 }

@@ -336,6 +336,8 @@ namespace _2DActionGame
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.White);
+            GraphicsDevice.BlendState = BlendState.AlphaBlend;
+            //GraphicsDevice.BlendState = BlendState.NonPremultiplied;//Opaque;
 
             // TODO: Add your drawing code here
 			//spriteBatch.Begin();

@@ -477,7 +477,7 @@ namespace _2DActionGame
 		}
 		#endregion
 		#region New_Hard
-		private void UseTurrets()
+		private void UseTurrets()// 7
 		{
 			if (isStartingAttack) {
 				foreach (Turret tur in thunderTurrets)
@@ -486,9 +486,7 @@ namespace _2DActionGame
 				attackCounter++;
 			}
 			if (thunderTurrets[0].isBeingUsed && thunderTurrets[1].isBeingUsed && thunderTurrets[2].isBeingUsed) { }// 全部isBeingUsedなのにthunderが出ない
-			//if (thunderTurrets[0].shootNumTotal) {}
 
-			if (attackCounter % 40 == 0) { }
 			for (int i = 0; i < thunderTurrets.Count; i++) {
 				if (attackCounter % (40 * (i + 1)) == 0) {
 					thunderTurrets[i].Inicialize();
@@ -500,12 +498,13 @@ namespace _2DActionGame
 					ControlTurret(tur, 1, 8);
 			}
 
-			if (attackCounter > 480) isEndingAttack = true;
-			if (isEndingAttack) {
+			if (attackCounter > 480) {
+				//isEndingAttack = true;
 				foreach (Turret tur in thunderTurrets) {
 					tur.isVisible = false;
 					tur.isBeingUsed = false;
 					tur.position = defaultPosition;
+					tur.Inicialize();
 				}
 				isStartingAttack = false;
 				isEndingAttack = false;

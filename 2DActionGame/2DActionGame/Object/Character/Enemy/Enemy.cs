@@ -25,7 +25,7 @@ namespace _2DActionGame
 		/// <summary>
 		/// 何コンボ目で強制的に死ぬか。まだ未使用
 		/// </summary>
-		protected readonly int maxComboTime = 6;
+		protected readonly int maxComboCount = 12;
 		
 		protected SoundEffect damageSound, hitSound;
 		protected Vector2 defPos;
@@ -74,31 +74,40 @@ namespace _2DActionGame
 			LoadXML("Enemy", "Xml\\Objects_Base.xml");
 		}
 
+        protected virtual void UpdateDamage()
+        {
+            if (HP <= 0 && time > deathComboTime || isBlownAway && HP <= 0 && drawPos.X > Game1.Width - width
+                || comboCount >= maxComboCount) {// 吹っ飛び時の条件も加えてみた
+                if (!game.isMuted)
+                    if (!hasPlayedSoundEffect) {
+                        damageSound.Play(SoundControl.volumeAll, 0f, 0f);
+                        hasPlayedSoundEffect = true;
+                    }
+                isAlive = false;
+                isMovingAround = false;
+                speed = Vector2.Zero;
+                gravity = 0;
+            }
+            if (!isAlive && counter == 0) {
+                isEffected = true;
+                deathEffected = true;
+                counter++;
+            }
+            if (time > deathComboTime) {
+                comboCount = 0;
+            }
+            if (IsActive()) MotionDelay();
+
+            time++;
+            delayTime++;
+        }
 		public override void Update()
 		{
-			base.Update();
-
+			//base.Update();
 			// HP0でフルボッコが終わったら死亡
-			if (HP <= 0 && time > deathComboTime || isBlownAway && HP <= 0 && drawPos.X > Game1.Width - width) {// 吹っ飛び時の条件も加えてみた
-				if (!game.isMuted)
-					if (!hasPlayedSoundEffect) {
-						damageSound.Play(SoundControl.volumeAll, 0f, 0f);
-						hasPlayedSoundEffect = true;
-					}
-				isAlive = false;
-			}
-			if (!isAlive && counter == 0) {
-				isEffected = true;
-				deathEffected = true;
-				counter++;
-			}
-			if (time > deathComboTime) {
-				comboCount = 0;
-			}
-			MotionDelay();
+            UpdateDamage();
 
-			time++;
-			delayTime++;
+			base.Update();
 		}
 		public override void UpdateAnimation()
 		{
@@ -245,9 +254,9 @@ namespace _2DActionGame
 					spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, 0, Vector2.Zero, Vector2.One, !turnsRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally, .0f);
 					DrawComboCount(spriteBatch);
 				} else {// 一旦戻す
-					spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, 0, Vector2.Zero, Vector2.One, !turnsRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally, .0f);
+					//spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, 0, Vector2.Zero, Vector2.One, !turnsRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally, .0f);
 					DrawComboCount(spriteBatch);
-					//DrawDamageBlink(spriteBatch, Color.Red, .05f);//.60f 15f
+                    DrawDamageBlink(spriteBatch, /*new Color(100, 50, 50)*/Color.Red, .05f);//.60f 15f
 				}
 			}
 		}

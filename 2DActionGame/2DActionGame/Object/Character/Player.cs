@@ -883,8 +883,10 @@ namespace _2DActionGame
 					if (isAttacking) {
 						sword.EndQuickly();
 						hasAttacked = true;
-						isInCombo = inCombo1 = inCombo2 = inCombo3 = inCombo4
-							= inCombo5 = inCombo6 = inCombo7 = isTrackingEnemy = false;
+						/*isInCombo = inCombo1 = inCombo2 = inCombo3 = inCombo4
+							= inCombo5 = inCombo6 = inCombo7 = isTrackingEnemy = false;*/
+                        for (int i = 0; i < inCombos.Length; i++) inCombos[i] = false;
+                        isInCombo = isTrackingEnemy = false;
 						isAttacking = isAttacking1 = isAttacking2 = isAttacking3 = false;
 						normalComboCount = time = 0;
 					}
@@ -893,8 +895,10 @@ namespace _2DActionGame
 				//if (isAttacking) {// falseだった　邪魔だなこれは
 				sword.EndQuickly();
 				hasAttacked = true;
-				isInCombo = inCombo1 = inCombo2 = inCombo3 = inCombo4
-							= inCombo5 = inCombo6 = inCombo7 = isTrackingEnemy = false;
+				/*isInCombo = inCombo1 = inCombo2 = inCombo3 = inCombo4
+							= inCombo5 = inCombo6 = inCombo7 = isTrackingEnemy = false;*/
+                for (int i = 0; i < inCombos.Length; i++) inCombos[i] = false;
+                isInCombo = isTrackingEnemy = false;
 				isAttacking = isAttacking1 = isAttacking2 = isAttacking3 = false;
 				normalComboCount = time = 0;
 				//}
@@ -905,8 +909,10 @@ namespace _2DActionGame
 				if (isAttacking) {
 					sword.EndQuickly();
 					hasAttacked = true;
-					isInCombo = inCombo1 = inCombo2 = inCombo3 = inCombo4
-							= inCombo5 = inCombo6 = inCombo7 = isTrackingEnemy = false;
+					/*isInCombo = inCombo1 = inCombo2 = inCombo3 = inCombo4
+							= inCombo5 = inCombo6 = inCombo7 = isTrackingEnemy = false;*/
+                    for (int i = 0; i < inCombos.Length; i++) inCombos[i] = false;
+                    isInCombo = isTrackingEnemy = false;
 					isAttacking = isAttacking1 = isAttacking2 = isAttacking3 = false;
 					normalComboCount = time = 0;
 				}
@@ -917,7 +923,8 @@ namespace _2DActionGame
 					Jump(12);
 				}
 			}
-			if (JoyStick.IsOnKeyUp(2) && jumpTime > 0 && !isInCombo && !isJumping) {
+            // mini jump
+			if (JoyStick.IsOnKeyUp(2) && jumpTime >= 0 && !isInCombo && !isJumping) {// jumpTime > 0
 				// 調整が難しい
 				//if(jumpTime < 5) scalarSpeed = 0;
 				//if(!hasJumped) 
@@ -951,10 +958,14 @@ namespace _2DActionGame
 
 			if (inAirReflection && airReflectCount <= 5) AdjustReflect(reflectSpeed);
 			// 加速
-			if (isAttacking /*&& (!hasJumped || !isJumping)|| isOnSomething*/&& (!syouryuuMode || (syouryuuMode && !isTrackingEnemy)) && !isAirial && !inAirReflection) {
-				gravity = defGravity; speed.Y = 0;
-			}// isOnSomethingもいれるとばぐる
-			else gravity = defGravity;
+            if (isAttacking /*&& (!hasJumped || !isJumping)|| isOnSomething*/&& (!syouryuuMode || (syouryuuMode && !isTrackingEnemy)) && !isAirial && !inAirReflection) {
+                gravity = defGravity;
+                //speed.Y = 0;
+                speed.Y *= .4f;
+            }// isOnSomethingもいれるとばぐる
+            else {
+                gravity = defGravity;
+            }
 			speed.Y += (float)gravity * timeCoef;//if(!isAttacking)で絞ってもあまり変わらない
 
 			// 減速 scalarSpeed *= friction;
@@ -1179,8 +1190,7 @@ namespace _2DActionGame
 				/*if(jumpTime < 30) scalarSpeed = firstJumpSpeed-20;
 				else if (jumpTime > 30 && jumpTime < 45) scalarSpeed = firstJumpSpeed - 10;
 				else if (jumpTime > 45 && jumpTime < 80) scalarSpeed = firstJumpSpeed;*/
-				if (jumpTime <= 5)
-					speed.Y = -10;
+				if (jumpTime <= 5) speed.Y = -10;
 				else if (jumpTime > 5 && jumpTime <= 6) speed.Y = firstJumpSpeed;//-14
 				else speed.Y = firstJumpSpeed;//-14
 				//scalarSpeed = firstJumpSpeed;
@@ -1197,7 +1207,7 @@ namespace _2DActionGame
 				position.Y += (float)speed.Y;
 				jumpCount++;
 				if (!game.isMuted) jumpSound.Play(SoundControl.volumeAll, 0f, 0f);
-			} else { }
+			}
 			jumpTime = 0;
 
 			//hasJumped = false;
@@ -1337,8 +1347,10 @@ namespace _2DActionGame
 						spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, 0, Vector2.Zero, 1, SpriteEffects.FlipHorizontally, 0);
 					}
 				} else {// 点滅させる
-					if (blinkCount % 5 == 0) e += 60f;//30f;//.02f;
-					dColor = (float)Math.Sin(e * 8) / 2.0f + 0.5f;
+					if (!stage.isPausing) {
+						if (blinkCount % 5 == 0) e += 60f;//30f;//.02f;
+						dColor = (float)Math.Sin(e * 8) / 2.0f + 0.5f;
+					}
 
 					spriteBatch.Draw(texture, drawPos, animation.rect, Color.Red * dColor);
 					blinkCount++;

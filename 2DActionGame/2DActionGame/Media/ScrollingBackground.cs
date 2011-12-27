@@ -17,9 +17,12 @@ using Microsoft.Xna.Framework.Input;
 
 namespace _2DActionGame
 {
+	/// <summary>
+	/// 背景スクロール
+	/// </summary>
+	/// <see cref="http://msdn.microsoft.com/ja-jp/library/bb203868.aspx"/>
     public class ScrollingBackground : Object
     {
-        // 背景スクロール　http://msdn.microsoft.com/ja-jp/library/bb203868.aspx　をちょっと変更しただけ
         public  Vector2 screenpos, origin, texturesize;
         private int screenwidth;
         public bool isFrontal { get; set; }
@@ -34,42 +37,44 @@ namespace _2DActionGame
             this.screenpos = screenpos;
         }
 
-        public void Load( GraphicsDevice device, /*Texture2D backgroundTexture*/ContentManager content, string texture_name )
-        {
-            //textures = backgroundTexture;
-            texture = content.Load<Texture2D>(texture_name);
-            //screenheight = 960;// device.Viewport.Height;// screenheight = Height
-            screenwidth = 1280;//device.Viewport.Width;
-            // Set the origin so that we're drawing from the 
-            // center of the top edge.
-            origin = new Vector2(0, 0);// textures.Width / 2
-            // Set the screen position to the center of the screen.
-            //↓最初から削ってったっけ？削らないと動かない状態だったが...
-            //screenpos = new Vector2(screenwidth , 0);//screenwidth / 2, screenheight / 2
-            // Offset to draw the second textures, when necessary.
-            texturesize = new Vector2(texture.Width,0);
-        }
+		public void Load(GraphicsDevice device, ContentManager content, string texture_name)
+		{
+			texture = content.Load<Texture2D>(texture_name);
+			//screenheight = 960;// device.Viewport.Height;// screenheight = Height
+			screenwidth = 1280;//device.Viewport.Width;
+			// Set the origin so that we're drawing from the 
+			// center of the top edge.
+			origin = new Vector2(0, 0);// textures.Width / 2
+			// Set the screen position to the center of the screen.
+			//↓最初から削ってったっけ？削らないと動かない状態だったが...
+			//screenpos = new Vector2(screenwidth , 0);//screenwidth / 2, screenheight / 2
+			// Offset to draw the second textures, when necessary.
+			texturesize = new Vector2(texture.Width, 0);
+		}
 
         public void Update(float deltaX)
         {
             if (stage != null && stage.isScrolled) {
-                screenpos.X -= deltaX;
-                if (screenpos.X < 0) screenpos.X = texture.Width;
+				if (isFrontal) {
+					screenpos.X -= deltaX;
+					if (screenpos.X < 0) screenpos.X = texture.Width;
+				} else {
+					screenpos.X += deltaX * 0.4f;// 0.5f
+					if (screenpos.X >  texture.Width) screenpos.X = 0;//texture.Width;
+				}
             }
             //screenpos.X = screenpos.X % textures.Width;　正の向きに動かすときはこう書くとｽﾏｰﾄ
-
-            /*screenpos.X -= deltaX; //振動する
-            screenpos.X = -(screenpos.X % textures.Width);*/
         }
 		// 補助メソッド
 		public void ScrollUpdateBoss(Vector2 criteriaPosition)
 		{
 			if (isFrontal) {
-				//if (texture != null) drawPos.X = stage.bossScreenEdgeLeft + stage.bossScreenEdgeLeft % texture.Width + Player.screenPosition.X/**/ - criteriaPosition.X;
-				drawPos.X = position.X - stage.player.position.X * .10f/**/ + Player.screenPosition.X;
+				//if (texture != null) drawPos.X = stage.bossScreenEdgeLeft + (texture.Width - stage.bossScreenEdgeLeft % texture.Width)/**/ + (Game1.Width - Player.screenPosition.X) - criteriaPosition.X - 32;//48;
+				if (texture != null) drawPos.X = stage.bossScreenEdgeLeft + (texture.Width - stage.bossScreenEdgeLeft % texture.Width)/**/ + (Game1.Width - Player.screenPosition.X) + Player.screenPosition.X - criteriaPosition.X - 32;//48;
+				//drawPos.X = position.X - stage.player.position.X * .10f/**/ + Player.screenPosition.X;
 				//drawPos.X = position.X - stage.player.position.X + Player.screenPosition.X;
 			} else {
-				drawPos.X = position.X - stage.player.position.X * .05f + Player.screenPosition.X;
+				drawPos.X = position.X - stage.player.position.X * .05f + Player.screenPosition.X;// .05f
 			}
 
 			drawPos.Y = position.Y;
@@ -80,7 +85,6 @@ namespace _2DActionGame
         /// <summary>
         /// 背景なのでlayerは一番奥
         /// </summary>
-        /// <param name="spriteBatch"></param>
         public override void Draw(SpriteBatch spriteBatch)
         {
             // DrawEffect the textures, if it is still onscreen.

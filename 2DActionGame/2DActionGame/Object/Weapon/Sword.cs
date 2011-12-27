@@ -427,8 +427,8 @@ namespace _2DActionGame
 				degreeCounter++;
 			}
 			if ((turnsRight) ?
-				degree > defaultDegree + (-1) * adj * 110 : //100→-10 //いきなりEndになってた
-				degree < defaultDegree + (-1) * adj * 110) {//-240
+				degree > defaultDegree + (-1) * adj * 180 :// * 110
+				degree < defaultDegree + (-1) * adj * 180) {
 
 				d = new Vector2(turnsRight ? 1 : -1, 1);
 				position = user.position + new Vector2(user.width / 2 + d.X, user.height - 15 + d.Y);
