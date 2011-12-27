@@ -100,7 +100,7 @@ namespace _2DActionGame
         }
         public void UpdateLog()
         {
-            if (!isReversed) {
+            if (!isReversed && stage.player.isAlive) {
                 //現在の座標を取得
                 nowlogdata.playerVector = stage.player.position;
                 nowlogdata.playervx = stage.player.speed.X;

@@ -41,7 +41,6 @@ namespace _2DActionGame
         public readonly float miniJumpSpeed = -10f;
 		public readonly float firstJumpSpeed = -13.0f;
 		public readonly float secondJumpSpeed = -10.0f;
-		public readonly int MAXTAS = 1800;
 		public readonly int initialTAS = 900;
 		
 		// Basis
@@ -52,6 +51,7 @@ namespace _2DActionGame
 		private bool[] inCombos = new bool[8];
 		private int animCounter, animCounter2;
 		public int TASpower { get; set; }					// protected化：reverseの修正
+        public int MAXTAS { get; internal set; }
 
 		// Input
 		private int workKeyNum, workButtonNum, workStickNum;
@@ -174,6 +174,7 @@ namespace _2DActionGame
 			: base(stage, x, y, width, height)
 		{
 			LoadXML("Player", "Xml\\Objects_Base.xml");
+            this.MAXTAS = 1800;
 			this.TASpower = initialTAS;
 			this.HP = HP;
 			this.activeDistance = defActiveDistance;

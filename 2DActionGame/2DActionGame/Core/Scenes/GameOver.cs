@@ -48,6 +48,15 @@ namespace _2DActionGame
 				SoundControl.IniMusic("Audio\\BGM\\menu_new");
 				BackScene(5);
             }
+            if (JoyStick.KEY(5)) {
+                isEndScene = true;
+                (upperScene as Stage).player.isAlive = true;
+                (upperScene as Stage).toGameOver = false;
+                (upperScene as Stage).hasEffectedPlayerDeath = false;
+                (upperScene as Stage).player.HP = 1;
+                (upperScene as Stage).reverse.StartReverse();
+                (upperScene as Stage).ResetDeathEffect();
+            }
         }
 
         public override void Draw(SpriteBatch spriteBatch)
