@@ -171,7 +171,7 @@ namespace _2DActionGame
 		public bool hasEffectedBossExplosion { get; set; }
 
 		public bool hasEffectedPlayerDeath { get; set; }
-		public bool toGameOver { get; private set; }
+		public bool toGameOver { get; internal set; }
 		/// <summary>
 		/// ボス戦移行シーンにいるか
 		/// </summary>
@@ -705,6 +705,11 @@ namespace _2DActionGame
 			BGMchanged = false;
 			#endregion
 		}
+
+        public void ResetDeathEffect()
+        {
+            this.effectPlayerDeath = new Effect(this);
+        }
 
 		/// <summary>
 		/// 1フレーム中の計算処理。通常/TAS中/スロー で分岐
