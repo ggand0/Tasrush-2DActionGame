@@ -165,6 +165,33 @@ namespace _2DActionGame
 				}
 			}
 		}
+        protected override void UpdateDamage()
+        {
+            if (HP <= 0 && time > deathComboTime || isBlownAway && HP <= 0 && drawPos.X > Game1.Width - width) {// 吹っ飛び時の条件も加えてみた
+                if (!game.isMuted)
+                    if (!hasPlayedSoundEffect) {
+                        damageSound.Play(SoundControl.volumeAll, 0f, 0f);
+                        hasPlayedSoundEffect = true;
+                    }
+                isAlive = false;
+                isMovingAround = false;
+                speed = Vector2.Zero;
+                gravity = 0;
+            }
+            if (!isAlive && counter == 0) {
+                isEffected = true;
+                deathEffected = true;
+                counter++;
+            }
+            if (time > deathComboTime) {
+                comboCount = 0;
+            }
+            if (IsActive()) MotionDelay();
+
+            time++;
+            delayTime++;
+        }
+
 		protected virtual void MoveIni()
 		{
 			hasPlayedSoundEffect = false;

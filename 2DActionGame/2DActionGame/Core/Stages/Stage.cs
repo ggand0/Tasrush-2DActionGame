@@ -916,7 +916,7 @@ namespace _2DActionGame
 						//else if (terrain is SnowBall) CollisionDetection.RectangleCross(terrain, character, terrain.degree, character.degree);
 						else {
 							if (terrain is Block && !(terrain is DamageBlock)) (terrain as Block).IsHitDetailed(character, 3);
-							else terrain.IsHit(character);/**/
+							else terrain.IsHit(character);
 							//terrain.IsHit(character);
 						}
 					}

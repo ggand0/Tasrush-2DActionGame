@@ -59,7 +59,7 @@ namespace _2DActionGame
 					screenpos.X -= deltaX;
 					if (screenpos.X < 0) screenpos.X = texture.Width;
 				} else {
-					screenpos.X += deltaX * 0.5f;
+					screenpos.X += deltaX * 0.4f;// 0.5f
 					if (screenpos.X >  texture.Width) screenpos.X = 0;//texture.Width;
 				}
             }
@@ -74,7 +74,7 @@ namespace _2DActionGame
 				//drawPos.X = position.X - stage.player.position.X * .10f/**/ + Player.screenPosition.X;
 				//drawPos.X = position.X - stage.player.position.X + Player.screenPosition.X;
 			} else {
-				drawPos.X = position.X - stage.player.position.X * .05f + Player.screenPosition.X;
+				drawPos.X = position.X - stage.player.position.X * .05f + Player.screenPosition.X;// .05f
 			}
 
 			drawPos.Y = position.Y;
