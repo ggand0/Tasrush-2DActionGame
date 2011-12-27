@@ -32,10 +32,13 @@ namespace _2DActionGame
 		public static readonly int thrustingTime = 40;
 		public static readonly Vector2 defReflectSpeed = new Vector2(4, -6);
         private static readonly int thrustPowerConsumption = 800;
-		private static readonly int miniJumpWaitTime = 12;
+        
 		private static readonly int airReflectLimit = 15;//30
+        private static readonly int walkingFootStepRatio = 10;
+        private static readonly int dashingFootStepRatio = 7;
 
 		private readonly float timeCoefPlayer = 0.5f;
+        public readonly float miniJumpSpeed = -10f;
 		public readonly float firstJumpSpeed = -13.0f;
 		public readonly float secondJumpSpeed = -10.0f;
 		public readonly int MAXTAS = 1800;
@@ -156,7 +159,8 @@ namespace _2DActionGame
 
 		public bool scrollPush { get; set; }
 		#endregion
-
+        private static readonly int miniJumpWaitTime = 6;//3;//12;
+        private bool miniJump, inJumpCharge;
 		// コンストラクタ
 		public Player()
 			: this(null, 0, 0, 32, 32)
@@ -320,8 +324,20 @@ namespace _2DActionGame
 
 			}
 		}
-		private static readonly int walkingFootStepRatio = 10;
-		private static readonly int dashingFootStepRatio = 7;
+        /// <summary>
+        /// ジャンプ時の攻撃キャンセル
+        /// </summary>
+        private void CancelAttacking()
+        {
+            sword.EndQuickly();
+            hasAttacked = true;
+            //isInCombo = inCombo1 = inCombo2 = inCombo3 = inCombo4
+            //	= inCombo5 = inCombo6 = inCombo7 = isTrackingEnemy = false;
+            for (int i = 0; i < inCombos.Length; i++) inCombos[i] = false;
+            isInCombo = isTrackingEnemy = false;
+            isAttacking = isAttacking1 = isAttacking2 = isAttacking3 = false;
+            normalComboCount = time = 0;
+        }
 		protected void UpdateInput()
 		{
 			#region General
@@ -873,64 +889,43 @@ namespace _2DActionGame
 			#endregion
 			#region Jumping
 			// ジャンプ
-			if (JoyStick.KEY(2) && /*isOnSomething*/!isInCombo) {
+			if (JoyStick.KEY(2) && !isInCombo) {
 				jumpTime++;                                         // 押下時間をチェック
-				if (jumpTime > miniJumpWaitTime && !isJumping) {
-					Jump(12);
+				if (jumpTime >= miniJumpWaitTime && !isJumping) {
+					Jump(12, false);// ジャンプ１段目
 					counter = 0;
 					//hasJumped = true;
-
 					if (isAttacking) {
-						sword.EndQuickly();
-						hasAttacked = true;
-						/*isInCombo = inCombo1 = inCombo2 = inCombo3 = inCombo4
-							= inCombo5 = inCombo6 = inCombo7 = isTrackingEnemy = false;*/
-                        for (int i = 0; i < inCombos.Length; i++) inCombos[i] = false;
-                        isInCombo = isTrackingEnemy = false;
-						isAttacking = isAttacking1 = isAttacking2 = isAttacking3 = false;
-						normalComboCount = time = 0;
+                        CancelAttacking();
 					}
 				}
 			} else if (JoyStick.KEY(2) && isInCombo) {           // キャンセル用
-				//if (isAttacking) {// falseだった　邪魔だなこれは
-				sword.EndQuickly();
-				hasAttacked = true;
-				/*isInCombo = inCombo1 = inCombo2 = inCombo3 = inCombo4
-							= inCombo5 = inCombo6 = inCombo7 = isTrackingEnemy = false;*/
-                for (int i = 0; i < inCombos.Length; i++) inCombos[i] = false;
-                isInCombo = isTrackingEnemy = false;
-				isAttacking = isAttacking1 = isAttacking2 = isAttacking3 = false;
-				normalComboCount = time = 0;
-				//}
+                CancelAttacking();
 			}
-			//counter++;// これってUpdate直下でしてるから要らなくないか...?
+			//　counter++;// これってUpdate直下でしてるから要らなくないか...?
 			// 2段目以降は、空中なのでIsOnKeyDownでおｋ
 			if (JoyStick.IsOnKeyDown(2)) {// 一気にjumpCountが0～2までいくのを修正.3/10 ここだけだとちょっとキャンセル具合がよろしくないのでKEYでも.
-				if (isAttacking) {
-					sword.EndQuickly();
-					hasAttacked = true;
-					/*isInCombo = inCombo1 = inCombo2 = inCombo3 = inCombo4
-							= inCombo5 = inCombo6 = inCombo7 = isTrackingEnemy = false;*/
-                    for (int i = 0; i < inCombos.Length; i++) inCombos[i] = false;
-                    isInCombo = isTrackingEnemy = false;
-					isAttacking = isAttacking1 = isAttacking2 = isAttacking3 = false;
-					normalComboCount = time = 0;
+                inJumpCharge = true;
+                if (isAttacking) {// || isInCombo) {
+                    CancelAttacking();
 				}
+                //if (jumpTime > miniJumpWaitTime && !isJumping) { Jump(12); }//jumpCount == 0
 
-				if (jumpCount == 1 && isJumping && counter > miniJumpWaitTime) {//30
-					Jump(12);//12は使われない
-				} else if (game.inDebugMode && jumpCount >= 2 && isJumping && counter > miniJumpWaitTime) {//30
-					Jump(12);
+                if (jumpCount == 1 && isJumping && counter > miniJumpWaitTime) {//30　// 2段ジャンプ
+					Jump(12, false);//12は使われない;
+				} else if (game.inDebugMode && jumpCount >= 2 && isJumping && counter > miniJumpWaitTime) {//30 // デバッグジャンプ
+					Jump(12, false);
 				}
 			}
             // mini jump
-			if (JoyStick.IsOnKeyUp(2) && jumpTime >= 0 && !isInCombo && !isJumping) {// jumpTime > 0
-				// 調整が難しい
-				//if(jumpTime < 5) scalarSpeed = 0;
-				//if(!hasJumped) 
-				if (!isJumping)
-					Jump(jumpTime);
+			if (JoyStick.IsOnKeyUp(2) && jumpTime < miniJumpWaitTime && !isInCombo && !isJumping) {// jumpTime > 0 IsOnKeyDown???
+                if (!isJumping) {
+                    Jump(jumpTime, true);
+                    miniJump = true;
+                }
 			}
+            if (isOnSomething && !inJumpCharge) jumpTime = 0;
+            if (JoyStick.IsOnKeyUp(2)) inJumpCharge = false;
 
 			// 可変長ジャンプ：押下時間で高さを変えるパターン:不使用だが残す
 			if (KeyInput.IsOnKeyDown(Keys.Tab)) {
@@ -1183,30 +1178,29 @@ namespace _2DActionGame
 		#endregion
 		#region Movement
 		// ジャンプ・特殊移動など
-		private void Jump(int jumpPower)
+		private void Jump(int jumpPower, bool mini)
 		{
-			isJumping = true;
 			if (jumpCount == 0) {
-				/*if(jumpTime < 30) scalarSpeed = firstJumpSpeed-20;
-				else if (jumpTime > 30 && jumpTime < 45) scalarSpeed = firstJumpSpeed - 10;
-				else if (jumpTime > 45 && jumpTime < 80) scalarSpeed = firstJumpSpeed;*/
-				if (jumpTime <= 5) speed.Y = -10;
-				else if (jumpTime > 5 && jumpTime <= 6) speed.Y = firstJumpSpeed;//-14
-				else speed.Y = firstJumpSpeed;//-14
-				//scalarSpeed = firstJumpSpeed;
-				//position.Y += (float)scalarSpeed;
+                // 11/12/27 タイム判定は呼ぶときに行うようにした
+				/*if (jumpTime <= 5) speed.Y = miniJumpSpeed;
+				else if (jumpTime > 5) speed.Y = firstJumpSpeed;//-14*/
+                speed.Y = mini ? miniJumpSpeed : firstJumpSpeed;
+
 				if (!game.isMuted) jumpSound.Play(SoundControl.volumeAll, 0f, 0f);
 				jumpCount = 1;
+                isJumping = true;
 			} else if (jumpCount == 1) {
 				speed.Y = secondJumpSpeed;
-				position.Y += speed.Y;
+
 				jumpCount = 2;
 				if (!game.isMuted) jumpSound.Play(SoundControl.volumeAll, 0f, 0f);
+                isJumping = true;
 			} else if (game.inDebugMode && jumpCount >= 2) {
-				speed.Y = (float)secondJumpSpeed;
-				position.Y += (float)speed.Y;
+				speed.Y = secondJumpSpeed;
+
 				jumpCount++;
 				if (!game.isMuted) jumpSound.Play(SoundControl.volumeAll, 0f, 0f);
+                isJumping = true;
 			}
 			jumpTime = 0;
 

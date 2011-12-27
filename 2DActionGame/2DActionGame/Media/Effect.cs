@@ -16,7 +16,6 @@ namespace _2DActionGame
 	public class Effect : Animation
 	{
 		#region Member variable
-
 		private static SoundEffect siren = game.Content.Load<SoundEffect>("Audio\\SE\\siren");
 		private static SoundEffect lastExplosion = game.Content.Load<SoundEffect>("Audio\\SE\\last_explosion");
 		private static SoundEffect playerDeath = game.Content.Load<SoundEffect>("Audio\\SE\\magic");
@@ -65,7 +64,6 @@ namespace _2DActionGame
 		public bool hasEffected { get; private set; }
 
 		#endregion
-
 		public Effect(Stage stage)
 			: this(stage, null, 0)
 		{

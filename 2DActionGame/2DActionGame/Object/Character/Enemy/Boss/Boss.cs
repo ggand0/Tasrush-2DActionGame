@@ -11,11 +11,16 @@ using Microsoft.Xna.Framework.Audio;
 namespace _2DActionGame
 {
 	public class Boss : Enemy
-	{
-		private SoundEffect hitSoundSmall;
+    {
+        #region Member variable
+        private SoundEffect hitSoundSmall;
 		public Object bind { get; protected set; }
 		protected Vector2 bindSize = new Vector2(210, 210);
 		protected  Vector2 bindPos = new Vector2(100, 100);
+        //protected Vector2 bindPosOther = new Vector2(100, 100);
+
+        //protected readonly Vector2 defBindPos= new Vector2(100, 100);
+        //protected readonly Vector2 defBindPosOther = new Vector2(100, 100);
 		//private int turretNum;// turretの数
 
 		/// <summary>
@@ -114,8 +119,11 @@ namespace _2DActionGame
 		/// 11/9 引数の数が２つ以上のメソッドに対応させるために二次元に拡張。いよいよクラス化したくなってきた
 		/// </summary>
 		protected List<object[]> attackMethodsArgs = new List<object[]>();
+        #endregion
+        protected Vector2 defBindPos = new Vector2(100, 100);
+        protected Vector2 defBindPosOther = new Vector2(100, 100);
 
-		/// <summary>
+        /// <summary>
 		/// 自Objectをウェイポイントに沿って移動させるメソッド。
 		/// </summary>
 		/// <param name="moveSpeed">移動速度[pixel/frame]</param>
@@ -304,6 +312,7 @@ namespace _2DActionGame
 			} else if ((position.X + width / 2) - stage.player.position.X < 0) {
 				turnsRight = true;
 			}
+            bindPos = !turnsRight ? defBindPos : defBindPosOther;
 			bind.position = position + bindPos;
 			bind.drawPos = drawPos + bindPos;
 			if (stage.inBossBattle) activeDistance = 9999;// ボス戦時に端に行ったときにstage.activeObjectsに追加されなくなるため
@@ -313,7 +322,6 @@ namespace _2DActionGame
 		public override void Draw(SpriteBatch spriteBatch)
 		{
 			base.Draw(spriteBatch);
-			
 		}
 		/// <summary>
 		/// 今のところBossは仰け反らない仕様

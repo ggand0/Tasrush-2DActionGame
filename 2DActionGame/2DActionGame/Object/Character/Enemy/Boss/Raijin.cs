@@ -55,7 +55,7 @@ namespace _2DActionGame
 		#endregion
 		private int[] attackPattern0 = { 0, 2, 3, 4, 5 };// XML化予定
 		private int[] attackPattern1 = { 7, 8, 4, 9, 1 };
-
+        
 		#region OldPattern(Old_Easy)
 		private void MoveLite(Vector2 startPos, Vector2 wayPos, Vector2 endPos, bool endAttack)
 		{
@@ -579,7 +579,9 @@ namespace _2DActionGame
 		{
 			this.defaultPosition = position;
 
-			bindPos = new Vector2(100, 0);
+			defBindPos = new Vector2(100, 0);
+            defBindPosOther = new Vector2(width - 100, 0);
+
 			tmpPosition = defaultPosition + new Vector2(-150, -50);
 			attackPosition = new Vector2(defaultPosition.X - 640, defaultPosition.Y - 50);
 			singleLightning = new Weapon(stage, position.X, position.Y, 16, 200, this);					// アニメーションの関係でWeaponじゃ処理しきれないのでBeamに移行

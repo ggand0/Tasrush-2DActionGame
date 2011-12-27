@@ -56,6 +56,9 @@ namespace _2DActionGame
 		/// </summary>
 		public Turret cutterTurretAlternate { get; private set; }
 		#endregion
+        //protected readonly Vector2 defBindPos = new Vector2(100, 100);
+        //protected readonly Vector2 defBindPosOther = new Vector2(100, 100);
+
 		/// <summary>
 		/// 前の技を出しながら次の技に移行しているときに、フラグが立ったら前の技を終了させる
 		/// </summary>
@@ -557,12 +560,16 @@ namespace _2DActionGame
 		public Fuujin(Stage stage, float x, float y, int width, int height, int HP, float vx, int bulletType, int shootType)
 			: base(stage, x, y, width, height, HP, bulletType, shootType) 
 		{
+            bindPos = new Vector2(50, 50);
+            defBindPos = new Vector2(50, 50);
+            defBindPosOther = new Vector2(width - 50, 50);
+
 			this.defaultPosition = position;
 			tmpPosition = defaultPosition + new Vector2(-100, -200);
 			attackPosition = new Vector2(defaultPosition.X - 720, defaultPosition.Y);// new Vector2(defaultPosition.X - 500, defaultPosition.Y);
 			animation = new Animation(380, 310);
 			resWaitTime = 240;
-			bindPos = new Vector2(50, 50);
+			
 			//bindSize = new Vector2(260, 260);
 			//animation2 = new Animation(210, 210);
 
