@@ -322,15 +322,15 @@ namespace _2DActionGame
 			mapDatas[mapDatas.Count - 1].devided1 = mapDatas[mapDatas.Count - 1].original.Replace("\r\n", "\n").Split('\n');    // "\r\n"を'\n'に置き換えた後(Spritはchar型しか受け取らない)に、まず１行ずつに分割　
 
 			if (mapDatas[0].original != "")                                                                                     // 空ファイル対策
-				for (int i = 0; i < mapDatas[mapDatas.Count - 1].devided1.Length; i++) {                                               // ファイルの末尾に改行コードがあるとエラーを吐くので注意
+				for (int i = 0; i < mapDatas[mapDatas.Count - 1].devided1.Length; i++) {                                        // ファイルの末尾に改行コードがあるとエラーを吐くので注意
 					for (int j = 0; j < 7; j++) {
 						string[] input_tmp = new string[7];
 						if (mapDatas[mapDatas.Count - 1].devided1[i].Contains("Segment")) {
-							input_tmp = mapDatas[mapDatas.Count - 1].devided1[i].Split(new char[] { ',' }, 7);                     // countは区切り文字の数ではなく分けるブロックの数らしい
+							input_tmp = mapDatas[mapDatas.Count - 1].devided1[i].Split(new char[] { ',' }, 7);                  // countは区切り文字の数ではなく分けるブロックの数らしい
 						} else { 
 							input_tmp = mapDatas[mapDatas.Count - 1].devided1[i].Split(new char[] { ',' });
 						}
-						mapDatas[mapDatas.Count - 1].devided2[i, j] = input_tmp[j];                                              // 次にカンマで分割：一時的な配列に入れた後に二次元配列の列へ代入
+						mapDatas[mapDatas.Count - 1].devided2[i, j] = input_tmp[j];                                             // 次にカンマで分割：一時的な配列に入れた後に二次元配列の列へ代入
 					}
 				}
 			sr.Close();
@@ -345,8 +345,8 @@ namespace _2DActionGame
 		/// <param name="y"></param>
 		protected void AddMapData(MapData mapData, float x, float y)
 		{
-			for (int i = 0; i < mapData.devided1.Length; i++) {                      // 引数がnullだとエラーになるので注意(配列の長さ的な意味で) 12/5 -1は要らない...?"mapData.devided1.Length-1"
-				switch (mapData.devided2[i, 0]) {                                   // Objectの種類ごとに指定 (できれば new "読み取った文字列" (constructor...)としたい)
+			for (int i = 0; i < mapData.devided1.Length; i++) {							// 引数がnullだとエラーになるので注意(配列の長さ的な意味で) 12/5 -1は要らない...?"mapData.devided1.Length-1"
+				switch (mapData.devided2[i, 0]) {										// Objectの種類ごとに指定 (できれば new "読み取った文字列" (constructor...)としたい)
 					#region Terrain
 					case ("Block"):
 						/*terrains.Add(new Block(this, float.Parse(mapData.devided2[i, 1]) + x, float.Parse(mapData.devided2[i, 2]), 
@@ -573,7 +573,7 @@ namespace _2DActionGame
 			}
 
 			// 背景バッファを必要分追加: 
-			for (int i = 0; i < ((int)CheckMapEnd(mapData.devided2)) / 2048 + 1; i++) {// stage0は45までしかinputastに入ってない xna側でいくつか読んでつなげてるから
+			for (int i = 0; i < ((int)CheckMapEnd(mapData.devided2)) / 2048 + 1; i++) {	// stage0は45までしかinputastに入ってない xna側でいくつか読んでつなげてるから
 				backGrounds.Add(new BackGround(this, 2048, 480));
 				if (x == 0)
 					backGrounds[backGrounds.Count - 1].position.X += i * 2048;
@@ -921,7 +921,7 @@ namespace _2DActionGame
 						if (terrain is Slope) (terrain as Slope).IsHitLite(character);
 						//else if (terrain is SnowBall) CollisionDetection.RectangleCross(terrain, character, terrain.degree, character.degree);
 						else {
-							if (terrain is Block && !(terrain is DamageBlock)) (terrain as Block).IsHitDetailed(character, 3);
+							if (terrain is Block && !(terrain is DamageBlock)) (terrain as Block).IsHitDetailed(character, 3);//3);
 							else terrain.IsHit(character);
 							//terrain.IsHit(character);
 						}

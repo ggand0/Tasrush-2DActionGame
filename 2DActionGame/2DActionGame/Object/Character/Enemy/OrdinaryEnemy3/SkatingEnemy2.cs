@@ -64,6 +64,23 @@ namespace _2DActionGame
 
 			if (blinkCount > 20) inDmgMotion = false;
 		}
+		protected override void DrawDamageBlinkOnce(SpriteBatch spriteBatch, Color color)
+		{
+			if (blinkCount <= 5) {
+				spriteBatch.End();
+				spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
+				dColor = 1.0f;
+				spriteBatch.Draw(texture, drawPos, animation.rect, color * dColor, MathHelper.ToRadians(90), Vector2.Zero, Vector2.One, SpriteEffects.None, 0f);
+				spriteBatch.End();
+				spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+			} else if (blinkCount <= 20) {
+				spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, MathHelper.ToRadians(90), Vector2.Zero, Vector2.One, SpriteEffects.None, 0f);
+			} else if (blinkCount > 20) {
+				inDmgMotion = false;
+				spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, MathHelper.ToRadians(90), Vector2.Zero, Vector2.One, SpriteEffects.None, 0f);
+			}
+			blinkCount++;
+		}
 
     }
 }

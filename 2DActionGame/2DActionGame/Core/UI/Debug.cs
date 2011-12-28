@@ -27,6 +27,7 @@ namespace _2DActionGame
         }
         public void Draw(SpriteBatch spriteBatch)
         {
+			int y = 100;
             // デバッグ情報
 			if (game.inDebugMode) {
 				switch (game.stageNum) {
@@ -74,82 +75,83 @@ namespace _2DActionGame
 					case 1:
 						// Player
 						if (stage.characters.Count > 1) {
-							spriteBatch.DrawString(game.Arial2, "player.vector" + stage.player.position.ToString(), new Vector2(0, 50), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.speed" + stage.player.speed.ToString(), new Vector2(0, 60), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.isDamaged" + stage.player.isDamaged.ToString(), new Vector2(0, 70), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.isHit:" + stage.player.isHit.ToString(), new Vector2(0, 80), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.vector" + stage.player.position.ToString(), new Vector2(0, 50 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.speed" + stage.player.speed.ToString(), new Vector2(0, 60 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.isDamaged" + stage.player.isDamaged.ToString(), new Vector2(0, 70 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.isHit:" + stage.player.isHit.ToString(), new Vector2(0, 80 + y), fontColor[1]);
 							spriteBatch.DrawString(game.Arial2, "player.normalComboCount:" + stage.player.normalComboCount.ToString(), new Vector2(0, 90), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.isJumping:" + stage.player.isJumping.ToString(), new Vector2(0, 100), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.jumpCount:" + stage.player.jumpCount.ToString(), new Vector2(0, 110), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.jumpTime:" + stage.player.jumpTime.ToString(), new Vector2(0, 120), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.isToChargingMotion:" + stage.player.isToChargingMotion.ToString(), new Vector2(0, 130), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.isChargingPower:" + stage.player.isChargingPower.ToString(), new Vector2(0, 140), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.isJumping:" + stage.player.isJumping.ToString(), new Vector2(0, 100 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.jumpCount:" + stage.player.jumpCount.ToString(), new Vector2(0, 110 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.jumpTime:" + stage.player.jumpTime.ToString(), new Vector2(0, 120 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.isToChargingMotion:" + stage.player.isToChargingMotion.ToString(), new Vector2(0, 130 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.isChargingPower:" + stage.player.isChargingPower.ToString(), new Vector2(0, 140 + y), fontColor[1]);
 							if (stage.player.locus.Count > 1)
-								spriteBatch.DrawString(game.Arial2, "player.prevVector[1]:" + stage.player.locus[1].ToString(), new Vector2(0, 150), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.hasAttacked:" + stage.player.hasAttacked.ToString(), new Vector2(0, 160), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "game.score:" + game.score.ToString(), new Vector2(0, 170), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.isOnSomething:" + stage.player.isOnSomething.ToString(), new Vector2(0, 180), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.isHitLeftSide:" + stage.player.isHitLeftSide.ToString(), new Vector2(0, 190), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "boss.position:" + stage.boss.position.ToString(), new Vector2(0, 200), fontColor[1]);
+								spriteBatch.DrawString(game.Arial2, "player.prevVector[1]:" + stage.player.locus[1].ToString(), new Vector2(0, 150 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.hasAttacked:" + stage.player.hasAttacked.ToString(), new Vector2(0, 160 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "game.score:" + game.score.ToString(), new Vector2(0, 170 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.isOnSomething:" + stage.player.isOnSomething.ToString(), new Vector2(0, 180 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.isHitLeftSide:" + stage.player.isHitLeftSide.ToString(), new Vector2(0, 190 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "boss.position:" + stage.boss.position.ToString(), new Vector2(0, 200 + y), fontColor[1]);
 						}
 						for (int i = 0; i < stage.boss.attackList.Count; i++) {
-							spriteBatch.DrawString(game.Arial2, "boss.attackList:" + stage.boss.attackList[i].ToString(), new Vector2(0, 230 + i * 10), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "boss.attackList:" + stage.boss.attackList[i].ToString(), new Vector2(0, 230 + i * 10 + y), fontColor[1]);
 						}
 						break;
 					case 2:
 						// Player
 						if (stage.characters.Count > 1) {
-							spriteBatch.DrawString(game.Arial2, "player.vector" + stage.player.position.X.ToString(), new Vector2(0, 50), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.speed.X" + stage.player.speed.X.ToString(), new Vector2(0, 60), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.speed.Y" + stage.player.speed.Y.ToString(), new Vector2(0, 70), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.isHit:" + stage.player.isHit.ToString(), new Vector2(0, 80), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.normalComboCount:" + stage.player.normalComboCount.ToString(), new Vector2(0, 90), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.isDamaged:" + stage.player.isDamaged.ToString(), new Vector2(0, 100), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.jumpCount:" + stage.player.jumpCount.ToString(), new Vector2(0, 110), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.jumpTime:" + stage.player.jumpTime.ToString(), new Vector2(0, 120), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.isToChargingMotion:" + stage.player.isToChargingMotion.ToString(), new Vector2(0, 130), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.isChargingPower:" + stage.player.isChargingPower.ToString(), new Vector2(0, 140), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.vector" + stage.player.position.X.ToString(), new Vector2(0, 50 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.speed.X" + stage.player.speed.X.ToString(), new Vector2(0, 60 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.speed.Y" + stage.player.speed.Y.ToString(), new Vector2(0, 70 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.isHit:" + stage.player.isHit.ToString(), new Vector2(0, 80 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.normalComboCount:" + stage.player.normalComboCount.ToString(), new Vector2(0, 90 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.isDamaged:" + stage.player.isDamaged.ToString(), new Vector2(0, 100 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.jumpCount:" + stage.player.jumpCount.ToString(), new Vector2(0, 110 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.jumpTime:" + stage.player.jumpTime.ToString(), new Vector2(0, 120 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.isToChargingMotion:" + stage.player.isToChargingMotion.ToString(), new Vector2(0, 130 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.isChargingPower:" + stage.player.isChargingPower.ToString(), new Vector2(0, 140 + y), fontColor[1]);
 							if (stage.player.locus.Count > 1)
-								spriteBatch.DrawString(game.Arial2, "player.prevVector[1]:" + stage.player.locus[1].ToString(), new Vector2(0, 150), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.hasAttacked:" + stage.player.hasAttacked.ToString(), new Vector2(0, 160), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "sword.isHit:" + stage.player.sword.isHit.ToString(), new Vector2(0, 170), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "game.score:" + game.score.ToString(), new Vector2(0, 180), fontColor[1]);
+								spriteBatch.DrawString(game.Arial2, "player.prevVector[1]:" + stage.player.locus[1].ToString(), new Vector2(0, 150 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.hasAttacked:" + stage.player.hasAttacked.ToString(), new Vector2(0, 160 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "sword.isHit:" + stage.player.sword.isHit.ToString(), new Vector2(0, 170 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "game.score:" + game.score.ToString(), new Vector2(0, 180 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.isTouchSomeCeiling:" + stage.player.isTouchSomeCeiling.ToString(), new Vector2(0, 190 + y), fontColor[1]);
 							//spriteBatch.DrawString(game.Arial2, "boss.Turret:" + (stage.boss as Fuujin).cutterTurret5Way.defaultPosition.ToString(), new Vector2(0, 180), fontColor[1]);
 							if (stage.boss is Fuujin) {
-								spriteBatch.DrawString(game.Arial2, "boss.Turret:" + (stage.boss as Fuujin).cutterTurret5Way.position.ToString(), new Vector2(0, 190), fontColor[1]);
-								spriteBatch.DrawString(game.Arial2, "boss.dFA:" + (stage.boss as Fuujin).damageFromAttacking.ToString(), new Vector2(0, 200), fontColor[1]);
+								spriteBatch.DrawString(game.Arial2, "boss.Turret:" + (stage.boss as Fuujin).cutterTurret5Way.position.ToString(), new Vector2(0, 200 + y), fontColor[1]);
+								spriteBatch.DrawString(game.Arial2, "boss.dFA:" + (stage.boss as Fuujin).damageFromAttacking.ToString(), new Vector2(0, 210 + y), fontColor[1]);
 							}
 							for (int i = 0; i < stage.boss.attackList.Count; i++) {
-								spriteBatch.DrawString(game.Arial2, "boss.attackList:" + stage.boss.attackList[i].ToString(), new Vector2(0, 230 + i * 10), fontColor[1]);
+								spriteBatch.DrawString(game.Arial2, "boss.attackList:" + stage.boss.attackList[i].ToString(), new Vector2(0, 230 + i * 10 + y), fontColor[1]);
 							}
 						}
 						break;
 					case 3:
 						// Player
 						if (stage.characters.Count > 1) {
-							spriteBatch.DrawString(game.Arial2, "player.vector" + stage.player.position.X.ToString(), new Vector2(0, 50), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.speed.X" + stage.player.speed.X.ToString(), new Vector2(0, 60), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.speed.Y" + stage.player.speed.Y.ToString(), new Vector2(0, 70), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.isHit:" + stage.player.isHit.ToString(), new Vector2(0, 80), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.normalComboCount:" + stage.player.normalComboCount.ToString(), new Vector2(0, 90), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.isDamaged:" + stage.player.isDamaged.ToString(), new Vector2(0, 100), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.jumpCount:" + stage.player.jumpCount.ToString(), new Vector2(0, 110), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.jumpTime:" + stage.player.jumpTime.ToString(), new Vector2(0, 120), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.isToChargingMotion:" + stage.player.isToChargingMotion.ToString(), new Vector2(0, 130), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.isChargingPower:" + stage.player.isChargingPower.ToString(), new Vector2(0, 140), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.vector" + stage.player.position.X.ToString(), new Vector2(0, 50 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.speed.X" + stage.player.speed.X.ToString(), new Vector2(0, 60 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.speed.Y" + stage.player.speed.Y.ToString(), new Vector2(0, 70 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.isHit:" + stage.player.isHit.ToString(), new Vector2(0, 80 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.normalComboCount:" + stage.player.normalComboCount.ToString(), new Vector2(0, 90 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.isDamaged:" + stage.player.isDamaged.ToString(), new Vector2(0, 100 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.jumpCount:" + stage.player.jumpCount.ToString(), new Vector2(0, 110 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.jumpTime:" + stage.player.jumpTime.ToString(), new Vector2(0, 120 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.isToChargingMotion:" + stage.player.isToChargingMotion.ToString(), new Vector2(0, 130 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.isChargingPower:" + stage.player.isChargingPower.ToString(), new Vector2(0, 140 + y), fontColor[1]);
 							if (stage.player.locus.Count > 1)
-								spriteBatch.DrawString(game.Arial2, "player.prevVector[1]:" + stage.player.locus[1].ToString(), new Vector2(0, 150), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "player.hasAttacked:" + stage.player.hasAttacked.ToString(), new Vector2(0, 160), fontColor[1]);
-							spriteBatch.DrawString(game.Arial2, "game.score:" + game.score.ToString(), new Vector2(0, 170), fontColor[1]);
+								spriteBatch.DrawString(game.Arial2, "player.prevVector[1]:" + stage.player.locus[1].ToString(), new Vector2(0, 150 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "player.hasAttacked:" + stage.player.hasAttacked.ToString(), new Vector2(0, 160 + y), fontColor[1]);
+							spriteBatch.DrawString(game.Arial2, "game.score:" + game.score.ToString(), new Vector2(0, 170 + y), fontColor[1]);
 							if (stage.boss is Rival) {
-								spriteBatch.DrawString(game.Arial2, "boss.syurikenTurret:" + (stage.boss as Rival).syuriken.isBeingUsed.ToString(), new Vector2(0, 180), fontColor[1]);
-								spriteBatch.DrawString(game.Arial2, "boss.syurikenTurret.bullets[0]:" + (stage.boss as Rival).syuriken.bullets[0].position.ToString(), new Vector2(0, 190), fontColor[1]);
-                                spriteBatch.DrawString(game.Arial2, "boss.position" + stage.boss.drawPos.ToString(), new Vector2(0, 200), fontColor[1]);
-                                spriteBatch.DrawString(game.Arial2, "boss.speed" + stage.boss.speed.ToString(), new Vector2(0, 210), fontColor[1]);
-								spriteBatch.DrawString(game.Arial2, "boss.max_speed" + maxValue.ToString(), new Vector2(0, 220), fontColor[1]);
+								spriteBatch.DrawString(game.Arial2, "boss.syurikenTurret:" + (stage.boss as Rival).syuriken.isBeingUsed.ToString(), new Vector2(0, 180 + y), fontColor[1]);
+								spriteBatch.DrawString(game.Arial2, "boss.syurikenTurret.bullets[0]:" + (stage.boss as Rival).syuriken.bullets[0].position.ToString(), new Vector2(0, 190 + y), fontColor[1]);
+								spriteBatch.DrawString(game.Arial2, "boss.position" + stage.boss.drawPos.ToString(), new Vector2(0, 200 + y), fontColor[1]);
+								spriteBatch.DrawString(game.Arial2, "boss.speed" + stage.boss.speed.ToString(), new Vector2(0, 210 + y), fontColor[1]);
+								spriteBatch.DrawString(game.Arial2, "boss.max_speed" + maxValue.ToString(), new Vector2(0, 220 + y), fontColor[1]);
 							}
 							for (int i = 0; i < stage.boss.attackList.Count; i++) {
-								spriteBatch.DrawString(game.Arial2, "boss.attackList:" + stage.boss.attackList[i].ToString(), new Vector2(0, 230 + i * 10), fontColor[1]);
+								spriteBatch.DrawString(game.Arial2, "boss.attackList:" + stage.boss.attackList[i].ToString(), new Vector2(0, 230 + i * 10 + y), fontColor[1]);
 							}
 							if (stage.boss.speed.Y > maxValue) maxValue = stage.boss.speed.Y;
 						}

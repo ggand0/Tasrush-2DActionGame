@@ -169,6 +169,8 @@ namespace _2DActionGame
 				damageEffected = true;
 				if (time < deathComboTime) comboCount++;
 				time++;
+				effectPos = new Vector2(position.X + width / 2 > stage.player.position.X + stage.player.width / 2 ? width / 4 : width * 3 / 4
+					, position.Y + height / 2 > stage.player.position.Y + stage.player.height / 2 ? height / 4 : height * 3 / 4);
 
 				int adj = 0;
 				adj = stage.gameStatus.maxComboCount;
@@ -249,14 +251,15 @@ namespace _2DActionGame
 
 		public override void Draw(SpriteBatch spriteBatch)
 		{
-			if (isAlive && isActive) {
+			if (IsActive()) {
 				if (!inDmgMotion) {
 					spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, 0, Vector2.Zero, Vector2.One, !turnsRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally, .0f);
 					DrawComboCount(spriteBatch);
 				} else {// 一旦戻す
 					//spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, 0, Vector2.Zero, Vector2.One, !turnsRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally, .0f);
 					DrawComboCount(spriteBatch);
-                    DrawDamageBlink(spriteBatch, /*new Color(100, 50, 50)*/Color.Red, .05f);//.60f 15f
+                    //DrawDamageBlink(spriteBatch, /*new Color(100, 50, 50)*/Color.Red, .1f);//.05f
+					DrawDamageBlinkOnce(spriteBatch, Color.Red);
 				}
 			}
 		}

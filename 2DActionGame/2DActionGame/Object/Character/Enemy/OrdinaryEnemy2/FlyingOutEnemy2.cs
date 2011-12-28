@@ -53,8 +53,9 @@ namespace _2DActionGame
         {
             double degree;
 			distance = Math.Abs(this.position.X - stage.player.position.X);
-			/*float distanceY = Math.Abs(this.position.Y - stage.player.position.Y);
-			flyingOutDistance = defFlyingOutDistance - distanceY;*/
+			float distanceY = Math.Abs(this.position.Y - stage.player.position.Y);
+			//flyingOutDistance = distanceY;//45度
+			flyingOutDistance = distanceY / 3.0f;
 
 			if (!hasFlownOut) {
 				isOnSomething = false;

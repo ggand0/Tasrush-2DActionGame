@@ -24,6 +24,10 @@ namespace _2DActionGame
         protected override void ButtonUpdate()
         {
 			base.ButtonUpdate();
+			if (KeyInput.IsOnKeyDown(Microsoft.Xna.Framework.Input.Keys.T)) {
+				if (!game.inDebugMode) game.inDebugMode = true;
+				else if (game.inDebugMode) game.inDebugMode = false;
+			}
 
 			if (button[0].isSelected && JoyStick.IsOnKeyDown(3)) {		// Resume
 				isEndScene = true;

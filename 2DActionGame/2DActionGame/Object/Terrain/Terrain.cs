@@ -280,6 +280,7 @@ namespace _2DActionGame
 				targetObject.firstTimeInAFrame = false;
 				isHitCB = false;
 				targetObject.isOnSomething = false;
+				targetObject.isTouchSomeCeiling = false;
 				if (targetObject is Player) (targetObject as Player).isHitLeftSide = false;
 			}
 		}

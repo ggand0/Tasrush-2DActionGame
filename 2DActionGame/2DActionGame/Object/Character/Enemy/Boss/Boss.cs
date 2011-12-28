@@ -260,7 +260,26 @@ namespace _2DActionGame
 				}
 			}
 		}
-
+		protected override void DrawDamageBlinkOnce(SpriteBatch spriteBatch, Color color)
+		{
+			if (blinkCount <= 5) {
+				spriteBatch.Draw(texture, drawPos, animation.rect, Color.White);
+				spriteBatch.End();
+				spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
+				dColor = 1.0f;
+				//spriteBatch.Draw(texture, drawPos, animation.rect, Color.White);//Color.Transparent);//Color.White);
+				spriteBatch.Draw(texture, drawPos, animation.rect, color);
+				spriteBatch.Draw(texture, drawPos, animation.rect, color);
+				spriteBatch.End();
+				spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+			} else if (blinkCount <= 20) {
+				spriteBatch.Draw(texture, drawPos, animation.rect, Color.White);
+			} else if (blinkCount > 20) {
+				inDmgMotion = false;
+				spriteBatch.Draw(texture, drawPos, animation.rect, Color.White);
+			}
+			if (!stage.isPausing) blinkCount++;
+		}
 
 		// コンストラクタ
 		public Boss(Stage stage, float x, float y, int width, int height, int HP)

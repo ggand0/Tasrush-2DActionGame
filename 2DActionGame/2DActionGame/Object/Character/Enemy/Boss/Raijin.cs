@@ -580,7 +580,7 @@ namespace _2DActionGame
 			this.defaultPosition = position;
 
 			defBindPos = new Vector2(100, 0);
-            defBindPosOther = new Vector2(width - 100, 0);
+            defBindPosOther = new Vector2(width - 100 -bindSize.X , 0);
 
 			tmpPosition = defaultPosition + new Vector2(-150, -50);
 			attackPosition = new Vector2(defaultPosition.X - 640, defaultPosition.Y - 50);

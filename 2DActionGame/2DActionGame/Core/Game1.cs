@@ -336,14 +336,14 @@ namespace _2DActionGame
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.White);
-            GraphicsDevice.BlendState = BlendState.AlphaBlend;
+            //GraphicsDevice.BlendState = BlendState.AlphaBlend;
             //GraphicsDevice.BlendState = BlendState.NonPremultiplied;//Opaque;
 
             // TODO: Add your drawing code here
 			//spriteBatch.Begin();
-			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);//SpriteSortMode.BackToFront, BlendState.NonPremultiplied);
+			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);//SpriteSortMode.BackToFront, BlendState.NonPremultiplied); //Additive
 			currentScene.Draw(spriteBatch);
-            dm.Draw(gameTime);
+            //dm.Draw(gameTime); // FPS•\Ž¦
 			spriteBatch.End();
             base.Draw(gameTime);
         }

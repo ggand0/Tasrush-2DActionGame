@@ -105,6 +105,10 @@ namespace _2DActionGame
 		/// </summary>
 		public bool isOnSomething { get; internal set; }
 		/// <summary>
+		/// 何らかのObjectに頭をつけているか
+		/// </summary>
+		public bool isTouchSomeCeiling { get; internal set; } 
+		/// <summary>
 		/// 地形をすり抜けるタイプかどうか：Obstacleなどに活用
 		/// </summary>
 		public bool canSlipThrough { get; internal set; }

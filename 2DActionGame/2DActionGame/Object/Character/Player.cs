@@ -160,7 +160,10 @@ namespace _2DActionGame
 		public bool scrollPush { get; set; }
 		#endregion
         private static readonly int miniJumpWaitTime = 6;//3;//12;
-        private bool miniJump, inJumpCharge;
+        private bool miniJump, inJumpCharge, inDashChargeRight, inDashChargeLeft;
+		//private int dashCount;// Timer作ればよかったorz
+		private FrameTimer dashTimer = new FrameTimer();
+
 		// コンストラクタ
 		public Player()
 			: this(null, 0, 0, 32, 32)
@@ -784,8 +787,45 @@ namespace _2DActionGame
 
 			#endregion
 			#region Moving
+			dashTimer.Update();
 			// 左右移動
 			if (!disableMovingInput) {
+				if (JoyStick.stickDirection == Direction.RIGHT && JoyStick.onStickDirectionChanged && !inDashChargeRight) {
+					inDashChargeRight = true;
+					inDashChargeLeft = false;
+					dashTimer.Start(15);
+				} else if (JoyStick.stickDirection == Direction.RIGHT && JoyStick.onStickDirectionChanged && inDashChargeRight
+					&& dashTimer.TimerState == FrameTimer.State.Run) {// 時間制限つき
+					// ２回押しダッシュ
+					if (!hasDashed) {
+						isEffected = true;
+						dashEffected = true;
+						hasDashed = true;
+					}
+					isDashing = true;
+				}
+				if (JoyStick.stickDirection == Direction.LEFT && JoyStick.onStickDirectionChanged && !inDashChargeLeft) {
+					inDashChargeLeft = true;
+					inDashChargeRight = false;
+					dashTimer.Start(15);
+				} else if (JoyStick.stickDirection == Direction.LEFT && JoyStick.onStickDirectionChanged && inDashChargeLeft
+					&& dashTimer.TimerState == FrameTimer.State.Run) {// 時間制限つき
+					// ２回押しダッシュ
+					if (!hasDashed) {
+						isEffected = true;
+						dashEffected = true;
+						hasDashed = true;
+					}
+					isDashing = true;
+				}
+
+				if (JoyStick.stickDirection == Direction.NEWTRAL 
+					&& (isDashing || !isDashing && (inDashChargeRight || inDashChargeLeft) && dashTimer.TimerState == FrameTimer.State.Finish)) {
+					isDashing = false;
+					hasDashed = false;
+					inDashChargeRight = inDashChargeLeft = false;
+				}
+
 				if (JoyStick.stickDirection == Direction.RIGHT) {
 					turnsRight = true;
 					if (isDashing) {
@@ -869,7 +909,7 @@ namespace _2DActionGame
 				}
 				isDashing = true;
 			}
-			if (JoyStick.IsOnKeyUp(4)) {
+			if (JoyStick.IsOnKeyUp(4) && !inDashChargeRight) {
 				isDashing = false;
 				hasDashed = false;
 			}
@@ -1145,8 +1185,10 @@ namespace _2DActionGame
 				for (int i = 0; i < stickCheck.Length; i++) {
 					if (stickCheck[i] == 1 && !isJumping)          // スティックが倒されている/従事キーが押されている && ジャンプしていない ×buttonCheck[1] == 0
 						if ((i == 0 || i == 1) && !isInJumpAnim) {//buttonCheck[1] == 1)
-							if (buttonCheck[4] == 0) animation.Update(3, 0, 48, 48, 5, 1);
-							else if (buttonCheck[4] == 1) animation.Update(3, 0, 48, 48, 4, 1);
+							/*if (buttonCheck[4] == 0) animation.Update(3, 0, 48, 48, 5, 1);
+							else if (buttonCheck[4] == 1) animation.Update(3, 0, 48, 48, 4, 1);*/
+							if (!isDashing) animation.Update(3, 0, 48, 48, 5, 1);
+							else animation.Update(3, 0, 48, 48, 4, 1);
 							isMoving = true;
 						}
 				}

@@ -48,15 +48,59 @@ namespace _2DActionGame
         public bool inDmgMotion { get; protected set; }
 		protected virtual void DrawDamageBlink(SpriteBatch spriteBatch, Color color, float blinkSpeed)
 		{
+			spriteBatch.End();
+			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
 			if (blinkCount % 5 == 0) e += blinkSpeed;
 			dColor = (float)Math.Sin(e * 8) / 2.0f + 0.5f;
 
-			spriteBatch.Draw(texture, drawPos, animation.rect, color/*Color.Red*/ * dColor);
+			spriteBatch.Draw(texture, drawPos, animation.rect, color * dColor);
             //spriteBatch.Draw(texture, drawPos, animation.rect, Color.Red);
 			blinkCount++;
 
-			if (blinkCount > 20) inDmgMotion = false;
+			if (blinkCount > 20) {
+				dColor = 1.0f;
+				inDmgMotion = false;
+			}
+			spriteBatch.End();
+			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
 		}
+		protected virtual void DrawDamageBlinkOnce(SpriteBatch spriteBatch, Color color)
+		{
+			/*spriteBatch.End();
+			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
+			if (blinkCount <= 3) {
+				dColor = 1.0f;
+				spriteBatch.Draw(texture, drawPos, animation.rect, color * dColor);
+			} else if (blinkCount <= 20) {
+				dColor = 0f;
+				spriteBatch.Draw(texture, drawPos, animation.rect, Color.White);
+			} else if (blinkCount > 20) {
+				dColor = 1.0f;
+				inDmgMotion = false;
+			}
+			blinkCount++;
+
+			spriteBatch.End();
+			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);*/
+			if (blinkCount <= 10) {
+				spriteBatch.Draw(texture, drawPos, animation.rect, Color.White);
+				spriteBatch.End();
+				spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
+				dColor = 1.0f;
+				//spriteBatch.Draw(texture, drawPos, animation.rect, Color.White);//Color.Transparent);//Color.White);
+				spriteBatch.Draw(texture, drawPos, animation.rect, color);
+				spriteBatch.Draw(texture, drawPos, animation.rect, color);
+				spriteBatch.End();
+				spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+			} else if (blinkCount <= 20) {
+				spriteBatch.Draw(texture, drawPos, animation.rect, Color.White);
+			} else if (blinkCount > 20) {
+				inDmgMotion = false;
+				spriteBatch.Draw(texture, drawPos, animation.rect, Color.White);
+			}
+			if (!stage.isPausing) blinkCount++;
+		}
+
         public Character()
             : this(null, 0, 0, 32, 32)
         {
@@ -69,6 +113,7 @@ namespace _2DActionGame
             : base(stage, x, y, width, height)
         {
             this.user = user;
+			effectPos = new Vector2();
         }
 
         public override void Update()
@@ -101,7 +146,8 @@ namespace _2DActionGame
 							spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, 0, Vector2.Zero, 1, SpriteEffects.FlipHorizontally, 0);
 						}
 					} else {
-						DrawDamageBlink(spriteBatch, Color.Red, .60f);
+						//DrawDamageBlink(spriteBatch, Color.Red, .60f);
+
 					}
 				}
             }

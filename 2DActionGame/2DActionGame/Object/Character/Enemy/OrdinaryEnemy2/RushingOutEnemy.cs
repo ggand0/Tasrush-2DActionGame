@@ -92,14 +92,45 @@ namespace _2DActionGame
 				}
 			}
         }
+		protected override void DrawDamageBlinkOnce(SpriteBatch spriteBatch, Color color)
+		{
+			if (blinkCount <= 10) {
+				spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, MathHelper.ToRadians(-degree), new Vector2(width / 2, height / 2), 1, SpriteEffects.None, 0);
+				spriteBatch.End();
+				spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
+
+				dColor = 1.0f;
+				spriteBatch.Draw(texture, drawPos, animation.rect, color, MathHelper.ToRadians(-degree), new Vector2(width / 2, height / 2), 1, SpriteEffects.None, 0);
+				spriteBatch.Draw(texture, drawPos, animation.rect, color, MathHelper.ToRadians(-degree), new Vector2(width / 2, height / 2), 1, SpriteEffects.None, 0);
+				spriteBatch.End();
+				spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+			} else if (blinkCount <= 20) {
+				spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, MathHelper.ToRadians(-degree), new Vector2(width / 2, height / 2), 1, SpriteEffects.None, 0);
+			} else if (blinkCount > 20) {
+				inDmgMotion = false;
+				spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, MathHelper.ToRadians(-degree), new Vector2(width / 2, height / 2), 1, SpriteEffects.None, 0);
+			}
+			if (!stage.isPausing) blinkCount++;
+		}
         public override void Draw(SpriteBatch spriteBatch)
         {
 			if (game.inDebugMode && IsActive()) spriteBatch.DrawString(game.Arial, this.drawPos.ToString(), new Vector2(320, 48), Color.Orange);
 			if (drawPos.X > 600) { }//639
 			if (speed.X > 0) { }//15.6
-			if (IsActive() && IsBeingUsed()) {
-				//base.DrawDamageBlink(spriteBatch, Color.Red, .60f);
+			/*if (IsActive() && IsBeingUsed()) {
+				//base.DrawDamageBlinkOnce(spriteBatch, Color.Red);
 				spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, MathHelper.ToRadians(-degree), new Vector2(width / 2, height / 2), 1, SpriteEffects.None, 0);
+			}*/
+			if (IsActive()) {
+				if (!inDmgMotion) {
+					spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, MathHelper.ToRadians(-degree), new Vector2(width / 2, height / 2), 1, SpriteEffects.None, 0);
+					DrawComboCount(spriteBatch);
+				} else {
+					//spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, 0, Vector2.Zero, Vector2.One, !turnsRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally, .0f);
+					DrawComboCount(spriteBatch);
+					//DrawDamageBlink(spriteBatch, /*new Color(100, 50, 50)*/Color.Red, .1f);//.05f
+					DrawDamageBlinkOnce(spriteBatch, Color.Red);
+				}
 			}
         }
     }
