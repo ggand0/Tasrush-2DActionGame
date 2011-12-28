@@ -115,6 +115,7 @@
     <Compile Include="Core\Scenes\PauseMenu.cs" />
     <Compile Include="Core\Scenes\Scene.cs" />
     <Compile Include="Core\Scenes\SelectScene.cs" />
+    <Compile Include="Core\Scenes\SoundTest.cs" />
     <Compile Include="Core\Scenes\Tutorial.cs" />
     <None Include="Core\Stages\BackGround.cs" />
     <Compile Include="Core\Stages\BossTest.cs" />

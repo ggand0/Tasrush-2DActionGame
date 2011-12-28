@@ -41,7 +41,6 @@ namespace _2DActionGame
 				if (!game.isMuted) cancel.Play(SoundControl.volumeAll, 0f, 0f);
 				SoundControl.Stop();
 				SoundControl.IniMusic("Audio\\BGM\\menu_new");
-				SoundControl.Play();
 			}
 
             if (button[0].isSelected && JoyStick.IsOnKeyDown(3)) {

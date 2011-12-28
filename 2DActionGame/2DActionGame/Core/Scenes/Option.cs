@@ -19,7 +19,7 @@ namespace _2DActionGame
 		public Option(Scene privousScene)
 			: base(privousScene)
 		{
-			buttonNum = 7;
+			buttonNum = 8;
 			button = new Button[buttonNum];
 
 			for (int i = 0; i < button.Length; i++) {
@@ -46,27 +46,41 @@ namespace _2DActionGame
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 				game.graphics.ToggleFullScreen();
             }
-			if (button[2].isSelected && JoyStick.KEY(3) && counter % 10 == 0) {			// Volume Control
-				game.wholeVolume = SoundControl.volumeAll += .05f;
-				if (SoundControl.volumeAll > 1.0f) 
-					game.wholeVolume = SoundControl.volumeAll = 0;
+			if (button[2].isSelected && JoyStick.onStickDirectionChanged/*JoyStick.KEY(3) && counter % 5 == 0*/) {			// Volume Control
+				if (JoyStick.stickDirection == Direction.RIGHT && SoundControl.volumeAll < 1.0f) {
+					game.wholeVolume = SoundControl.volumeAll += .05f;
+					SoundControl.musicInstance.Volume += .05f;
+				} else if (JoyStick.stickDirection == Direction.LEFT && SoundControl.volumeAll > 0f) {
+					game.wholeVolume = SoundControl.volumeAll -= .05f;
+					SoundControl.musicInstance.Volume -= .05f;
+				}
             }
 			if (button[3].isSelected && JoyStick.IsOnKeyDown(3)) {						// Mute
-				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
-				if (!game.isMuted) game.isMuted = true;
-				else game.isMuted = false;
+				if (game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);			// ここだけはわかりやすさのため他のSEの条件の逆にする
+				if (!game.isMuted) {
+					game.isMuted = true;
+					SoundControl.Stop();
+				} else {
+					game.isMuted = false;
+					SoundControl.Play();
+				}
 			}
-			if (button[4].isSelected && JoyStick.IsOnKeyDown(3)) {						// Ranking
+			if (button[4].isSelected && JoyStick.IsOnKeyDown(3)) {													// Sound Test
+				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
+				PushScene(new SoundTest(this));
+			}
+
+
+			if (button[5].isSelected && JoyStick.IsOnKeyDown(3)) {						// Ranking
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 				PushScene(new Ranking(this));
-				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 			}
-            if (button[5].isSelected && JoyStick.IsOnKeyDown(3)) {						// StageSelect
+            if (button[6].isSelected && JoyStick.IsOnKeyDown(3)) {						// StageSelect
                 if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
                 PushScene(new StageSelect(this));
             }
-			if (button[6].isSelected && JoyStick.IsOnKeyDown(3)) {						// Back To Menu
-				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
+			if (button[7].isSelected && JoyStick.IsOnKeyDown(3)) {						// Back To Menu
+				if (!game.isMuted) cancel.Play(SoundControl.volumeAll, 0f, 0f);
 				isEndScene = true;
 			}
         }
@@ -77,12 +91,12 @@ namespace _2DActionGame
             spriteBatch.DrawString(game.Arial, "Option", new Vector2(250, 0), Color.Orange);
             spriteBatch.DrawString(game.Arial, "KeyConfig", new Vector2(200, 50), button[0].color);
 			spriteBatch.DrawString(game.Arial, "Full Screen / Window", new Vector2(200, 100), button[1].color);
-			spriteBatch.DrawString(game.Arial, "BGMVolume", new Vector2(200, 150), button[2].color);
-			spriteBatch.DrawString(game.Arial, "volume : " + SoundControl.volumeAll.ToString(), new Vector2(200, 200), button[2].color);
-			spriteBatch.DrawString(game.Arial, "Mute : " + (game.isMuted ? "On" : "Off"), new Vector2(200, 250), button[3].color);
-			spriteBatch.DrawString(game.Arial, "ViewRanking", new Vector2(200, 300), button[4].color);
-            spriteBatch.DrawString(game.Arial, "StageSelect", new Vector2(200, 350), button[5].color);
-			spriteBatch.DrawString(game.Arial, "Back", new Vector2(200, 420), button[6].color);
+			spriteBatch.DrawString(game.Arial, "BGM volume : " + SoundControl.volumeAll.ToString("F1"), new Vector2(200, 150), button[2].color);
+			spriteBatch.DrawString(game.Arial, "Mute all sound : " + (game.isMuted ? "On" : "Off"), new Vector2(200, 200), button[3].color);
+			spriteBatch.DrawString(game.Arial, "SoundTest", new Vector2(200, 250), button[4].color);
+			spriteBatch.DrawString(game.Arial, "ViewRanking", new Vector2(200, 300), button[5].color);
+            spriteBatch.DrawString(game.Arial, "StageSelect", new Vector2(200, 350), button[6].color);
+			spriteBatch.DrawString(game.Arial, "Back", new Vector2(200, 420), button[7].color);
         }
     }
 }

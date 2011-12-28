@@ -27,7 +27,7 @@ namespace _2DActionGame
 		public override void Load()
 		{
 			base.Load();
-			game.LoadRanking("Ranking.txt", false, "Ranking_original.txt");
+			game.LoadRanking("Ranking.txt", false, "Ranking.txt");//"Ranking_original.txt");
 		}
 
 		protected override void ButtonUpdate()

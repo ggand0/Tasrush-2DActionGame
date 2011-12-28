@@ -149,21 +149,22 @@ namespace _2DActionGame
 			original = Encoding.UTF8.GetString(bs);		// UTF8じゃないと文字化けする
 			//original = sr.ReadToEnd();
 			original = original.TrimEnd(new char[] { '\r', '\n' });
+			if (original == "") return;
 
 			tmp = original.Replace("\r\n", "\n").Split('\n');// 0が無視される...
 			tmp2 = new string[tmp.Length, 2];
-			for (int i = 0; i < tmp.Length-1; i++) {// 最後の行は削られることを想定してlength-1
+			for (int i = 0; i < tmp.Length; i++) {// 最後の行は削られることを想定してlength-1
 				//try {
-					string[] t = tmp[i].Split(' ');
-					tmp2[i, 0] = t[0];
-					tmp2[i, 1] = t[1];
+				string[] t = tmp[i].Split('\t');
+				tmp2[i, 0] = t[0];
+				tmp2[i, 1] = t[1];
 					//tmp2[i, 2] = t[2];
 				/*} catch {
 					throw new Exception("failed ranking decoding.");// 5番目だけ"5 na"で終わってる件ｗｗ buffer[2048]にしたらnanasまでｋｔ...?←やっぱ関係なかった
 					// そもそもbs.lengthの時点で明らかに足りてない
 				}*/
 			}
-			for (int i = 0; i < tmp.Length-1; i++) {
+			for (int i = 0; i < tmp.Length; i++) {
 				/*scores[i].rank = Int32.Parse(tmp2[i, 0]);
 				scores[i].score = Double.Parse(tmp2[i, 2]);
 				scores[i].name = tmp2[i, 1];*/
@@ -206,10 +207,10 @@ namespace _2DActionGame
 
 			// 暗号化＆ファイル書き込み
 			for (int i = 0; i < scores.Count; i++) {
-				output += /*scores[i].rank.ToString() + " " + */scores[i].name.ToString() + " " + scores[i].score + "\r\n";//(i+1).ToString() 
+				output += /*scores[i].rank.ToString() + " " + */scores[i].name.ToString() + "\t" + scores[i].score + "\r\n";//(i+1).ToString() 
 			}
 			//output = output.TrimEnd(new char[] { '\r', '\n' });
-			output += "6 dummy 100\r\n";
+			output += "dummy 100\r\n";
 			MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(output));
 			Encryption.EncryptionData(ms, fileName);
 			/*sw.Write(output);
@@ -269,7 +270,7 @@ namespace _2DActionGame
             // TODO: use this.content to load your game content here
 			PushScene(new MainTitle(null));
 			//EvaluateScore("Ranking.txt");
-			LoadRanking("Ranking.txt", false, "Ranking_original.txt");
+			LoadRanking("Ranking.txt", false, "Ranking.txt");//"Ranking_original.txt");
 
 			// Fonts
 			Arial = Content.Load<SpriteFont>("General\\Arial32");
