@@ -140,9 +140,9 @@ namespace _2DActionGame
 
 			for (int i = 0; i < buttonNum; i++) {
 				if (button[i].isSelected) //spriteBatch.Draw(button[i].texture, Vector2.Zero, Color.White);
-					spriteBatch.DrawString(game.Arial2, button[i].name, new Vector2(100, i * 20), Color.White);
+					spriteBatch.DrawString(game.menuFont, button[i].name, new Vector2(100, i * 20), Color.White);
 			}
-			if (waitingInput) spriteBatch.DrawString(game.Arial2, "waiting Input", new Vector2(200, 20), Color.White);
+			if (waitingInput) spriteBatch.DrawString(game.menuFont, "waiting Input", new Vector2(200, 20), Color.White);
 		}
 	}
 }

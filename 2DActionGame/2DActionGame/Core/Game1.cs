@@ -57,7 +57,7 @@ namespace _2DActionGame
 
 		// Font
 		public SpriteFont Arial { get; private set; }
-		public SpriteFont Arial2 { get; private set; }
+		public SpriteFont menuFont { get; private set; }
 		public SpriteFont pumpDemi { get; private set; }
         
         // Game
@@ -274,7 +274,7 @@ namespace _2DActionGame
 
 			// Fonts
 			Arial = Content.Load<SpriteFont>("General\\Arial32");
-			Arial2 = Content.Load<SpriteFont>("General\\Arial10");
+			menuFont = Content.Load<SpriteFont>("General\\Arial14");
 			pumpDemi = Content.Load<SpriteFont>("General\\Pump_Demi_Bold");
             dm = new DebugMessage(this, spriteBatch);
             dm.Initialize();

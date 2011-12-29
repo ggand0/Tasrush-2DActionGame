@@ -13,44 +13,54 @@ namespace _2DActionGame
 	public class SelectScene : Scene
 	{
 		private static readonly int sensitivity = 5;
-
+		protected string sceneTitle;
+		protected string[] menuString;
+		protected static Vector2 TITLE_POSITION;
+		protected Vector2 TEXT_POSITION;
 		protected Button[] button;
 		protected int buttonNum, curButton;
+		protected bool drawBackGround = true;
 
-		public SelectScene(Scene privousScene/*, params Button[] button*/)
+		public SelectScene(Scene privousScene)
 			: base(privousScene)
 		{
-			/*this.button = button;
-			for (int i = 0; i < button.Length; i++) button[i].color = Color.Blue;*/
 		}
 
 		public override void Load()
 		{
+			TEXT_POSITION = new Vector2(Game1.Width / 2,
+				Game1.Height / 2 - game.menuFont.MeasureString("A").Y * (buttonNum * 3 / 4));
+			TITLE_POSITION = new Vector2(Game1.Width / 2, 0);
 			backGround = content.Load<Texture2D>("General\\Menu\\MenuBG");
 			mask = content.Load<Texture2D>("General\\Menu\\MaskTexture");
 		}
+		protected virtual void UpdateTexts()
+		{
+			TEXT_POSITION = new Vector2(Game1.Width / 2,
+				Game1.Height / 2 - game.menuFont.MeasureString("A").Y * (buttonNum * 3 / 4));
+		}
 		public override void Update(double dt)
 		{
-			if (counter % sensitivity == 0) {// Controllerを使って書ければcounterを消せる
+			if (counter % sensitivity == 0) {
 				if (JoyStick.stickDirection == Direction.DOWN) curButton++;
 				else if (JoyStick.stickDirection == Direction.UP) curButton--;
 			}
-			Debug();
-
 			if (curButton > buttonNum - 1) curButton = buttonNum - 1;
-			else if (curButton < 0) curButton = 0;
+			else if (curButton < 0)	curButton = 0;
 
-			for (int i = 0; i < buttonNum; i++)
+			for (int i = 0; i < buttonNum; i++) {
 				if (i == curButton) {
 					button[i].isSelected = true;
 					button[i].color = Color.Orange;
-				}
-				else {
+				} else {
 					button[i].isSelected = false;
 					button[i].color = Color.Blue;
 				}
+			}
 
 			ButtonUpdate();
+			UpdateTexts();
+			Debug();
 			counter++;
 		}
 		protected virtual void ButtonUpdate()
@@ -63,7 +73,20 @@ namespace _2DActionGame
 
 		public override void Draw(SpriteBatch spriteBatch)
 		{
-			spriteBatch.Draw(backGround, Vector2.Zero, Color.White);
+			if (drawBackGround) spriteBatch.Draw(backGround, Vector2.Zero, Color.White);
+
+			Vector2 origin = game.Arial.MeasureString(sceneTitle) / 2;
+			Vector2 v = TEXT_POSITION;
+			spriteBatch.DrawString(game.Arial, sceneTitle, TITLE_POSITION + new Vector2(0, origin.Y * 1), Color.DarkOrange, 0, origin, 1, SpriteEffects.None, 0);
+
+			for (int i = 0; i < buttonNum; i++) {
+				origin = game.menuFont.MeasureString(button[i].name) / 2;
+				game.spriteBatch.DrawString(game.menuFont, button[i].name,
+					v, (i == curButton ? Color.White : Color.Gray),
+				   0, origin, 1, SpriteEffects.None, 0);
+				//1列分空けて次のメニューを表示
+				v.Y += origin.Y * 4;
+			}
 		}
 	}
 }

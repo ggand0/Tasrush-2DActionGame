@@ -379,7 +379,7 @@ namespace _2DActionGame
 					stage.hasEffectedBeginning = true;
 				}
 			}
-			time++;
+			if (!stage.isPausing) time++;
 		}
 	}
 }

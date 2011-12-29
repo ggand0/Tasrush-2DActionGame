@@ -110,7 +110,7 @@
     <Compile Include="Core\Scenes\KeyConfig.cs" />
     <Compile Include="Core\Scenes\LvlSelect.cs" />
     <Compile Include="Core\Scenes\MainMenu.cs" />
-    <Compile Include="Core\Scenes\MianTitle.cs" />
+    <Compile Include="Core\Scenes\MainTitle.cs" />
     <Compile Include="Core\Scenes\Option.cs" />
     <Compile Include="Core\Scenes\PauseMenu.cs" />
     <Compile Include="Core\Scenes\Scene.cs" />

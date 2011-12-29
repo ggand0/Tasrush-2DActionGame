@@ -19,11 +19,23 @@ namespace _2DActionGame
 		public Option(Scene privousScene)
 			: base(privousScene)
 		{
+			sceneTitle = "Option";
 			buttonNum = 8;
 			button = new Button[buttonNum];
+			menuString = new string[] { 
+				"KeyConfig",
+				"Full Screen / Window",
+				"BGM volume : " + SoundControl.volumeAll.ToString("F1"),
+				"Mute all sound " + (game.isMuted ? "On" : "Off"),
+				"SoundTest",
+				"ViewRanking",
+				"StageSelect",
+				"Back" 
+			};
 
 			for (int i = 0; i < button.Length; i++) {
 				button[i].color = Color.Blue;
+				button[i].name = menuString[i];
 			}
 
 			Load();
@@ -34,6 +46,12 @@ namespace _2DActionGame
 			base.Load();
 			button[0].texture = content.Load<Texture2D>("General\\Menu\\Option");
         }
+		protected override void UpdateTexts()
+		{
+			base.UpdateTexts();
+			button[2].name = "BGM volume : " + SoundControl.volumeAll.ToString("F2");
+			button[3].name = "Mute all sound " + (game.isMuted ? "On" : "Off");
+		}
         protected override void ButtonUpdate()
         {
 			base.ButtonUpdate();
@@ -47,10 +65,10 @@ namespace _2DActionGame
 				game.graphics.ToggleFullScreen();
             }
 			if (button[2].isSelected && JoyStick.onStickDirectionChanged/*JoyStick.KEY(3) && counter % 5 == 0*/) {			// Volume Control
-				if (JoyStick.stickDirection == Direction.RIGHT && SoundControl.volumeAll < 1.0f) {
+				if (JoyStick.stickDirection == Direction.RIGHT && SoundControl.volumeAll <= .95f) {
 					game.wholeVolume = SoundControl.volumeAll += .05f;
 					SoundControl.musicInstance.Volume += .05f;
-				} else if (JoyStick.stickDirection == Direction.LEFT && SoundControl.volumeAll > 0f) {
+				} else if (JoyStick.stickDirection == Direction.LEFT && SoundControl.volumeAll >= 0.05f) {
 					game.wholeVolume = SoundControl.volumeAll -= .05f;
 					SoundControl.musicInstance.Volume -= .05f;
 				}
@@ -87,16 +105,15 @@ namespace _2DActionGame
 
         public override void Draw(SpriteBatch spriteBatch) 
         {
-            spriteBatch.Draw(backGround, new Vector2(0, 0), Color.White);
-            spriteBatch.DrawString(game.Arial, "Option", new Vector2(250, 0), Color.Orange);
-            spriteBatch.DrawString(game.Arial, "KeyConfig", new Vector2(200, 50), button[0].color);
+			base.Draw(spriteBatch);
+            /*spriteBatch.DrawString(game.Arial, "KeyConfig", new Vector2(200, 50), button[0].color);
 			spriteBatch.DrawString(game.Arial, "Full Screen / Window", new Vector2(200, 100), button[1].color);
 			spriteBatch.DrawString(game.Arial, "BGM volume : " + SoundControl.volumeAll.ToString("F1"), new Vector2(200, 150), button[2].color);
 			spriteBatch.DrawString(game.Arial, "Mute all sound : " + (game.isMuted ? "On" : "Off"), new Vector2(200, 200), button[3].color);
 			spriteBatch.DrawString(game.Arial, "SoundTest", new Vector2(200, 250), button[4].color);
 			spriteBatch.DrawString(game.Arial, "ViewRanking", new Vector2(200, 300), button[5].color);
             spriteBatch.DrawString(game.Arial, "StageSelect", new Vector2(200, 350), button[6].color);
-			spriteBatch.DrawString(game.Arial, "Back", new Vector2(200, 420), button[7].color);
+			spriteBatch.DrawString(game.Arial, "Back", new Vector2(200, 420), button[7].color);*/
         }
     }
 }

@@ -1349,8 +1349,8 @@ namespace _2DActionGame
 					//BGM = game.soundBank.GetCue("boss");
 					SoundControl.IniMusic("Audio\\BGM\\hard_last");
 				} else {
-					//BGM = game.soundBank.GetCue("boss_nomal");
-					SoundControl.IniMusic("Audio\\BGM\\boss_nomal");
+					//BGM = game.soundBank.GetCue("boss_normal");
+					SoundControl.IniMusic("Audio\\BGM\\boss_normal");
 				} SoundControl.musicInstance.IsLooped = true;
 
 				if (!game.isMuted) SoundControl.Play();

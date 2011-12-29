@@ -42,10 +42,10 @@ namespace _2DActionGame
 
 		public override void Draw(SpriteBatch spriteBatch)
 		{
-			base.Draw(spriteBatch);
+			if (drawBackGround) spriteBatch.Draw(backGround, Vector2.Zero, Color.White);
 			for (int i = 0; i < game.scores.Count; i++) {
 				//spriteBatch.DrawString(game.Arial2, game.scores[i].ToString(), new Vector2(100, 100 + i * 50), Color.White);
-				spriteBatch.DrawString(game.Arial2
+				spriteBatch.DrawString(game.menuFont
 					, (i+1).ToString()/*game.scores[i].rank*/ + " " + game.scores[i].name + " " + game.scores[i].score.ToString(), new Vector2(100, 30 + i * 50), Color.White);
 			}
 		}

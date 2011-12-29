@@ -171,7 +171,7 @@ namespace _2DActionGame
 			spriteBatch.Draw(texture2, drawPos, animation2.rect, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, .2f);
 			spriteBatch.Draw(texture2, drawPos + new Vector2(0, height - animation2.rect.Height), animation2.rect, Color.White, 0, new Vector2(), new Vector2(1, 1), SpriteEffects.FlipVertically, .2f);
 			// debug
-			spriteBatch.DrawString(game.Arial2, height.ToString(), drawPos, Color.Red);
+			spriteBatch.DrawString(game.menuFont, height.ToString(), drawPos, Color.Red);
 			if (height > 242) { }
 		}
 

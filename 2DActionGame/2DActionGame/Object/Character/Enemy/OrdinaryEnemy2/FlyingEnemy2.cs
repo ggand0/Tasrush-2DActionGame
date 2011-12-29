@@ -73,9 +73,9 @@ namespace _2DActionGame
         {
             base.Draw(spriteBatch);
 			if (game.inDebugMode) {
-				spriteBatch.DrawString(game.Arial2, "t.pos : " + turret.position.ToString(), new Vector2(300, 50), Color.White);
-				spriteBatch.DrawString(game.Arial2, "b[0].pos : " + turret.bullets[0].position.ToString(), new Vector2(300, 100), Color.White);
-				spriteBatch.DrawString(game.Arial2, "this.pos : " + position.ToString(), new Vector2(300, 150), Color.White);
+				spriteBatch.DrawString(game.menuFont, "t.pos : " + turret.position.ToString(), new Vector2(300, 50), Color.White);
+				spriteBatch.DrawString(game.menuFont, "b[0].pos : " + turret.bullets[0].position.ToString(), new Vector2(300, 100), Color.White);
+				spriteBatch.DrawString(game.menuFont, "this.pos : " + position.ToString(), new Vector2(300, 150), Color.White);
 			}
         }
 

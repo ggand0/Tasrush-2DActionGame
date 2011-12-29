@@ -32,10 +32,6 @@ namespace _2DActionGame
 			if (game.random.Next(1, 20) == 1) texture[2] = content.Load<Texture2D>("General\\OP\\OP3");
 			texture[3] = content.Load<Texture2D>("General\\Menu\\PushStart");
 
-			//music = content.Load<SoundEffect>("Audio\\BGM\\menu_new");
-			//musicInstance = music.CreateInstance();
-			//musicInstance.Play(SoundControl.volumeAll, 0f, 0f);
-			
 			SoundControl.IniMusic("Audio\\BGM\\menu_new");
 			KeyConfig.LoadXML("KeyConfig", "Xml\\KeyConfig.xml");
         }
