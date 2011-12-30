@@ -31,7 +31,7 @@ namespace _2DActionGame
 		public static readonly int normaSecondComboTime = 40;
 		public static readonly int thrustingTime = 40;
 		public static readonly Vector2 defReflectSpeed = new Vector2(4, -6);
-        private static readonly int thrustPowerConsumption = 800;
+		private static readonly int thrustPowerConsumption = 360;//800;
         
 		private static readonly int airReflectLimit = 15;//30
         private static readonly int walkingFootStepRatio = 10;
@@ -134,6 +134,7 @@ namespace _2DActionGame
 		/// コンボカウンタ：現在のコンボ数
 		/// </summary>
 		public int normalComboCount { get; private set; }
+		public int thrustComboCount { get; private set; }
 
 		// Behavior
 		/// <summary>
@@ -160,7 +161,7 @@ namespace _2DActionGame
 		public bool scrollPush { get; set; }
 		#endregion
         private static readonly int miniJumpWaitTime = 6;//3;//12;
-        private bool miniJump, inJumpCharge, inDashChargeRight, inDashChargeLeft;
+        private bool miniJump, inJumpCharge, inDashChargeRight, inDashChargeLeft, inThrustCharge;
 		//private int dashCount;// Timer作ればよかったorz
 		private FrameTimer dashTimer = new FrameTimer();
 
@@ -463,9 +464,9 @@ namespace _2DActionGame
 			hasAttacked = false;
 			// NormalCombo: △ △ ○
 			// LaunchCombo: △ △ △＋↑ ○/× △...
-
-			#region cross(rect)
-			if (/*KeyInput.IsOnKeyDown(Keys.Down) || */JoyStick.IsOnKeyDown(0)) {
+			// 3/X, 0/A, 1/Z, 2/C
+			#region Mega Thrust
+			/*if (JoyStick.IsOnKeyDown(0)) {
 				if (normalComboCount == 4) {
 					if (time < normaSecondComboTime) {
 						hasAttacked = isAttacking = isInCombo = isCuttingDown = sword.isBeingUsed = true;
@@ -473,25 +474,44 @@ namespace _2DActionGame
 						time = 0;
 						inCombos[normalComboCount] = false;
 						inCombos[++normalComboCount] = true;
-						/*inCombo4 = false;
-						inCombo5 = true;
-						normalComboCount = 5;*/
+						//inCombo4 = false;
+						//inCombo5 = true;
+						//normalComboCount = 5;
 					}
 				}
+			}*/
+			if (JoyStick.onStickDirectionChanged && JoyStick.stickDirection == Direction.DOWN) {
+				if (normalComboCount == 0) {
+					hasAttacked = isAttacking = isInCombo = true;
+					inCombos[++normalComboCount] = true;
+					thrustComboCount++;
+					time = 0;
+				}
 			}
-			#endregion
-			#region rect
-			if (TASpower >= thrustPowerConsumption && /*KeyInput.IsOnKeyDown(Keys.Right) || */JoyStick.IsOnKeyDown(0) && thrustCount >= thrustingTime) {
+			if (JoyStick.onStickDirectionChanged && JoyStick.stickDirection == Direction.UP) {
+				if (normalComboCount == 1) {
+					hasAttacked = isAttacking = isInCombo = true;
+					inCombos[normalComboCount] = false;
+					inCombos[++normalComboCount] = true;
+					thrustComboCount++;
+					time = 0;
+				}
+			}
+			if (TASpower >= thrustPowerConsumption && JoyStick.IsOnKeyDown(1) && thrustCount >= thrustingTime) {
 				//BackStep();
-				if (normalComboCount == 0 || normalComboCount == 2 || normalComboCount == 3) {
+				if (normalComboCount == 2 && thrustComboCount == 2) {
 					hasAttacked = isAttacking = isInCombo = isThrusting = sword.isBeingUsed = true;
 					isAttacking2 = false;
 
-					inCombos[1] = true;
+					inCombos[normalComboCount] = false;
+					inCombos[++normalComboCount] = true;
+					//inCombos[1] = true;
 					//inCombo1 = true;
-					normalComboCount = 3;
+
+					//normalComboCount = 3;
+					thrustComboCount++;
 					time = thrustCount = sword.degreeCounter = 0;
-					//TASpower -= thrustPowerConsumption;	// デバッグのため
+					TASpower -= thrustPowerConsumption;
 				}
 			}
 			#endregion
@@ -516,19 +536,19 @@ namespace _2DActionGame
 						inCombos[normalComboCount] = false;
 						inCombos[++normalComboCount] = true;
 					}
-				} else if (normalComboCount == 4) {
+				} /*else if (normalComboCount == 4) {// 吹き飛ばし
 					if (time < normaSecondComboTime) {// hasAttacked = trueはデフォで無
 						hasAttacked = isAttacking = isCuttingAway = isInCombo = sword.isBeingUsed = true;
 						isTrackingEnemy = false;
 						
-						/*normalComboCount = 5;
-						inCombo4 = false;
-						inCombo5 = true;*/
+						//normalComboCount = 5;
+						//inCombo4 = false;
+						//inCombo5 = true;
 						inCombos[normalComboCount] = false;
 						inCombos[++normalComboCount] = true;
 						time = 0;
 					}
-				} else if (normalComboCount == 6) {
+				} else if (normalComboCount == 6) {// 吹き飛ばし
 					if (time < normaSecondComboTime) {// hasAttacked = trueはデフォで無
 						hasAttacked = isAttacking = isCuttingAway = isInCombo = sword.isBeingUsed = true;
 						isAttacking2 = false;
@@ -536,15 +556,15 @@ namespace _2DActionGame
 						normalComboCount = 0;//7
 						inCombos[6] = false;
 						inCombos[7] = true;
-						/*inCombo6 = false;
-						inCombo7 = true;*/
+						//inCombo6 = false;
+						//inCombo7 = true;
 						time = 0;
 					}
-				}
+				}*/
 			}
 			#endregion
 			#region triangle
-			if (/*KeyInput.IsOnKeyDown(Keys.Up) ||*/ JoyStick.IsOnKeyDown(1)) {
+			if (JoyStick.IsOnKeyDown(1)) {
 				if (normalComboCount == 0) {
 					hasAttacked = isAttacking = isAttacking1 = isInCombo = sword.isBeingUsed = true;
 					isAttacking2 = false;
@@ -602,6 +622,20 @@ namespace _2DActionGame
 					}
 				}
 			}
+
+			/*if (TASpower >= thrustPowerConsumption && JoyStick.KeyTime(1) >= thrustingTime) {// && thrustCount >= thrustingTime
+				//BackStep();
+				if (normalComboCount == 0 || normalComboCount == 2 || normalComboCount == 3) {
+					hasAttacked = isAttacking = isInCombo = isThrusting = sword.isBeingUsed = true;
+					isAttacking2 = false;
+
+					inCombos[1] = true;
+					//inCombo1 = true;
+					normalComboCount = 3;
+					time = thrustCount = sword.degreeCounter = 0;
+					//TASpower -= thrustPowerConsumption;	// デバッグのため
+				}
+			}*/
 			#region ShootBeam
 			/*if (JoyStick.KEY(1) && normalComboCount==1) {
                 if(time > 60) {
@@ -632,6 +666,49 @@ namespace _2DActionGame
                 }
             }*/
 			#endregion
+			#endregion
+			#region D-Pad
+			if (JoyStick.stickDirection == Direction.RIGHT) {// 吹き飛ばし
+				if (normalComboCount == 4) {// 吹き飛ばし
+					if (time < normaSecondComboTime) {
+						hasAttacked = isAttacking = isCuttingAway = isInCombo = sword.isBeingUsed = true;
+						isTrackingEnemy = false;
+
+						//normalComboCount = 5;
+						//inCombo4 = false;
+						//inCombo5 = true;
+						inCombos[normalComboCount] = false;
+						inCombos[++normalComboCount] = true;
+						time = 0;
+					}
+				} else if (normalComboCount == 6) {
+					if (time < normaSecondComboTime) {
+						hasAttacked = isAttacking = isCuttingAway = isInCombo = sword.isBeingUsed = true;
+						isAttacking2 = false;
+
+						normalComboCount = 0;//7
+						inCombos[6] = false;
+						inCombos[7] = true;
+						//inCombo6 = false;
+						//inCombo7 = true;
+						time = 0;
+					}
+				}
+			}
+			if (JoyStick.stickDirection == Direction.DOWN) {// 斬り落とし
+				if (normalComboCount == 4 || normalComboCount == 6) {
+					if (time < normaSecondComboTime) {
+						hasAttacked = isAttacking = isInCombo = isCuttingDown = sword.isBeingUsed = true;
+						isTrackingEnemy = isCuttingUp = false;
+						time = 0; normalComboCount = 0;
+						inCombos[normalComboCount] = false;
+						inCombos[++normalComboCount] = true;
+						//inCombo4 = false;
+						//inCombo5 = true;
+						//normalComboCount = 5;
+					}
+				}
+			}
 			#endregion
 			#region triangle+↑
 			// 押しっぱなし+↑ではなく、↑押しっぱで△3回押して斬り上げる感じのほうがいいらしい　要修正
@@ -775,12 +852,12 @@ namespace _2DActionGame
 			}*/
             if (time > normaSecondComboTime) { }
 			for (int i = 1; i < inCombos.Length; i++) {
-                if (inCombos[1] && time > normaFirstComboTime && !JoyStick.KEY(1) || inCombos[2] && time > normaSecondComboTime && !isChargingPower
-                    || i >= 3 && i < 7 && inCombos[i] && time > normaSecondComboTime || inCombos[7] && time > 10) {
+                if (i == 1 && inCombos[i] && time > normaFirstComboTime && !JoyStick.KEY(1) || i == 2 && inCombos[i] && time > normaSecondComboTime && !isChargingPower
+                    || i >= 3 && i < 7 && inCombos[i] && time > normaSecondComboTime || i == 7 && inCombos[i] && time > 10) {
 					isInCombo = false;
-					if (inCombos[i]) inCombos[i] = false;
+					/*if (inCombos[i]) */inCombos[i] = false;
 					if (i == 4) isTrackingEnemy = false;
-					normalComboCount = time = 0;
+					thrustComboCount = normalComboCount = time = 0;
 				}
 			}
 			#endregion

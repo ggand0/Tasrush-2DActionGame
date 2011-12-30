@@ -76,8 +76,18 @@ namespace _2DActionGame
 			if (drawBackGround) spriteBatch.Draw(backGround, Vector2.Zero, Color.White);
 
 			Vector2 origin = game.Arial.MeasureString(sceneTitle) / 2;
-			Vector2 v = TEXT_POSITION;
 			spriteBatch.DrawString(game.Arial, sceneTitle, TITLE_POSITION + new Vector2(0, origin.Y * 1), Color.DarkOrange, 0, origin, 1, SpriteEffects.None, 0);
+			DrawTexts(spriteBatch, 1);
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="spriteBatch"></param>
+		/// <param name="textMargin">文字何列分空けるか</param>
+		protected virtual void DrawTexts(SpriteBatch spriteBatch, float textMargin)
+		{
+			Vector2 v = TEXT_POSITION;
+			Vector2 origin;
 
 			for (int i = 0; i < buttonNum; i++) {
 				origin = game.menuFont.MeasureString(button[i].name) / 2;
@@ -85,7 +95,7 @@ namespace _2DActionGame
 					v, (i == curButton ? Color.White : Color.Gray),
 				   0, origin, 1, SpriteEffects.None, 0);
 				//1列分空けて次のメニューを表示
-				v.Y += origin.Y * 4;
+				v.Y += origin.Y * 4 * textMargin;//origin.Y * 4;
 			}
 		}
 	}

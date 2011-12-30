@@ -43,6 +43,5 @@ namespace _2DActionGame
 		public static void Pause() { musicInstance.Pause(); }
 		public static void Stop() { musicInstance.Stop(); }
 		public static void Resume() { musicInstance.Resume(); }
-
 	}
 }
