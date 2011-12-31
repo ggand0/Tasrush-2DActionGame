@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
 
 namespace _2DActionGame
 {
@@ -61,24 +63,28 @@ namespace _2DActionGame
         private int frameNumber;
         private int updateCount = 1;
         private double score_prev;
+        private SoundEffect tasSound;
+        private ContentManager content;
         
         private readonly int frameRange = 120;
         private readonly int updateSpeed = 2;// "1 / updateSpeed"倍速で逆再生する
         #endregion
 
-        public Reverse(Stage stage, Game1 game)
+        public Reverse(Stage stage, Game1 game, ContentManager content)
         {
             this.game = game;
             this.stage = stage;
+            this.content = content;
             nowlogdata = new LogData();
             reverseLog = new List<LogData>();
             score_prev = 0;
+            tasSound = content.Load<SoundEffect>("Audio\\SE\\TAS");
         }
 
         public void RegenerateTAS()
         {
             //時間回復
-            if(stage.player.TASpower < stage.player.MAXTAS) {
+            if(stage.player.TASpower < stage.player.MAXTAS && !stage.toGameOver) {
                 if (game.isHighLvl) {
                     stage.player.TASpower += 1;
                 } else {
@@ -98,6 +104,26 @@ namespace _2DActionGame
             }
             score_prev = game.stageScores[game.stageNum-1];
         }
+
+        public int ReduceTAS()
+        {
+            switch (stage.player.MAXTAS)
+            {
+                case 1800:
+                    if (stage.player.TASpower > 900) { stage.player.TASpower = 900; }
+                    stage.player.MAXTAS = 900;
+                    break;
+                case 900:
+                    if (stage.player.TASpower > 450) { stage.player.TASpower = 450; }
+                    stage.player.MAXTAS = 450;
+                    break;
+                case 450:
+                    stage.player.MAXTAS = 0;
+                    break;
+            }
+            return stage.player.MAXTAS;
+        }
+
         public void UpdateLog()
         {
             if (!isReversed && stage.player.isAlive) {
@@ -143,7 +169,7 @@ namespace _2DActionGame
         public void Update()
         {
             updateCount += 1;
-            stage.player.TASpower += -(stage.player.MAXTAS / 300);
+            stage.player.TASpower += -(stage.player.defMAXTAS / 300);
             keystate_now = Keyboard.GetState();
             UpdateKeyPress(keystate_now);
 
@@ -193,8 +219,8 @@ namespace _2DActionGame
             isReversed = false;
             if (isAutoReversed)
                 isAutoReversed = false;
-            stage.player.speed.X = 0;//or reverseLog[frameNumber - 1].playervx;
-            stage.player.speed.Y = 0;//reverseLog[frameNumber - 1].playervy;
+            stage.player.speed.X = 0;
+            stage.player.speed.Y = 0;
             updateCount = 1;
         }
 
@@ -212,5 +238,7 @@ namespace _2DActionGame
                 stage.ScrollUpdateReverse((stage.camera.position.X + reverseLog[frameNumber - 1].cameraVector.X) / 2);
             }
         }
+
+        public void PlaySound() { tasSound.Play(SoundControl.volumeAll, 0f, 0f); }
     }
 }

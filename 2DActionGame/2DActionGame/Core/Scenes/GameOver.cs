@@ -48,14 +48,20 @@ namespace _2DActionGame
 				SoundControl.IniMusic("Audio\\BGM\\menu_new");
 				BackScene(5);
             }
-            if (JoyStick.KEY(5)) {
-                isEndScene = true;
-                (upperScene as Stage).player.isAlive = true;
-                (upperScene as Stage).toGameOver = false;
-                (upperScene as Stage).hasEffectedPlayerDeath = false;
-                (upperScene as Stage).player.HP = 1;
-                (upperScene as Stage).reverse.StartReverse();
-                (upperScene as Stage).ResetDeathEffect();
+            if (JoyStick.KEY(5) && game.avilityNum == 0 ) {
+                if ((upperScene as Stage).reverse.ReduceTAS() != 0)
+                {
+                    SoundControl.Stop();
+                    SoundControl.RestoreMusic();
+                    SoundControl.Play();
+                    if (!game.isMuted) { (upperScene as Stage).reverse.PlaySound(); }
+                    isEndScene = true;
+                    (upperScene as Stage).player.isAlive = true;
+                    (upperScene as Stage).toGameOver = false;
+                    (upperScene as Stage).hasEffectedPlayerDeath = false;
+                    (upperScene as Stage).reverse.StartReverse();
+                    (upperScene as Stage).ResetDeathEffect();
+                }
             }
         }
 

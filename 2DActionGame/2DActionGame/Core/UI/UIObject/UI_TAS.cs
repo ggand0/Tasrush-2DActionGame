@@ -22,9 +22,8 @@ namespace _2DActionGame
         public void Update()
         {
             if (data != stage.player.TASpower) {
-
                 data = stage.player.TASpower;
-                position.X = ((data / (float)stage.player.MAXTAS) * 150) - 150;
+                position.X = ((data / (float)stage.player.defMAXTAS) * 150) - 150;
             }
 
         }

@@ -17,7 +17,7 @@ namespace _2DActionGame
 		public static ContentManager content { get; private set; }
 		public static float volumeAll = defVolume;
 		public static SoundEffect menuMusic, music;
-		public static SoundEffectInstance menuMusicInstance, musicInstance;
+		public static SoundEffectInstance menuMusicInstance, musicInstance,musicTmp;
 
 		static SoundControl()
 		{
@@ -38,6 +38,9 @@ namespace _2DActionGame
 			musicInstance = music.CreateInstance();
 			musicInstance.Volume = defVolume;
 		}
+
+        public static void CacheMusic(SoundEffectInstance musicInstance) { musicTmp = SoundControl.musicInstance; }
+        public static void RestoreMusic() { SoundControl.musicInstance = musicTmp; }
 
         public static void Play() { musicInstance.Volume = SoundControl.volumeAll; musicInstance.Play();}
 		public static void Pause() { musicInstance.Pause(); }
