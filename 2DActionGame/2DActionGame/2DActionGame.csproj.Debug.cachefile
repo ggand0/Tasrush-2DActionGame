@@ -1,5 +1,4 @@
 Content\Audio\BGM\boss.xnb
-Content\Audio\BGM\boss_normal.xnb
 Content\Audio\BGM\cave.xnb
 Content\Audio\BGM\clear.xnb
 Content\Audio\BGM\ending_medley_newnew.xnb
@@ -156,7 +155,6 @@ Content\Object\BackGround\BackGround-11.xnb
 Content\Object\BackGround\BackGround-12.xnb
 Content\Object\BackGround\BackGround01.xnb
 Content\Object\BackGround\BackGround02.xnb
-Content\Object\BackGround\BackGround03.xnb
 Content\Object\BackGround\BackGround11.xnb
 Content\Object\BackGround\BackGround12.xnb
 Content\Object\BackGround\BackGround13.xnb
@@ -337,3 +335,5 @@ Content\General\Arial14.xnb
 Content\General\Arial32.xnb
 Content\General\Pump_Demi_Bold.xnb
 Content\General\Pump_Demi_Bold2.xnb
+Content\Object\BackGround\BackGround03.xnb
+Content\Audio\BGM\boss_normal.xnb
