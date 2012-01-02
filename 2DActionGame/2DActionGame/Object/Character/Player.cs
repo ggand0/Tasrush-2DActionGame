@@ -42,6 +42,7 @@ namespace _2DActionGame
 		public readonly float firstJumpSpeed = -13.0f;
 		public readonly float secondJumpSpeed = -10.0f;
 		public readonly int initialTAS = 900;
+        public readonly int defMAXTAS = 1800;
 		
 		// Basis
 		private SoundEffect footstep, jumpSound, landingSound, tasSound, damageSound;
@@ -178,7 +179,7 @@ namespace _2DActionGame
 			: base(stage, x, y, width, height)
 		{
 			LoadXML("Player", "Xml\\Objects_Base.xml");
-            this.MAXTAS = 1800;
+            this.MAXTAS = defMAXTAS;
 			this.TASpower = initialTAS;
 			this.HP = HP;
 			this.activeDistance = defActiveDistance;
@@ -423,7 +424,7 @@ namespace _2DActionGame
 							break;
 					}
 				} else {
-					if (JoyStick.KEY(5))
+					if (JoyStick.IsOnKeyDown(5))
 						switch (game.avilityNum) {
 							case 0:
 								stage.reverse.StartReverse();

@@ -243,7 +243,7 @@ namespace _2DActionGame
 		{
 			this.isHighLvl = isHighLvl;
 			// System
-			reverse = new Reverse(this, game);
+			reverse = new Reverse(this, game, content);
 			slowmotion = new SlowMotion();
 			damageControl = new DamageControl(this, attackedObjects, damagedObjects);
 			effectControl = new EffectControl(this);
@@ -807,6 +807,8 @@ namespace _2DActionGame
 		{
 			slowmotion.Update();
 
+            scrollingTASEffect.Update(5);
+
 			// unitsAdd:分裂する敵などが死んだら、その場(U@date()を実行中)でcharacters二追加するとforeachが使えないのでqueに追加しておいて次回Updateの始めに追加、という形にする。
 			if (unitToAdd.Count > 0)
 				for (int i = unitToAdd.Count - 1; i >= 0; i--) {
@@ -850,7 +852,7 @@ namespace _2DActionGame
 			// maxCombo
 			
 			//TASpower
-			player.TASpower += -1;
+			player.TASpower += -(player.defMAXTAS / 300);
 
 			gameTimeTAS++;
 			
@@ -1138,7 +1140,8 @@ namespace _2DActionGame
 				hasEffectedPlayerDeath = false;
 			}
 			if (toGameOver && hasEffectedPlayerDeath) {
-				SoundControl.Stop();
+                SoundControl.CacheMusic(musicInstance);
+				SoundControl.Pause();
 				PushScene(new GameOver(this));
 			}
 			if (boss.position.Y > 600) boss.isAlive = false;// characterが自分で殺すようにする...?
