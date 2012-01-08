@@ -20,18 +20,17 @@ namespace _2DActionGame
 			sceneTitle = "Debug Menu";
 			this.stage = stage;
 
-			buttonNum = 10;
+			buttonNum = 9;
 			button = new Button[buttonNum];
 			menuString = new string[] { 
 				"Back",
-				"change on/off",
+				//"change on/off",
 				"inDebugMode",
 				"isMuted",
 				"visibleSword",
 				"score",
 				"syoryuMode",
-				"empty",
-				"empty",
+				"thrustChargeMode",
 				"empty",
 				"empty",
 			};
@@ -46,9 +45,17 @@ namespace _2DActionGame
 		{
 			base.UpdateTexts();
 
+			button[1].name = "inDebugMode : " + game.inDebugMode.ToString();
+			button[2].name = "isMuted : " + game.isMuted.ToString();
+			button[3].name = "visibleSword : " + game.visibleSword.ToString();
+			button[4].name = "score : " + game.visibleScore.ToString();
+			button[5].name = "syoryuMode : " + stage.player.syouryuuMode.ToString();
+			button[6].name = "thrustChargeMode : " + stage.player.thrustChargeMode.ToString();
 		}
 		protected override void ButtonUpdate()
 		{
+			base.ButtonUpdate();
+
 			if (button[0].isSelected && JoyStick.IsOnKeyDown(3)) {
 				if (!game.isMuted) cancel.Play(SoundControl.volumeAll, 0f, 0f);
 				isEndScene = true;
@@ -88,18 +95,22 @@ namespace _2DActionGame
 			}
 
 			if (button[6].isSelected && JoyStick.IsOnKeyDown(3)) {
+				if (!stage.player.thrustChargeMode) stage.player.thrustChargeMode = true;
+				else stage.player.thrustChargeMode = false;
+
+
+				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 			}
 			if (button[7].isSelected && JoyStick.IsOnKeyDown(3)) {
 			}
 			if (button[8].isSelected && JoyStick.IsOnKeyDown(3)) {
-			}
-			if (button[9].isSelected && JoyStick.IsOnKeyDown(3)) {
 			}
 		}
 
 		public override void Draw(SpriteBatch spriteBatch)
 		{
 			base.Draw(spriteBatch);
+			//spriteBatch.DrawString(game.Arial, "てすと", new Vector2(250, 30), Color.Orange);
 			/*spriteBatch.Draw(backGround, Vector2.Zero, Color.White);
 			spriteBatch.DrawString(game.Arial, "Debug Options", new Vector2(250, 30), Color.Orange);
 			spriteBatch.DrawString(game.menuFont, "change on/off", new Vector2(200, 70), Color.Orange);

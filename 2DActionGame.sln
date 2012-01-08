@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2DActionGame", "2DActionGame\2DActionGame\2DActionGame.csproj", "{BB5F1070-FDBB-4DA7-BD17-5DAAFB700FAC}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "2DActionGameContent", "2DActionGame\2DActionGameContent\2DActionGameContent.contentproj", "{3DEDE866-FC21-495D-B8DF-1B1D06148449}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2DActionGameContent", "2DActionGame\2DActionGameContent\2DActionGameContent.contentproj", "{3DEDE866-FC21-495D-B8DF-1B1D06148449}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FontProcessors", "..\FontProcessors\FontProcessors.csproj", "{276C5AB5-1007-4986-9CFA-8F38F1961660}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,6 +19,10 @@ Global
 		{BB5F1070-FDBB-4DA7-BD17-5DAAFB700FAC}.Release|x86.Build.0 = Release|x86
 		{3DEDE866-FC21-495D-B8DF-1B1D06148449}.Debug|x86.ActiveCfg = Debug|x86
 		{3DEDE866-FC21-495D-B8DF-1B1D06148449}.Release|x86.ActiveCfg = Release|x86
+		{276C5AB5-1007-4986-9CFA-8F38F1961660}.Debug|x86.ActiveCfg = Debug|x86
+		{276C5AB5-1007-4986-9CFA-8F38F1961660}.Debug|x86.Build.0 = Debug|x86
+		{276C5AB5-1007-4986-9CFA-8F38F1961660}.Release|x86.ActiveCfg = Release|x86
+		{276C5AB5-1007-4986-9CFA-8F38F1961660}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

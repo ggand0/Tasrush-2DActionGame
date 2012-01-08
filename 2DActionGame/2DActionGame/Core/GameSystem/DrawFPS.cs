@@ -39,7 +39,7 @@ namespace _2DActionGame
         {
             base.LoadContent();
 
-            _font = this.Game.Content.Load<SpriteFont>("General\\Arial32");
+            _font = this.Game.Content.Load<SpriteFont>("General\\menuFont");
         }
 
         public override void Draw(GameTime gameTime)

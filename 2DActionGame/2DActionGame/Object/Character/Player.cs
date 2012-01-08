@@ -31,7 +31,7 @@ namespace _2DActionGame
 		public static readonly int normaSecondComboTime = 40;
 		public static readonly int thrustingTime = 40;
 		public static readonly Vector2 defReflectSpeed = new Vector2(4, -6);
-		private static readonly int thrustPowerConsumption = 360;//800;
+		private static readonly int thrustPowerConsumption = 720;//360;//800;
         
 		private static readonly int airReflectLimit = 15;//30
         private static readonly int walkingFootStepRatio = 10;
@@ -163,8 +163,10 @@ namespace _2DActionGame
 		#endregion
         private static readonly int miniJumpWaitTime = 6;//3;//12;
         private bool miniJump, inJumpCharge, inDashChargeRight, inDashChargeLeft, inThrustCharge;
-		//private int dashCount;// Timer作ればよかったorz
 		private FrameTimer dashTimer = new FrameTimer();
+        private int thrustTime;
+		private FrameTimer thrustTimer = new FrameTimer();
+		public bool thrustChargeMode { get; set; }
 
 		// コンストラクタ
 		public Player()
@@ -348,7 +350,7 @@ namespace _2DActionGame
 		{
 			#region General
 			// 主にDebug用
-			if (KeyInput.IsOnKeyDown(Keys.Space)) {
+			if (KeyInput.IsOnKeyDown(Keys.D)) {//Space
 				if (!stage.isScrolled) stage.isScrolled = true;
 				else if (stage.isScrolled) stage.camera.isScrollingToPlayer = true;
 			}
@@ -466,78 +468,29 @@ namespace _2DActionGame
 			// NormalCombo: △ △ ○
 			// LaunchCombo: △ △ △＋↑ ○/× △...
 			// 3/X, 0/A, 1/Z, 2/C
-			#region Mega Thrust
-			/*if (JoyStick.IsOnKeyDown(0)) {
-				if (normalComboCount == 4) {
-					if (time < normaSecondComboTime) {
-						hasAttacked = isAttacking = isInCombo = isCuttingDown = sword.isBeingUsed = true;
-						isTrackingEnemy = isCuttingUp = false;
-						time = 0;
-						inCombos[normalComboCount] = false;
-						inCombos[++normalComboCount] = true;
-						//inCombo4 = false;
-						//inCombo5 = true;
-						//normalComboCount = 5;
-					}
-				}
-			}*/
-			if (JoyStick.onStickDirectionChanged && JoyStick.stickDirection == Direction.DOWN) {
-				if (normalComboCount == 0) {
-					hasAttacked = isAttacking = isInCombo = true;
-					inCombos[++normalComboCount] = true;
-					thrustComboCount++;
-					time = 0;
-				}
-			}
-			if (JoyStick.onStickDirectionChanged && JoyStick.stickDirection == Direction.UP) {
-				if (normalComboCount == 1) {
-					hasAttacked = isAttacking = isInCombo = true;
-					inCombos[normalComboCount] = false;
-					inCombos[++normalComboCount] = true;
-					thrustComboCount++;
-					time = 0;
-				}
-			}
-			if (TASpower >= thrustPowerConsumption && JoyStick.IsOnKeyDown(1) && thrustCount >= thrustingTime) {
-				//BackStep();
-				if (normalComboCount == 2 && thrustComboCount == 2) {
-					hasAttacked = isAttacking = isInCombo = isThrusting = sword.isBeingUsed = true;
-					isAttacking2 = false;
-
-					inCombos[normalComboCount] = false;
-					inCombos[++normalComboCount] = true;
-					//inCombos[1] = true;
-					//inCombo1 = true;
-
-					//normalComboCount = 3;
-					thrustComboCount++;
-					time = thrustCount = sword.degreeCounter = 0;
-					TASpower -= thrustPowerConsumption;
-				}
-			}
-			#endregion
-			#region circle
-			if (JoyStick.IsOnKeyDown(3)) {
-				if (normalComboCount == 0) {// 単発の強攻撃
-					hasAttacked = isAttacking = isAttacking3 = isInCombo = sword.isBeingUsed = true;
-					time = 0;              // 最初に押したときから計り始める
-					sword.degreeCounter = 0;
-					
-					//normalComboCount = 1;
-					//inCombo1 = true;
-					inCombos[++normalComboCount] = true;
-				} else if (normalComboCount == 2) {// 地上３段目
-					if (time < normaSecondComboTime) {// hasAttacked = trueはデフォで無
+			if (!isThrusting) {
+				#region circle
+				if (JoyStick.IsOnKeyDown(3)) {
+					if (normalComboCount == 0) {// 単発の強攻撃
 						hasAttacked = isAttacking = isAttacking3 = isInCombo = sword.isBeingUsed = true;
-						isAttacking2 = false;
-						time = sword.degreeCounter = 0;
-						/*normalComboCount = 3;
-						inCombo2 = false;
-						inCombo3 = true;*/
-						inCombos[normalComboCount] = false;
+						time = 0;              // 最初に押したときから計り始める
+						sword.degreeCounter = 0;
+
+						//normalComboCount = 1;
+						//inCombo1 = true;
 						inCombos[++normalComboCount] = true;
-					}
-				} /*else if (normalComboCount == 4) {// 吹き飛ばし
+					} else if (normalComboCount == 2) {// 地上３段目
+						if (time < normaSecondComboTime) {// hasAttacked = trueはデフォで無
+							hasAttacked = isAttacking = isAttacking3 = isInCombo = sword.isBeingUsed = true;
+							isAttacking2 = false;
+							time = sword.degreeCounter = 0;
+							/*normalComboCount = 3;
+							inCombo2 = false;
+							inCombo3 = true;*/
+							inCombos[normalComboCount] = false;
+							inCombos[++normalComboCount] = true;
+						}
+					} /*else if (normalComboCount == 4) {// 吹き飛ばし
 					if (time < normaSecondComboTime) {// hasAttacked = trueはデフォで無
 						hasAttacked = isAttacking = isCuttingAway = isInCombo = sword.isBeingUsed = true;
 						isTrackingEnemy = false;
@@ -562,83 +515,83 @@ namespace _2DActionGame
 						time = 0;
 					}
 				}*/
-			}
-			#endregion
-			#region triangle
-			if (JoyStick.IsOnKeyDown(1)) {
-				if (normalComboCount == 0) {
-					hasAttacked = isAttacking = isAttacking1 = isInCombo = sword.isBeingUsed = true;
-					isAttacking2 = false;
-					time = 0;
-
-					/*normalComboCount = 1;
-					inCombo1 = true;*/
-					inCombos[++normalComboCount] = true;
-				} else if (normalComboCount == 1) {
-					if (time < normaFirstComboTime) {
-						hasAttacked = isAttacking = isAttacking2 = isInCombo = sword.isBeingUsed = true;
-						isAttacking1 = false;      // 自動終了する前に強制的に次の攻撃に移るのでfalseに調整
-
-						/*normalComboCount = 2;
-						inCombo1 = false;
-						inCombo2 = true;*/
-						inCombos[normalComboCount] = false;
-						inCombos[++normalComboCount] = true;
-						time = 0;
-					} // すぐに1段目を出せるようにする。地上の3段目は○とか△＋○とかにしよう　上に書く
-				} else if (normalComboCount == 2 && JoyStick.stickDirection != Direction.UP) {
-					hasAttacked = isAttacking = isAttacking1 = isInCombo = sword.isBeingUsed = true;
-					isAttacking2 = false;
-					isInNormalCombo = true;
-
-					time = 0;
-					sword.degreeCounter = 0;// 角度が初期化されないので必要
-					/*inCombo2 = false;
-					inCombo1 = true;              // launch comboとnormal comboで時間を分けてもいいかも*/
-					inCombos[normalComboCount] = false;
-					normalComboCount = 1;
-					inCombos[normalComboCount] = true;
-				} else if (normalComboCount == 4) {
-					if (time < normaSecondComboTime) {
+				}
+				#endregion
+				#region triangle
+				if (JoyStick.IsOnKeyDown(1)) {
+					if (normalComboCount == 0) {
 						hasAttacked = isAttacking = isAttacking1 = isInCombo = sword.isBeingUsed = true;
-
-						/*normalComboCount = 5;
-						inCombo4 = false;
-						inCombo5 = true;*/
-						inCombos[normalComboCount] = false;
-						inCombos[++normalComboCount] = true;
+						isAttacking2 = false;
 						time = 0;
-					}
-				} else if (normalComboCount == 5) {
-					if (time < normaSecondComboTime) {
-						hasAttacked = isAttacking = isAttacking2 = isInCombo = sword.isBeingUsed = true;
-						isAttacking1 = false;
 
-						/*normalComboCount = 6;
-						inCombo5 = false;
-						inCombo6 = true;*/
-						inCombos[normalComboCount] = false;
+						/*normalComboCount = 1;
+						inCombo1 = true;*/
 						inCombos[++normalComboCount] = true;
+					} else if (normalComboCount == 1) {
+						if (time < normaFirstComboTime) {
+							hasAttacked = isAttacking = isAttacking2 = isInCombo = sword.isBeingUsed = true;
+							isAttacking1 = false;      // 自動終了する前に強制的に次の攻撃に移るのでfalseに調整
+
+							/*normalComboCount = 2;
+							inCombo1 = false;
+							inCombo2 = true;*/
+							inCombos[normalComboCount] = false;
+							inCombos[++normalComboCount] = true;
+							time = 0;
+						} // すぐに1段目を出せるようにする。地上の3段目は○とか△＋○とかにしよう　上に書く
+					} else if (normalComboCount == 2 && JoyStick.stickDirection != Direction.UP) {
+						hasAttacked = isAttacking = isAttacking1 = isInCombo = sword.isBeingUsed = true;
+						isAttacking2 = false;
+						isInNormalCombo = true;
+
 						time = 0;
+						sword.degreeCounter = 0;// 角度が初期化されないので必要
+						/*inCombo2 = false;
+						inCombo1 = true;              // launch comboとnormal comboで時間を分けてもいいかも*/
+						inCombos[normalComboCount] = false;
+						normalComboCount = 1;
+						inCombos[normalComboCount] = true;
+					} else if (normalComboCount == 4) {
+						if (time < normaSecondComboTime) {
+							hasAttacked = isAttacking = isAttacking1 = isInCombo = sword.isBeingUsed = true;
+
+							/*normalComboCount = 5;
+							inCombo4 = false;
+							inCombo5 = true;*/
+							inCombos[normalComboCount] = false;
+							inCombos[++normalComboCount] = true;
+							time = 0;
+						}
+					} else if (normalComboCount == 5) {
+						if (time < normaSecondComboTime) {
+							hasAttacked = isAttacking = isAttacking2 = isInCombo = sword.isBeingUsed = true;
+							isAttacking1 = false;
+
+							/*normalComboCount = 6;
+							inCombo5 = false;
+							inCombo6 = true;*/
+							inCombos[normalComboCount] = false;
+							inCombos[++normalComboCount] = true;
+							time = 0;
+						}
 					}
 				}
-			}
 
-			/*if (TASpower >= thrustPowerConsumption && JoyStick.KeyTime(1) >= thrustingTime) {// && thrustCount >= thrustingTime
-				//BackStep();
-				if (normalComboCount == 0 || normalComboCount == 2 || normalComboCount == 3) {
-					hasAttacked = isAttacking = isInCombo = isThrusting = sword.isBeingUsed = true;
-					isAttacking2 = false;
+				/*if (TASpower >= thrustPowerConsumption && JoyStick.KeyTime(1) >= thrustingTime) {// && thrustCount >= thrustingTime
+					//BackStep();
+					if (normalComboCount == 0 || normalComboCount == 2 || normalComboCount == 3) {
+						hasAttacked = isAttacking = isInCombo = isThrusting = sword.isBeingUsed = true;
+						isAttacking2 = false;
 
-					inCombos[1] = true;
-					//inCombo1 = true;
-					normalComboCount = 3;
-					time = thrustCount = sword.degreeCounter = 0;
-					//TASpower -= thrustPowerConsumption;	// デバッグのため
-				}
-			}*/
-			#region ShootBeam
-			/*if (JoyStick.KEY(1) && normalComboCount==1) {
+						inCombos[1] = true;
+						//inCombo1 = true;
+						normalComboCount = 3;
+						time = thrustCount = sword.degreeCounter = 0;
+						//TASpower -= thrustPowerConsumption;	// デバッグのため
+					}
+				}*/
+				#region ShootBeam
+				/*if (JoyStick.KEY(1) && normalComboCount==1) {
                 if(time > 60) {
                     hasAttacked = true;
                     isAttacking = true; sword.isBeingUsed=true;
@@ -666,42 +619,177 @@ namespace _2DActionGame
                     normalComboCount = 0;
                 }
             }*/
-			#endregion
-			#endregion
-			#region D-Pad
-			if (JoyStick.stickDirection == Direction.RIGHT) {// 吹き飛ばし
-				if (normalComboCount == 4) {// 吹き飛ばし
-					if (time < normaSecondComboTime) {
-						hasAttacked = isAttacking = isCuttingAway = isInCombo = sword.isBeingUsed = true;
-						isTrackingEnemy = false;
+				#endregion
+				#endregion
+				#region D-Pad
+				if (JoyStick.stickDirection == Direction.RIGHT) {// 吹き飛ばし
+					if (normalComboCount == 4) {// 吹き飛ばし
+						if (time < normaSecondComboTime) {
+							hasAttacked = isAttacking = isCuttingAway = isInCombo = sword.isBeingUsed = true;
+							isTrackingEnemy = false;
 
-						//normalComboCount = 5;
-						//inCombo4 = false;
-						//inCombo5 = true;
+							//normalComboCount = 5;
+							//inCombo4 = false;
+							//inCombo5 = true;
+							inCombos[normalComboCount] = false;
+							inCombos[++normalComboCount] = true;
+							time = 0;
+						}
+					} else if (normalComboCount == 6) {
+						if (time < normaSecondComboTime) {
+							hasAttacked = isAttacking = isCuttingAway = isInCombo = sword.isBeingUsed = true;
+							isAttacking2 = false;
+
+							normalComboCount = 0;//7
+							inCombos[6] = false;
+							inCombos[7] = true;
+							//inCombo6 = false;
+							//inCombo7 = true;
+							time = 0;
+						}
+					}
+				}
+				if (JoyStick.stickDirection == Direction.DOWN) {// 斬り落とし
+					if (normalComboCount == 4 || normalComboCount == 6) {
+						if (time < normaSecondComboTime) {
+							hasAttacked = isAttacking = isInCombo = isCuttingDown = sword.isBeingUsed = true;
+							isTrackingEnemy = isCuttingUp = false;
+							time = 0;
+							if (normalComboCount == 6) normalComboCount = 0;
+							inCombos[normalComboCount] = false;
+							inCombos[++normalComboCount] = true;
+							//inCombo4 = false;
+							//inCombo5 = true;
+							//normalComboCount = 5;
+						}
+					}
+				}
+				#endregion
+				#region triangle+↑
+				// 押しっぱなし+↑ではなく、↑押しっぱで△3回押して斬り上げる感じのほうがいいらしい　要修正
+				// 2撃目を出すために△を押したフレームのときは飛ばしたい
+				#region !syoryu
+				if (!syouryuuMode) {
+					if (JoyStick.IsOnKeyDown(1) /*&& JoyStick.onStickDirectionChanged*/ && JoyStick.stickDirection == Direction.UP) {// この設定なら、押しっぱなしで自動追撃するようにしたほうがよい(DMC3みたいに)
+						if (normalComboCount == 2 && time != 0) {// stickが倒れた瞬間
+							if (time < normaSecondComboTime) {
+								hasAttacked = isAttacking = isCuttingUp = isTrackingEnemy = isInCombo = sword.isBeingUsed = true;
+								isAttacking2 = false;
+
+								/*normalComboCount = 3;
+								//stage.sword.degreeCounter = 0; // 重要//
+							
+								//inCombo1 = false;//一応
+								inCombo2 = false;
+								inCombo3 = true;*/
+								inCombos[normalComboCount] = false;
+								inCombos[++normalComboCount] = true;
+								time = 0;
+							}
+						}
+						/*else if(normalComboCount == 3) {// ctrl+K)*2:bookmark　(ctrl+K),(ctrl+N/P):bookmarkに移動
+							if(time < normaSecondComboTime) {
+								normalComboCount = 4;
+								isAttacking = false;
+								isInCombo = true;
+								isCuttingUp = false;
+								hasAttacked = true;
+								isTrackingEnemy = true;
+								time = 0;
+								inCombo3 = false;
+								inCombo4 = true;
+								TrackEnemy2(); // 物理エンジンを利用するならここで1回のみ呼んでもよい
+							}
+						}*/
+					}
+					//trackCounter++;
+					if (normalComboCount == 3 && isTrackingEnemy && JoyStick.IsOnKeyUp(1) && time < 20) {// 斬り上げのコンボ中かつ指定時間以内に離さないなら自動追尾
+						normalComboCount = 0;
+						isAttacking = isCuttingUp = isInCombo = false;
+						//inCombo3 = false;
+						inCombos[normalComboCount] = false;
+					}
+					if (normalComboCount == 3 && isTrackingEnemy && time > 20) {//isCuttingUp && JoyStick.KEY(1) && JoyStick.stickDirection == Direction.UP) {
+						hasAttacked = isAttacking = isCuttingUp = false;
+						isInCombo = isTrackingEnemy = true;
+
+						/*normalComboCount = 4;
+						inCombo3 = false;
+						inCombo4 = true;*/
 						inCombos[normalComboCount] = false;
 						inCombos[++normalComboCount] = true;
 						time = 0;
-					}
-				} else if (normalComboCount == 6) {
-					if (time < normaSecondComboTime) {
-						hasAttacked = isAttacking = isCuttingAway = isInCombo = sword.isBeingUsed = true;
-						isAttacking2 = false;
-
-						normalComboCount = 0;//7
-						inCombos[6] = false;
-						inCombos[7] = true;
-						//inCombo6 = false;
-						//inCombo7 = true;
-						time = 0;
+						TrackEnemy2();
 					}
 				}
+				#endregion
+				#region syoryu
+ else {
+					if (JoyStick.IsOnKeyDown(1) && JoyStick.stickDirection == Direction.UP /*|| (JoyStick.KEY(1) && JoyStick.onStickDirectionChanged && JoyStick.Vector.Y < .5)*/) {
+						if (normalComboCount == 2 && time != 0) {// stickが倒れた瞬間
+							if (time < normaSecondComboTime) {
+								hasAttacked = isAttacking = isCuttingUp = isTrackingEnemy = isInCombo = sword.isBeingUsed = true;
+								isAttacking2 = false;
+
+								/*normalComboCount = 3;
+								inCombo1 = false;
+								inCombo2 = false;
+								inCombo3 = true;*/
+								inCombos[1] = false;
+								inCombos[normalComboCount] = false;
+								inCombos[++normalComboCount] = true;
+								time = 0;
+								TrackEnemy2();
+							}
+						}
+					}
+					if (normalComboCount == 3 && isTrackingEnemy && time > 20) {
+						hasAttacked = isTrackingEnemy = isInCombo = true;
+						isAttacking = isCuttingUp = false;
+
+						/*normalComboCount = 4;
+						inCombo3 = false;
+						inCombo4 = true;*/
+						inCombos[normalComboCount] = false;
+						inCombos[++normalComboCount] = true;
+						time = 0;
+						//TrackEnemy2();
+					}
+				}
+				#endregion
+				#endregion
+				#region triangle+↓
+				if ((JoyStick.IsOnKeyDown(1) && JoyStick.stickDirection == Direction.DOWN) || (JoyStick.KEY(1) && JoyStick.onStickDirectionChanged && JoyStick.Vector.Y > .5)) {// コンボを強制終了させる　とりあえずコンボから独立させよう
+					if (/*normalComboCount == 2 &&*/ time != 0 || time == 0) {
+						//if(time < normaSecondComboTime) {
+						isAttacking1 = isAttacking2 = isAttacking3 = isCuttingAway = isCuttingDown = isCuttingUp = isTrackingEnemy = false;
+						hasAttacked = isAttacking = sword.isBeingUsed = true;
+
+						time = normalComboCount = 0;
+						//inCombo1 = false;
+						//inCombo2 = false;
+						//inCombo3 = false;
+						AirialDown();
+						isAirial = true;
+						//}
+					}
+				}
+				if (isAirial && time > 20) { //atProcessで.?
+					isAttacking = false;
+					isAirial = false;
+					hasAttacked = true;
+					time = 0;
+				}
+
+				#endregion}
 			}
-			if (JoyStick.stickDirection == Direction.DOWN) {// 斬り落とし
-				if (normalComboCount == 4 || normalComboCount == 6) {
+            #region Mega Thrust
+			/*if (JoyStick.IsOnKeyDown(0)) {
+				if (normalComboCount == 4) {
 					if (time < normaSecondComboTime) {
 						hasAttacked = isAttacking = isInCombo = isCuttingDown = sword.isBeingUsed = true;
 						isTrackingEnemy = isCuttingUp = false;
-						time = 0; normalComboCount = 0;
+						time = 0;
 						inCombos[normalComboCount] = false;
 						inCombos[++normalComboCount] = true;
 						//inCombo4 = false;
@@ -709,125 +797,63 @@ namespace _2DActionGame
 						//normalComboCount = 5;
 					}
 				}
-			}
-			#endregion
-			#region triangle+↑
-			// 押しっぱなし+↑ではなく、↑押しっぱで△3回押して斬り上げる感じのほうがいいらしい　要修正
-			// 2撃目を出すために△を押したフレームのときは飛ばしたい
-			#region !syoryu
-			if (!syouryuuMode) {
-				if (JoyStick.IsOnKeyDown(1) /*&& JoyStick.onStickDirectionChanged*/ && JoyStick.stickDirection == Direction.UP) {// この設定なら、押しっぱなしで自動追撃するようにしたほうがよい(DMC3みたいに)
-					if (normalComboCount == 2 && time != 0) {// stickが倒れた瞬間
-						if (time < normaSecondComboTime) {
-							hasAttacked = isAttacking = isCuttingUp = isTrackingEnemy = isInCombo = sword.isBeingUsed = true;
-							isAttacking2 = false;
-
-							/*normalComboCount = 3;
-							//stage.sword.degreeCounter = 0; // 重要//
-							
-							//inCombo1 = false;//一応
-							inCombo2 = false;
-							inCombo3 = true;*/
-							inCombos[normalComboCount] = false;
-							inCombos[++normalComboCount] = true;
-							time = 0;
-						}
-					}
-					/*else if(normalComboCount == 3) {// ctrl+K)*2:bookmark　(ctrl+K),(ctrl+N/P):bookmarkに移動
-						if(time < normaSecondComboTime) {
-							normalComboCount = 4;
-							isAttacking = false;
-							isInCombo = true;
-							isCuttingUp = false;
-							hasAttacked = true;
-							isTrackingEnemy = true;
-							time = 0;
-							inCombo3 = false;
-							inCombo4 = true;
-							TrackEnemy2(); // 物理エンジンを利用するならここで1回のみ呼んでもよい
-						}
-					}*/
-				}
-				//trackCounter++;
-				if (normalComboCount == 3 && isTrackingEnemy && JoyStick.IsOnKeyUp(1) && time < 20) {// 斬り上げのコンボ中かつ指定時間以内に離さないなら自動追尾
-					normalComboCount = 0;
-					isAttacking = isCuttingUp = isInCombo = false;
-					//inCombo3 = false;
-					inCombos[normalComboCount] = false;
-				}
-				if (normalComboCount == 3 && isTrackingEnemy && time > 20) {//isCuttingUp && JoyStick.KEY(1) && JoyStick.stickDirection == Direction.UP) {
-					hasAttacked = isAttacking = isCuttingUp = false;
-					isInCombo = isTrackingEnemy = true;
-
-					/*normalComboCount = 4;
-					inCombo3 = false;
-					inCombo4 = true;*/
-					inCombos[normalComboCount] = false;
-					inCombos[++normalComboCount] = true;
-					time = 0;
-					TrackEnemy2();
-				}
-			}
-			#endregion
-			#region syoryu
-			 else {
-				if (JoyStick.IsOnKeyDown(1) && JoyStick.stickDirection == Direction.UP /*|| (JoyStick.KEY(1) && JoyStick.onStickDirectionChanged && JoyStick.Vector.Y < .5)*/) {
-					if (normalComboCount == 2 && time != 0) {// stickが倒れた瞬間
-						if (time < normaSecondComboTime) {
-							hasAttacked = isAttacking = isCuttingUp = isTrackingEnemy = isInCombo = sword.isBeingUsed = true;
-							isAttacking2 = false;
-
-							/*normalComboCount = 3;
-							inCombo1 = false;
-							inCombo2 = false;
-							inCombo3 = true;*/
-                            inCombos[1] = false;
-							inCombos[normalComboCount] = false;
-							inCombos[++normalComboCount] = true;
-							time = 0;
-							TrackEnemy2();
-						}
+			}*/
+			if (!thrustChargeMode) {
+				#region Command
+				if (JoyStick.onStickDirectionChanged && JoyStick.stickDirection == Direction.DOWN) {
+					if (thrustComboCount == 0 && (normalComboCount == 1 || normalComboCount == 2 || normalComboCount == 3)) {
+						thrustComboCount++;
+						thrustTime = 0;
+						inThrustCharge = true;
+						thrustTimer.Start(30);
 					}
 				}
-				if (normalComboCount == 3 && isTrackingEnemy && time > 20) {
-					hasAttacked = isTrackingEnemy = isInCombo = true;
-					isAttacking = isCuttingUp = false;
+				if (JoyStick.onStickDirectionChanged && JoyStick.stickDirection == Direction.UP) {
+					if (thrustComboCount == 1 && thrustTimer.TimerState == FrameTimer.State.Run) {
+						thrustComboCount++;
+						thrustTimer.Start(30);
+					}
+				}
+				if (TASpower >= thrustPowerConsumption && JoyStick.IsOnKeyDown(1) && thrustCount >= thrustingTime) {
+					//BackStep();
+					if (thrustComboCount == 2 && thrustTimer.TimerState == FrameTimer.State.Run) {
+						hasAttacked = isAttacking = isInCombo = isThrusting = sword.isBeingUsed = true;
+						isAttacking1 = isAttacking2 = isAttacking3 = isTrackingEnemy = isCuttingUp = isCuttingDown = isAirial = isCuttingAway = false;
 
-					/*normalComboCount = 4;
-					inCombo3 = false;
-					inCombo4 = true;*/
+						inCombos[normalComboCount] = false;
+						inCombos[++normalComboCount] = true;
+
+						//inCombos[1] = true;
+						//inCombo1 = true;
+
+						//normalComboCount = 3;
+						thrustComboCount++;
+						thrustTime = 0; time = thrustCount = sword.degreeCounter = 0;
+						thrustComboCount = 0;
+						inThrustCharge = false;
+						TASpower -= thrustPowerConsumption;
+					}
+				}
+				#endregion
+			} else {
+				#region Charge
+				if (JoyStick.KeyTime(1) > 20) {//normaSecondComboTime) {
+					inThrustCharge = true;
+				}
+				if (JoyStick.IsOnKeyUp(1) && inThrustCharge) {
+					hasAttacked = isAttacking = isInCombo = isThrusting = sword.isBeingUsed = true;
+					isAttacking1 = isAttacking2 = isAttacking3 = isTrackingEnemy = isCuttingUp = isCuttingDown = isAirial = isCuttingAway = false;
+
 					inCombos[normalComboCount] = false;
 					inCombos[++normalComboCount] = true;
-					time = 0;
-					//TrackEnemy2();
+					time = thrustCount = sword.degreeCounter = 0;
+					TASpower -= thrustPowerConsumption;
+					inThrustCharge = false;
 				}
+				#endregion
 			}
 			#endregion
-			#endregion
-			#region triangle+↓
-			if ((JoyStick.IsOnKeyDown(1) && JoyStick.stickDirection == Direction.DOWN) || (JoyStick.KEY(1) && JoyStick.onStickDirectionChanged && JoyStick.Vector.Y > .5)) {// コンボを強制終了させる　とりあえずコンボから独立させよう
-				if (/*normalComboCount == 2 &&*/ time != 0 || time == 0) {
-					//if(time < normaSecondComboTime) {
-					isAttacking1 = isAttacking2 = isAttacking3 = isCuttingAway = isCuttingDown = isCuttingUp = isTrackingEnemy = false;
-					hasAttacked = isAttacking = sword.isBeingUsed = true;
 
-					time = normalComboCount = 0;
-					//inCombo1 = false;
-					//inCombo2 = false;
-					//inCombo3 = false;
-					AirialDown();
-					isAirial = true;
-					//}
-				}
-			}
-			if (isAirial && time > 20) { //atProcessで.?
-				isAttacking = false;
-				isAirial = false;
-				hasAttacked = true;
-				time = 0;
-			}
-
-			#endregion
 
 			time++;// 攻撃開始時に初期化、次の入力までの時間を計る
 			thrustCount++;
@@ -858,9 +884,15 @@ namespace _2DActionGame
 					isInCombo = false;
 					/*if (inCombos[i]) */inCombos[i] = false;
 					if (i == 4) isTrackingEnemy = false;
-					thrustComboCount = normalComboCount = time = 0;
+					normalComboCount = time = 0;
 				}
 			}
+            /*if ((thrustComboCount >= 1) && thrustTime > normaSecondComboTime) {
+                thrustComboCount = 0;
+                thrustTime = 0;
+                
+            }*/
+            thrustTime++;
 			#endregion
 
 			#endregion
@@ -1334,7 +1366,7 @@ namespace _2DActionGame
 			// ②敵に与えたのと同じ初速（もしくは+α）を与える。
 			double angle;
 			double speed;
-			int counter = 0;
+			//int counter = 0;
 			isTrackingEnemy = true;
 			//stage.damagedCharacters[0]
 			speed = 18;

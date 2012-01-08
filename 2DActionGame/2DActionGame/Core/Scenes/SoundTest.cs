@@ -14,7 +14,8 @@ namespace _2DActionGame
 	{
 		private int musicIndex, seIndex;
 		private SoundEffect[] musics, soundEffects;
-		private float musicVolume, seVolume;
+		private float musicVolume = .5f;
+		private float seVolume = .5f;
 		private SoundEffectInstance seInstance;
 
 		private string[] musicString = {
@@ -35,28 +36,19 @@ namespace _2DActionGame
 			musics = new SoundEffect[musicString.Length];
 			soundEffects = new SoundEffect[seString.Length];
 
-			menuString = new string[] { 
-				"Song index : "  + musicIndex.ToString() + "\r\nsong name : ",
-				"song volume : ",
-				"SoundEffect index : " + seIndex.ToString() + "\r\nse name : ",
-				"se volume : ",
-				"Back" 
-			};
-			for (int i = 0; i < button.Length; i++) {
-				button[i].color = Color.Blue;
-				button[i].name = menuString[i];
-			}
-			
 			Load();
+
+            for (int i = 0; i < button.Length; i++) {
+                button[i].color = Color.Blue;
+                button[i].name = menuString[i];
+            }
         }
 
         public override void Load()
         {
 			base.Load();
+
 			button[0].texture = content.Load<Texture2D>("General\\Menu\\Option");
-			/*musics[0] = content.Load<SoundEffect>("Audio\\BGM\\forest");
-			musics[1] = content.Load<SoundEffect>("Audio\\BGM\\ice");
-			musics[2] = content.Load<SoundEffect>("Audio\\BGM\\boss_normal");*/
 			for (int i = 0; i < musics.Length; i++) {
 				musics[i] = content.Load<SoundEffect>("Audio\\BGM\\" + musicString[i]);
 				musics[i].Name = musicString[i];
@@ -67,13 +59,21 @@ namespace _2DActionGame
 			}
 			musicInstance = musics[0].CreateInstance();
 			seInstance = soundEffects[0].CreateInstance();
+
+            menuString = new string[] {
+				/*"Song index : "  + musicIndex.ToString() + "\r\n*/"song name : " + musics[musicIndex].Name,
+				"song volume : ",
+				/*"SoundEffect index : " + seIndex.ToString() + "\r\n*/"se name : " + soundEffects[seIndex].Name,
+				"se volume : ",
+				"Back"
+			};
         }
 		protected override void UpdateTexts()
 		{
 			base.UpdateTexts();
-			button[0].name = "Song index : " + musicIndex.ToString() + "\r\nsong name : " + musics[musicIndex].Name;
+			button[0].name = /*"Song index : " + musicIndex.ToString() + "\r\n*/"song name : " + musics[musicIndex].Name;
 			button[1].name = "song volume : " + musicVolume.ToString("F2");
-			button[2].name = "SoundEffect index : " + seIndex.ToString() + "\r\nse name : " + soundEffects[seIndex].Name;
+			button[2].name = /*"SoundEffect index : " + seIndex.ToString() + "\r\n*/"se name : " + soundEffects[seIndex].Name;
 			button[3].name = "se volume : " + seVolume.ToString("F2");
 			musicInstance.Volume = musicVolume;
 			seInstance.Volume = seVolume;
@@ -143,17 +143,9 @@ namespace _2DActionGame
 		{
 			if (drawBackGround) spriteBatch.Draw(backGround, Vector2.Zero, Color.White);
 
-			Vector2 origin = game.Arial.MeasureString(sceneTitle) / 2;
-			spriteBatch.DrawString(game.Arial, sceneTitle, TITLE_POSITION + new Vector2(0, origin.Y * 1), Color.DarkOrange, 0, origin, 1, SpriteEffects.None, 0);
-			DrawTexts(spriteBatch, 1);//.5f);
-			//base.Draw(spriteBatch);
-			/*spriteBatch.DrawString(game.Arial, "Musics", new Vector2(200, 50), Color.Orange);
-			spriteBatch.DrawString(game.Arial, "Index : " + musicIndex.ToString(), new Vector2(200, 100), button[0].color);
-			spriteBatch.DrawString(game.Arial, "song name : " + musics[musicIndex].Name, new Vector2(200, 150), button[0].color);
-			spriteBatch.DrawString(game.Arial, "song volume : " + musicInstance.Volume.ToString("F1"), new Vector2(200, 200), button[1].color);
-			spriteBatch.DrawString(game.Arial, "Sound Effects", new Vector2(200, 300), button[2].color);
-			spriteBatch.DrawString(game.Arial, "se volume : ", new Vector2(200, 350), button[3].color);
-			spriteBatch.DrawString(game.Arial, "Back", new Vector2(200, 420), button[4].color);*/
+			Vector2 origin = game.titleFont.MeasureString(sceneTitle) / 2;
+			spriteBatch.DrawString(game.titleFont, sceneTitle, TITLE_POSITION + new Vector2(0, origin.Y * 1), Color.DarkOrange, 0, origin, 1, SpriteEffects.None, 0);
+			DrawTexts(spriteBatch, 1);
 		}
 	}
 }

@@ -34,7 +34,11 @@ namespace _2DActionGame
 
         protected override void ButtonUpdate()
         {
-			base.ButtonUpdate();
+			if (JoyStick.IsOnKeyDown(2) || JoyStick.IsOnKeyDown(8)) {
+				isEndScene = true;
+				if (!game.isMuted) cancel.Play(SoundControl.volumeAll, 0f, 0f);
+			}
+
 			if (KeyInput.IsOnKeyDown(Microsoft.Xna.Framework.Input.Keys.T)) {
 				if (!game.inDebugMode) game.inDebugMode = true;
 				else if (game.inDebugMode) game.inDebugMode = false;

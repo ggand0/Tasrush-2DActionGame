@@ -55,7 +55,7 @@ namespace _2DActionGame
                 KeyboardConfig[(int)config.Y] = xnainput.Keys.F;
                 KeyboardConfig[(int)config.key6] = xnainput.Keys.V;
                 KeyboardConfig[(int)config.MENU] = xnainput.Keys.LeftShift;
-                KeyboardConfig[(int)config.LOCK] = xnainput.Keys.D;      //Space;//TODO:コンフィグが俺コントローラ仕様すぎるから変えないと。。
+				KeyboardConfig[(int)config.LOCK] = xnainput.Keys.Space;      //Space;//TODO:コンフィグが俺コントローラ仕様すぎるから変えないと。。
                 KeyboardConfig[(int)config.START] = xnainput.Keys.Enter; // 追加
             }
             #endregion

@@ -15,7 +15,6 @@ namespace _2DActionGame
 		protected readonly float defSpeed;
 		protected readonly float spFriction = .25f;
 		protected readonly float defStopDistance = 50;
-
 		protected float stopDistance;
         
         public SkatingEnemy(Stage stage, float x, float y, int width, int height, int HP)

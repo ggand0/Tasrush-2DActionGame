@@ -13,7 +13,6 @@ namespace _2DActionGame
 {
 	public class GameStatus
 	{
-		//public int second, minute;
 		/// <summary>
 		/// プレイ開始時からの秒数を格納する。
 		/// </summary>
@@ -967,12 +966,15 @@ namespace _2DActionGame
 				if (!weapon.isAlive) continue;
 				foreach (Character character in activeCharacters) {
 					if (!character.isAlive) continue;
-					if ((weapon.user != character))
+					if (weapon.user != character) {
 						if (weapon is Sword) {
 							CollisionDetection.RectangleCrossDetailed(weapon, character, weapon.degree, character.degree, 16);
 						} else {
 							CollisionDetection.RectangleCross(weapon, character, weapon.degree, character.degree);
 						}
+                    }
+
+                    if (character.isDamaged && character is ShootingEnemy) { }
 					// Fuujin.damageFromAttacking == trueで剣での攻撃が"damageControlに感知されないまま"isDamaged状態が続いて毎フレHPが減るｗ
 					if (character.isDamaged && !character.damageFromAttacking && !character.damageFromTouching && !character.damageFromThrusting) {
 						// character==weapon.userなら無視 10/12/27:別の場所でisDamaged=trueになったため当たり判定せずにListに追加しちゃってる状況らしい.(雪玉に当たった)
@@ -1108,11 +1110,13 @@ namespace _2DActionGame
 				player.HP += -1;
 			}*/
 			// 左側が露出している地形だけ見るように改良
-			if ((isScrolled || inBossBattle) && player.position.X <= camera.position.X) {
-				player.position.X = camera.position.X;									// 位置を前に変更
-				player.speed.X = scrollSpeed;											// 押す
-				player.scrollPush = true;
-			} else player.scrollPush = false;
+            if ((isScrolled || inBossBattle) && player.position.X <= camera.position.X) {
+                player.position.X = camera.position.X;									// 位置を前に変更
+                player.speed.X = scrollSpeed;											// 押す
+                player.scrollPush = true;
+            } else {
+                player.scrollPush = false;
+            }
 
 			if (isScrolled && (player.position.X <= camera.position.X && player.isHitLeftSide/*&&
 				   activeStaticTerrains.Any((x) => !(x is Slope) && !x.isRightSlope && !x.isLeftSlope && x.isLeft && !x.isRight
@@ -1128,7 +1132,7 @@ namespace _2DActionGame
 			//if (inBossBattle && boss.position.X < camera.position.X) boss.position.X = camera.position.X;
 
 			/// Game Over処理
-			if (!toGameOver && (player.HP < 1 || player.position.Y > 540)) {// 600 546
+			if (!toGameOver && (player.HP < 1 || player.position.Y > 600)) {// 600 546 540
 				//camera.isScrollingToPlayer = true;// スクロールモードの差を取り除く
 				//playerDeathDrawPos = player.drawPos;
 				//player.position += Player.screenPosition;

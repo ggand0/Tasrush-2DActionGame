@@ -114,7 +114,7 @@ namespace _2DActionGame
 		}
         public override void Draw(SpriteBatch spriteBatch)
         {
-			if (game.inDebugMode && IsActive()) spriteBatch.DrawString(game.Arial, this.drawPos.ToString(), new Vector2(320, 48), Color.Orange);
+			if (game.inDebugMode && IsActive()) spriteBatch.DrawString(game.titleFont, this.drawPos.ToString(), new Vector2(320, 48), Color.Orange);
 			if (drawPos.X > 600) { }//639
 			if (speed.X > 0) { }//15.6
 			/*if (IsActive() && IsBeingUsed()) {

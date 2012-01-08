@@ -56,8 +56,9 @@ namespace _2DActionGame
 		private Scene currentScene;
 
 		// Font
-		public SpriteFont Arial { get; private set; }
+		public SpriteFont titleFont { get; private set; }
 		public SpriteFont menuFont { get; private set; }
+		public SpriteFont debugFont { get; private set; }
 		public SpriteFont pumpDemi { get; private set; }
         
         // Game
@@ -174,7 +175,7 @@ namespace _2DActionGame
 		}
 		public void EvaluateScore(string fileName)
 		{
-			int ranking = 999;//rankingNodeNum;
+			//int ranking = 999;//rankingNodeNum;
 			string output = "";
 			//StreamWriter sw = new StreamWriter("Ranking_test.txt");
 			// 各ステージのスコアを総計
@@ -273,8 +274,9 @@ namespace _2DActionGame
 			LoadRanking("Ranking.txt", false, "Ranking.txt");//"Ranking_original.txt");
 
 			// Fonts
-			Arial = Content.Load<SpriteFont>("General\\Arial32");
-			menuFont = Content.Load<SpriteFont>("General\\Arial14");
+			titleFont = Content.Load<SpriteFont>("General\\titleFont");
+			menuFont = Content.Load<SpriteFont>("General\\menuFont");
+			debugFont = Content.Load<SpriteFont>("General\\debugFont");
 			pumpDemi = Content.Load<SpriteFont>("General\\Pump_Demi_Bold");
             dm = new DebugMessage(this, spriteBatch);
             dm.Initialize();
