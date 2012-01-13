@@ -60,6 +60,7 @@ namespace _2DActionGame
 		public SpriteFont menuFont { get; private set; }
 		public SpriteFont debugFont { get; private set; }
 		public SpriteFont pumpDemi { get; private set; }
+		public SpriteFont japaneseFont { get; private set; }
         
         // Game
 		private const int rankingNodeNum = 5;
@@ -93,6 +94,7 @@ namespace _2DActionGame
 		public bool visibleSword { get; set; }
 		public bool visibleScore { get; set; }
 		public bool hasReachedCheckPoint { get; set; }
+		public bool twoButtonMode { get; set; }
 		#endregion
 
 		private void graphics_DeviceResetting(object sender, EventArgs e)
@@ -235,7 +237,7 @@ namespace _2DActionGame
 
 			random = new Random();
 
-			//isMuted = true;
+			isMuted = true;
 			//noEnemy = true;
 			stageScores = new double[maxStageNum];
 			//scores = dummyScore.ToList<RankingStatus>();// •œ†‰»¸”s‚Ì‚Æ‚«—p{ƒeƒXƒg—p{—v‘f”Šm•Û
@@ -278,6 +280,7 @@ namespace _2DActionGame
 			menuFont = Content.Load<SpriteFont>("General\\menuFont");
 			debugFont = Content.Load<SpriteFont>("General\\debugFont");
 			pumpDemi = Content.Load<SpriteFont>("General\\Pump_Demi_Bold");
+			japaneseFont = Content.Load<SpriteFont>("General\\japaneseFont");
             dm = new DebugMessage(this, spriteBatch);
             dm.Initialize();
 

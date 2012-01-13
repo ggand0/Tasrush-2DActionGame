@@ -12,7 +12,9 @@ namespace _2DActionGame
 {
 	public class DebugMenu : SelectScene
 	{
+		private Vector2 CONTEXT_POSITION;
 		private Stage stage;
+		protected string[] contextString;
 
 		public DebugMenu(PauseMenu privousScene, Stage stage)
 			: base(privousScene)
@@ -31,8 +33,19 @@ namespace _2DActionGame
 				"score",
 				"syoryuMode",
 				"thrustChargeMode",
+				"twoButtonMode",
 				"empty",
-				"empty",
+			};
+			contextString = new string[] { 
+				"戻る",
+				"デバッグモードをオン／オフにします",
+				"ミュートのオン／オフ",
+				"ゲーム中、剣の判定矩形を表示します",
+				"ゲーム中、画面上にスコアを表示します",
+				"斬り上げ時のモーションを変更します",
+				"連続突きを発動するアサインを変更します",
+				"攻撃を２ボタンで行うモードをオン／オフします",
+				"空の項目",
 			};
 			for (int i = 0; i < buttonNum; i++) {
 				button[i].color = Color.Blue;
@@ -41,6 +54,13 @@ namespace _2DActionGame
 			Load();
 		}
 
+		public override void Load()
+		{
+			base.Load();
+			TEXT_POSITION = new Vector2(Game1.Width / 2,
+				Game1.Height / 2 - game.menuFont.MeasureString("A").Y * (buttonNum * 4 / 4));
+			CONTEXT_POSITION = new Vector2(Game1.Width / 2, Game1.Height - game.japaneseFont.MeasureString("あ").Y);
+		}
 		protected override void UpdateTexts()
 		{
 			base.UpdateTexts();
@@ -51,6 +71,7 @@ namespace _2DActionGame
 			button[4].name = "score : " + game.visibleScore.ToString();
 			button[5].name = "syoryuMode : " + stage.player.syouryuuMode.ToString();
 			button[6].name = "thrustChargeMode : " + stage.player.thrustChargeMode.ToString();
+			button[6].name = "twoButtonMode : " + game.twoButtonMode.ToString();
 		}
 		protected override void ButtonUpdate()
 		{
@@ -102,6 +123,10 @@ namespace _2DActionGame
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 			}
 			if (button[7].isSelected && JoyStick.IsOnKeyDown(3)) {
+				if (!game.twoButtonMode) game.twoButtonMode = true;
+				else game.twoButtonMode = false;
+
+				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 			}
 			if (button[8].isSelected && JoyStick.IsOnKeyDown(3)) {
 			}
@@ -110,6 +135,9 @@ namespace _2DActionGame
 		public override void Draw(SpriteBatch spriteBatch)
 		{
 			base.Draw(spriteBatch);
+			foreach (String s in contextString) {
+				spriteBatch.DrawString(game.japaneseFont, contextString[curButton], CONTEXT_POSITION, Color.Orange);
+			}
 			//spriteBatch.DrawString(game.Arial, "てすと", new Vector2(250, 30), Color.Orange);
 			/*spriteBatch.Draw(backGround, Vector2.Zero, Color.White);
 			spriteBatch.DrawString(game.Arial, "Debug Options", new Vector2(250, 30), Color.Orange);

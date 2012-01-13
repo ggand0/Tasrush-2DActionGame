@@ -10,7 +10,8 @@
     <RootNamespace>_2DActionGame</RootNamespace>
     <AssemblyName>2DActionGame</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
     <XnaProfile>Reach</XnaProfile>
@@ -121,6 +122,7 @@
     <Compile Include="Core\Scenes\SelectScene.cs" />
     <Compile Include="Core\Scenes\SoundTest.cs" />
     <Compile Include="Core\Scenes\Tutorial.cs" />
+    <None Include="app.config" />
     <None Include="Core\Stages\BackGround.cs" />
     <Compile Include="Core\Stages\BossTest.cs" />
     <Compile Include="Core\Stages\MainStages.cs" />

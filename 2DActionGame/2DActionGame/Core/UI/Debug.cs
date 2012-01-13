@@ -74,7 +74,7 @@ namespace _2DActionGame
 					#region Stage1, 2, 3
 					case 1:
 						// Player
-						if (stage.characters.Count > 1) {
+						if (stage.characters.Count >= 1) {
 							spriteBatch.DrawString(game.debugFont, "player.vector" + stage.player.position.ToString(), new Vector2(0, 50 + y), fontColor[1]);
 							spriteBatch.DrawString(game.debugFont, "player.speed" + stage.player.speed.ToString(), new Vector2(0, 60 + y), fontColor[1]);
 							spriteBatch.DrawString(game.debugFont, "player.isDamaged" + stage.player.isDamaged.ToString(), new Vector2(0, 70 + y), fontColor[1]);
@@ -83,7 +83,7 @@ namespace _2DActionGame
 							spriteBatch.DrawString(game.debugFont, "player.isJumping:" + stage.player.isJumping.ToString(), new Vector2(0, 100 + y), fontColor[1]);
 							spriteBatch.DrawString(game.debugFont, "player.jumpCount:" + stage.player.jumpCount.ToString(), new Vector2(0, 110 + y), fontColor[1]);
 							spriteBatch.DrawString(game.debugFont, "player.jumpTime:" + stage.player.jumpTime.ToString(), new Vector2(0, 120 + y), fontColor[1]);
-							spriteBatch.DrawString(game.debugFont, "player.isToChargingMotion:" + stage.player.isToChargingMotion.ToString(), new Vector2(0, 130 + y), fontColor[1]);
+							spriteBatch.DrawString(game.debugFont, "player.isAttacking3:" + stage.player.isAttacking3.ToString(), new Vector2(0, 130 + y), fontColor[1]);
 							spriteBatch.DrawString(game.debugFont, "player.isChargingPower:" + stage.player.isChargingPower.ToString(), new Vector2(0, 140 + y), fontColor[1]);
 							if (stage.player.locus.Count > 1)
 								spriteBatch.DrawString(game.debugFont, "player.prevVector[1]:" + stage.player.locus[1].ToString(), new Vector2(0, 150 + y), fontColor[1]);

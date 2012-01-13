@@ -106,6 +106,7 @@ namespace _2DActionGame
         public override void Draw(SpriteBatch spriteBatch) 
         {
 			base.Draw(spriteBatch);
+			spriteBatch.DrawString(game.japaneseFont, "てすと", new Vector2(200, 50), button[0].color);
             /*spriteBatch.DrawString(game.Arial, "KeyConfig", new Vector2(200, 50), button[0].color);
 			spriteBatch.DrawString(game.Arial, "Full Screen / Window", new Vector2(200, 100), button[1].color);
 			spriteBatch.DrawString(game.Arial, "BGM volume : " + SoundControl.volumeAll.ToString("F1"), new Vector2(200, 150), button[2].color);
