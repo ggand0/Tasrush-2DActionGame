@@ -5,7 +5,7 @@ using System.Text;
 
 namespace _2DActionGame
 {
-	public class DamageControl
+	public class DamageManeger
 	{
 		// WeaponとPlayerでそれぞれやるよりは統一したほうがいいだろう bulletも剣で跳ね返すのに
 		public static Game1 game;
@@ -36,14 +36,14 @@ namespace _2DActionGame
 		/// </summary>
 		private int counter;
 
-		public DamageControl(Stage stage)
+		public DamageManeger(Stage stage)
 		{
 			this.stage = stage;
 
 			damagedObjects = new List<Object>();
 			damages = new List<Damage>();
 		}
-		public DamageControl(Stage stage, List<Object> attackedObjects, List<Object> damagedObjects)
+		public DamageManeger(Stage stage, List<Object> attackedObjects, List<Object> damagedObjects)
 		{
 
 			this.stage = stage;

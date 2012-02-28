@@ -32,6 +32,8 @@ namespace _2DActionGame
 		public bool isBlownAway { get; protected set; }
         public bool isInDamageMotion { get; set; }
         public bool onConveyor { get; set; }
+		public bool deathByFalling { get; set; }
+		
 
         public int totalHits { get; set; }                          // デバッグ用
         public int comboCount { get; protected set; }
@@ -152,6 +154,5 @@ namespace _2DActionGame
 				}
             }
         }
-
     }
 }

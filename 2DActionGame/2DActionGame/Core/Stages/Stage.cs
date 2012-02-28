@@ -33,8 +33,8 @@ namespace _2DActionGame
 		public Reverse reverse { get; protected set; }
 		public Camera camera { get; private set; }
 
-		public DamageControl damageControl { get; private set; }
-		public EffectControl effectControl { get; private set; }
+		public DamageManeger damageControl { get; private set; }
+		public EffectManeger effectControl { get; private set; }
 		public UserInterface userInterface { get; protected set; }
 		public SlowMotion slowmotion { get; protected set; }
 		private Debug debug;
@@ -244,8 +244,8 @@ namespace _2DActionGame
 			// System
 			reverse = new Reverse(this, game, content);
 			slowmotion = new SlowMotion();
-			damageControl = new DamageControl(this, attackedObjects, damagedObjects);
-			effectControl = new EffectControl(this);
+			damageControl = new DamageManeger(this, attackedObjects, damagedObjects);
+			effectControl = new EffectManeger(this);
 			camera = new Camera(this, 320, 240, 640, 480);
 			effectBoss = new Effect(this);
 			effectStage = new Effect(this);
@@ -1138,7 +1138,11 @@ namespace _2DActionGame
 				//player.position += Player.screenPosition;
 
 				//camera.position.X -= Player.screenPosition.X; //player.drawPos == (-8, 199.8); 2430
-
+				if (player.position.Y > 600) {
+					player.deathByFalling = true;
+					
+				}
+				//isScrolled = false;
 				player.isAlive = false;
 				toGameOver = true;
 				hasEffectedPlayerDeath = false;
@@ -1514,13 +1518,13 @@ namespace _2DActionGame
 				//inBossBattle = true;
 			}
 			if (!hasEffectedBossExplosion && game.stageNum != 0 && !boss.isAlive) {
-				effectBoss.DrawBossDeathEffect(spriteBatch, boss);
+				effectBoss.DrawBossDeathEffect(spriteBatch, boss, 60, 8, 3, 1.5f);
 			}
 			if (!hasEffectedPlayerDeath && toGameOver) {
 				//camera.position//2965
 				effectPlayerDeath.DrawPlayerDeathEffect(spriteBatch, 4
-					, new Vector2(player.position.X + player.width / 2, player.position.Y + player.height / 2), 360 / (float)4, 2, 1, 1);//Effect.deathEffectNum
-			}//player.drawPos == (200, y) やっぱりずれてた
+					, new Vector2(player.position.X + player.width / 2, player.deathByFalling ? (player.position.Y - player.height * 3) : player.position.Y + player.height / 2), 360 / (float)4, 2, 1, 1);//Effect.deathEffectNum
+			}
 			
 			// debug
 			debug.Draw(spriteBatch);

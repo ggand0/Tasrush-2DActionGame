@@ -27,7 +27,7 @@ namespace _2DActionGame
 		/// </summary>
 		protected readonly int maxComboCount = 12;
 		
-		protected SoundEffect damageSound, hitSound;
+		protected SoundEffect damageSound, hitSound, blownSound;
 		protected Vector2 defPos;
 		/// <summary>
 		/// 往復移動する仕様のときに使っていたもの
@@ -65,12 +65,14 @@ namespace _2DActionGame
 
 			Load();
 		}
+
 		protected override void Load()
 		{
 			base.Load();
 
 			damageSound = content.Load<SoundEffect>("Audio\\SE\\damage");
 			hitSound = content.Load<SoundEffect>("Audio\\SE\\hit_big");
+			blownSound = content.Load<SoundEffect>("Audio\\SE\\blast_small");
 			LoadXML("Enemy", "Xml\\Objects_Base.xml");
 		}
 
@@ -128,6 +130,7 @@ namespace _2DActionGame
 			 * ④1回の攻撃につき当たるのは1回のみ、攻撃は基本的に自動終了←これを採用
 			 */
 			float distance = position.X - stage.player.position.X;
+			int seType = 0;
 
 			if (isDamaged && isAlive) {
 				if (stage.player.isCuttingUp) {
@@ -136,12 +139,16 @@ namespace _2DActionGame
 				} else if (stage.player.isCuttingAway) {
 					BlownAwayMotionRight(2, 60);
 					isBlownAway = true;
+					//blownEffected = true;
+					seType = 1;
 				} else if (stage.player.isCuttingDown) {
 					BlownAwayMotionDown(5, 60);
 				} else if (stage.player.isAttacking3) {
-					if (distance > 0) speed.X += 5 * timeCoef;
+					/*if (distance > 0) speed.X += 5 * timeCoef;
 					else speed.X += -5 * timeCoef;
-					speed.Y -= 5;
+					speed.Y -= 5;*/
+					//blownEffected = true;
+					BlownAwayMotionRight(1.0f, 60);
 					HP--;
 				} else if (stage.player.isAirial) {
 					if (distance > 0) speed.X += 5 * timeCoef;
@@ -156,8 +163,17 @@ namespace _2DActionGame
 					if (distance > 0) speed.X += 1.5f * timeCoef;
 					else speed.X += -1.5f * timeCoef;
 				}
-				
-				if (!game.isMuted) hitSound.Play(SoundControl.volumeAll, 0f, 0f);
+
+				if (!game.isMuted) {
+					switch (seType) {
+						case 1:
+							blownSound.Play(SoundControl.volumeAll, 0f, 0f);
+							break;
+						default:
+							hitSound.Play(SoundControl.volumeAll, 0f, 0f);
+							break;
+					}
+				}
 				if (stage.player.normalComboCount >= 3) deathComboTime = 60;
 				else deathComboTime = 30;
 

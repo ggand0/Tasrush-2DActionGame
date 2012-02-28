@@ -40,14 +40,15 @@ namespace _2DActionGame
 		/// プレイヤーのティウン時に撒き散らす弾エフェクト
 		/// </summary>
 		//private Object[] deathEffects;// = new Object[deathEffectNum];
-		private List<Object[]> deathEffects = new List<Object[]>();
+		private List<Object[]> deathEffectsPlayer = new List<Object[]>();
+		private List<List<Object>> deathEffectsBoss = new List<List<Object>>();
 		//private Object[] deathEffectsOutSide = new Object[deathEffectNum * 2];
 
 		private float dColor;
 		private int counter;
 		private int time;
 		private bool fadeOut;
-		private List<int> count = new List<int>();
+		private List<int> effectCount = new List<int>();
 		private bool hasPlayedSoundEffect;
 
 		private Texture2D[] textures = new Texture2D[10];
@@ -117,7 +118,21 @@ namespace _2DActionGame
 					hasEffected = true;
 				}
 			}
+			if (targetObject.blownEffected) {
+				Load(game.Content, "Effect\\blownEffect", 1);
+				//Update(0, 0, 120, 120, 1, 0);
+				float ratio = (counter + 1) / 2; //* .1f;
+				rect.Width = rect.Height = (int)(120 * ratio);
 
+				spriteBatch.Draw(texture, targetObject.drawPos + targetObject.effectPos, rect, Color.White, 0,
+					Vector2.Zero, new Vector2(ratio), SpriteEffects.None, .1f);
+
+				if (counter > 120) {
+					targetObject.blownEffected = false;
+					targetObject.isEffected = false;
+					hasEffected = true;
+				}
+			}
 			if (targetObject.deathEffected) {// このときにdamageEffectedもtrue!! すでにposeCount == 2はいいのか?
 				if (counter == -1) {
 					switch (game.random.Next(2)) {
@@ -195,45 +210,45 @@ namespace _2DActionGame
 			//float direction = 360 / (float)deathEffectNum;
 			//float speed = 2;
 			int index = maxTime - time;
-			if (count.Count == index) count.Add(-1);
+			if (effectCount.Count == index) effectCount.Add(-1);
 			//DrawPlayerDeathEffectOutSide(spriteBatch);
-			if (count[index] == -1)	deathEffects.Add(new Object[deathEffectNum]);
+			if (effectCount[index] == -1)	deathEffectsPlayer.Add(new Object[deathEffectNum]);
 			if (time == 1) DrawPlayerDeathEffect(spriteBatch, deathEffectNum * 2, defPos, 360 / (float)(deathEffectNum * 2), speed + 1, maxTime, time - 1);
 
 			// 等幅で飛ぶようにspeedを与える。
-			float size = count[index] != 0 ? deathEffectMaxSize % count[index] / (float)deathEffectDelayTime : 0;
-			if (count[index] % deathEffectMaxSize == 0) {
+			float size = effectCount[index] != 0 ? deathEffectMaxSize % effectCount[index] / (float)deathEffectDelayTime : 0;
+			if (effectCount[index] % deathEffectMaxSize == 0) {
 				if (index == 0)	repeatTime++;
-				count[index] = 0;
-				deathEffects.Add(new Object[deathEffectNum]);
+				effectCount[index] = 0;
+				deathEffectsPlayer.Add(new Object[deathEffectNum]);
 
 				if (!game.isMuted) playerDeath.Play(SoundControl.volumeAll, 0f, 0f);
 			}
 
 			for (int i = 0; i < deathEffectNum; i++) {
-				if (count[index] == -1) {
-					deathEffects[index][i] = new Object(stage, defPos.X, defPos.Y, 25, 25);
-					deathEffects[index][i].Load(game.Content, "Effect\\playerDeathEffect0");
-				} else if (count[index] == 0) {
-					deathEffects[index][i].isActive = true;
-					stage.unitToAdd.Add(deathEffects[index][i]);
+				if (effectCount[index] == -1) {
+					deathEffectsPlayer[index][i] = new Object(stage, defPos.X, defPos.Y, 25, 25);
+					deathEffectsPlayer[index][i].Load(game.Content, "Effect\\playerDeathEffect0");
+				} else if (effectCount[index] == 0) {
+					deathEffectsPlayer[index][i].isActive = true;
+					stage.unitToAdd.Add(deathEffectsPlayer[index][i]);
 
-					deathEffects[index][i].speed.X = (float)Math.Cos(MathHelper.ToRadians(direction * i)) * speed;
-					deathEffects[index][i].speed.Y = (float)Math.Sin(MathHelper.ToRadians(direction * i)) * speed;
-				} else if (deathEffectMaxSize % count[index] == 0) {// counter % deathEffectDelayTime == 0
-					foreach (Object obj in deathEffects[index]) obj.position = defPos;
+					deathEffectsPlayer[index][i].speed.X = (float)Math.Cos(MathHelper.ToRadians(direction * i)) * speed;
+					deathEffectsPlayer[index][i].speed.Y = (float)Math.Sin(MathHelper.ToRadians(direction * i)) * speed;
+				} else if (deathEffectMaxSize % effectCount[index] == 0) {// counter % deathEffectDelayTime == 0
+					foreach (Object obj in deathEffectsPlayer[index]) obj.position = defPos;
 				} else {
-					deathEffects[index][i].position += deathEffects[index][i].speed;
-					deathEffects[index][i].drawPos.X = deathEffects[index][i].position.X - stage.camera.position.X;// スクロールもさせちゃう
-					deathEffects[index][i].drawPos.Y = deathEffects[index][i].position.Y;
-					deathEffects[index][i].animation.Update(4, 0, 25, 25, 12, 1);
+					deathEffectsPlayer[index][i].position += deathEffectsPlayer[index][i].speed;
+					deathEffectsPlayer[index][i].drawPos.X = deathEffectsPlayer[index][i].position.X - stage.camera.position.X;// スクロールもさせちゃう
+					deathEffectsPlayer[index][i].drawPos.Y = deathEffectsPlayer[index][i].position.Y;
+					deathEffectsPlayer[index][i].animation.Update(4, 0, 25, 25, 12, 1);
 
-					spriteBatch.Draw(deathEffects[index][i].texture, deathEffects[index][i].drawPos, deathEffects[index][i].animation.rect, Color.White, 0, Vector2.Zero, new Vector2(size), SpriteEffects.None, 0);
+					spriteBatch.Draw(deathEffectsPlayer[index][i].texture, deathEffectsPlayer[index][i].drawPos, deathEffectsPlayer[index][i].animation.rect, Color.White, 0, Vector2.Zero, new Vector2(size), SpriteEffects.None, 0);
 					// debug : //spriteBatch.DrawString(game.Arial, (deathEffectMaxSize % counter).ToString(), new Vector2(0, 250), Color.Orange);
 				}
 			}
 
-			count[index]++;
+			effectCount[index]++;
 			//if (counter > deathEffectMaxSize * 2) stage.hasEffectedPlayerDeath = true;	// 120
 			if (repeatTime > 2) stage.hasEffectedPlayerDeath = true;
 		}
@@ -292,39 +307,43 @@ namespace _2DActionGame
 
 			time++;
 		}
-		Vector2 adj;
 		/// <summary>
 		/// ボス死亡時の爆発エフェクト。適当なので後で直したい
 		/// </summary>
 		/// <param name="targetBoss">エフェクトを描画する対象のボス</param>
-		public void DrawBossDeathEffect(SpriteBatch spriteBatch, Boss targetBoss)
+		public void DrawBossDeathEffect(SpriteBatch spriteBatch, Boss targetBoss, int numPerEffect, int totalNum, int animationSpeed, float range)
 		{
-			Load(game.Content, "Effect\\DeathEffect2", ref textures[0]);// 値渡し?←関数の引数は基本値渡し！
-			Update(3, 0, 64, 64, 4, 1);//912
-			//bossExplosionEffectTime = 360;
+			Load(game.Content, "Effect\\DeathEffect2", ref textures[0]);
+			Update(3, 0, 64, 64, 12, 2);
 
 			if (!hasPlayedSoundEffect) {
 				if (!game.isMuted) lastExplosion.Play(SoundControl.volumeAll, 0f, 0f);
 				hasPlayedSoundEffect = true;
-			} else {
-				// = new Vector2();
-				if (stage.gameTimeNormal % 4 == 0) adj = new Vector2(game.random.Next(-32, 32), game.random.Next(-32, 32));
-				
-				spriteBatch.Draw(textures[0], targetBoss.drawPos + new Vector2(targetBoss.width / 2, targetBoss.height / 2) + adj, rect, Color.White);
-				spriteBatch.Draw(textures[0], targetBoss.drawPos + new Vector2(targetBoss.width / 2 - 50, targetBoss.height / 2 + 50) + adj, rect, Color.White);
-				spriteBatch.Draw(textures[0], targetBoss.drawPos + new Vector2(targetBoss.width / 2, targetBoss.height / 2 - 30) + adj, rect, Color.White);
-				spriteBatch.Draw(textures[0], targetBoss.drawPos + new Vector2(targetBoss.width, targetBoss.height + 50) + adj, rect, Color.White);/**/
+				deathEffectsBoss.Clear();
+				for (int i = 0; i < totalNum; i++) deathEffectsBoss.Add(new List<Object>());
 
-				spriteBatch.Draw(textures[0], targetBoss.drawPos + new Vector2(targetBoss.width / 2 - 50, targetBoss.height + 50) + adj, rect, Color.White);
-				spriteBatch.Draw(textures[0], targetBoss.drawPos + new Vector2(targetBoss.width / 3 + 100, targetBoss.height / 2 + 50) + adj, rect, Color.White);
-				spriteBatch.Draw(textures[0], targetBoss.drawPos + new Vector2(targetBoss.width , targetBoss.height / 2) + adj, rect, Color.White);
-				spriteBatch.Draw(textures[0], targetBoss.drawPos + new Vector2(targetBoss.width, targetBoss.height / 2 - 50) + adj, rect, Color.White);
-				/*for (int i = 0; i < 10; i++) {
-					if (time > i * 10)
-					spriteBatch.Draw(textures[0], targetBoss.drawPos + new Vector2(targetBoss.width / 2, targetBoss.height / 2) + new Vector2(game.random.Next(targetBoss.width / 2) * 3f, game.random.Next(targetBoss.height / 2) * 3f), rect, Color.White);
-				}*/
+				for (int i = 0; i < totalNum; i++) {
+					for (int j = 0; j < numPerEffect; j++) {
+						deathEffectsBoss[i].Add(new Object(stage, (int)textures[0].Width, (int)textures[0].Height));
+						deathEffectsBoss[i][j].Load(game.Content, "Effect\\DeathEffect2");
+						deathEffectsBoss[i][j].position = new Vector2(targetBoss.width / 2, targetBoss.height / 2)
+							+ new Vector2(game.random.Next(targetBoss.width / 2) * range, game.random.Next(targetBoss.height / 2) * range);
+					}
+				}
+			} else {
+				for (int i = 0; i < totalNum; i++) {
+					int interval = game.random.Next(11, 12);//(int)(animationSpeed / 2.0f), animationSpeed);
+					for (int j = 0; j < numPerEffect; j++) {
+						deathEffectsBoss[i][j].drawPos = targetBoss.drawPos + deathEffectsBoss[i][j].position;
+
+						if (time > j * interval && time < (j + 1) * interval) {
+							deathEffectsBoss[i][j].animation.Update(3, 0, 64, 64, animationSpeed, 2);
+							spriteBatch.Draw(textures[0], deathEffectsBoss[i][j].drawPos, deathEffectsBoss[i][j].animation.rect, Color.White);
+						}
+					}
+				}
 			}
-			if (time > bossExplosionEffectTime) {
+			if (time > numPerEffect * animationSpeed * 1.5f) {
 				stage.hasEffectedBossExplosion = true;
 				time = 0;
 				hasPlayedSoundEffect = false;

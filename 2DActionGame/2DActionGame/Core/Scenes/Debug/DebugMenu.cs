@@ -58,8 +58,8 @@ namespace _2DActionGame
 		{
 			base.Load();
 			TEXT_POSITION = new Vector2(Game1.Width / 2,
-				Game1.Height / 2 - game.menuFont.MeasureString("A").Y * (buttonNum * 4 / 4));
-			CONTEXT_POSITION = new Vector2(Game1.Width / 2, Game1.Height - game.japaneseFont.MeasureString("あ").Y);
+				Game1.Height / 2 - game.menuFont.MeasureString("A").Y * (buttonNum * 5 / 8));/*3 / 4*/
+			CONTEXT_POSITION = new Vector2(0, Game1.Height - game.japaneseFont.MeasureString("あ").Y);
 		}
 		protected override void UpdateTexts()
 		{
@@ -71,7 +71,7 @@ namespace _2DActionGame
 			button[4].name = "score : " + game.visibleScore.ToString();
 			button[5].name = "syoryuMode : " + stage.player.syouryuuMode.ToString();
 			button[6].name = "thrustChargeMode : " + stage.player.thrustChargeMode.ToString();
-			button[6].name = "twoButtonMode : " + game.twoButtonMode.ToString();
+			button[7].name = "twoButtonMode : " + game.twoButtonMode.ToString();
 		}
 		protected override void ButtonUpdate()
 		{
@@ -136,7 +136,7 @@ namespace _2DActionGame
 		{
 			base.Draw(spriteBatch);
 			foreach (String s in contextString) {
-				spriteBatch.DrawString(game.japaneseFont, contextString[curButton], CONTEXT_POSITION, Color.Orange);
+				spriteBatch.DrawString(game.japaneseFont, MessageTable.debugMenuMsgs[curButton], CONTEXT_POSITION, Color.Orange);
 			}
 			//spriteBatch.DrawString(game.Arial, "てすと", new Vector2(250, 30), Color.Orange);
 			/*spriteBatch.Draw(backGround, Vector2.Zero, Color.White);

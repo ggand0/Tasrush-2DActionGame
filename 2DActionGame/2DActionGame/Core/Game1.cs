@@ -140,14 +140,13 @@ namespace _2DActionGame
 
 			if (isTest) {
 				original = sr.ReadToEnd();
-				// 暗号化の実験
 				MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(original));
 				Encryption.EncryptionData(ms, fileName);
 			}// １行追加してテストしてみたところ最後の行の途中から欠ける仕様らしい？
 
 			// 復号化
 			MemoryStream msd = new MemoryStream();
-			Encryption.DecryptionFile(fileName, msd);//("test.txt", msd);
+			Encryption.DecryptionFile(fileName, msd);
 			byte[] bs = msd.ToArray();
 			original = Encoding.UTF8.GetString(bs);		// UTF8じゃないと文字化けする
 			//original = sr.ReadToEnd();
@@ -253,8 +252,8 @@ namespace _2DActionGame
             // TODO: Add your initialization logic here
             CollisionDetection.game = this;
 			Animation.game = this;
-			EffectControl.game = this;
-			DamageControl.game = this;
+			EffectManeger.game = this;
+			DamageManeger.game = this;
 
             base.Initialize();
         }

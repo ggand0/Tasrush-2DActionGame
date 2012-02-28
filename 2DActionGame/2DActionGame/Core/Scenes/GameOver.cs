@@ -36,17 +36,19 @@ namespace _2DActionGame
         protected override void ButtonUpdate()
         {
             if (button[0].isSelected && (JoyStick.IsOnKeyDown(3) || JoyStick.IsOnKeyDown(8))) {		// Continue
+				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
+
                 game.ReloadStage(game.isHighLvl);
                 //SoundControl.Pause();//SoundControl.Stop();
 				isEndScene = true;
-                
-                if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
             }
             if (button[1].isSelected && (JoyStick.IsOnKeyDown(3) || JoyStick.IsOnKeyDown(8))) {		// Back to Menu
                 if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 				SoundControl.Stop();
 				SoundControl.IniMusic("Audio\\BGM\\menu_new");
-				BackScene(5);
+				//isEndScene = true;
+
+				BackScene(game.stageNum + 4);//5
             }
             if (JoyStick.KEY(5) && game.avilityNum == 0 ) {
                 if ((upperScene as Stage).reverse.ReduceTAS() != 0)

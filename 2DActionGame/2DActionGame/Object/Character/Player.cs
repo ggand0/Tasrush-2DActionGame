@@ -248,7 +248,7 @@ namespace _2DActionGame
 		/// </summary>
 		private void UpdateAttackProcess()
 		{
-			if (isAttacking) {
+			//if (isAttacking) {
 				if (isAttacking1) {
 					sword.SlashVertically(turnsRight, 120, 8);
 					if (sword.isEnd) {									// isEndはsword内のメソッド内で使い始めに初期化
@@ -332,7 +332,7 @@ namespace _2DActionGame
 					}
 				}
 
-			}
+			//}
 		}
         /// <summary>
         /// ジャンプ時の攻撃キャンセル
@@ -470,7 +470,7 @@ namespace _2DActionGame
 			// NormalCombo: △ △ ○
 			// LaunchCombo: △ △ △＋↑ ○/× △...
 			// 3/X, 0/A, 1/Z, 2/C
-			if (!isThrusting) {
+			if (!isThrusting) {// isThrustingが終わらないバグが...!!!
 				#region circle
 				if (game.twoButtonMode && JoyStick.IsOnKeyDown(3)) {
 					if (normalComboCount == 0) {// 単発の強攻撃
@@ -522,22 +522,25 @@ namespace _2DActionGame
 				#endregion
 				#region StrongSlash
 				// 1ボタンモードの場合の処理 : Z+→同時押しで強攻撃
-				if (!game.twoButtonMode) {
+				/*if (!game.twoButtonMode) {
 					if ((normalComboCount == 0 || normalComboCount == 3)) {
-						if (/*!hasAttackButtonPressed && */!hasRightButtonPressed
-							&& (/*JoyStick.IsOnKeyDown(1) || */JoyStick.onStickDirectionChanged && JoyStick.stickDirection == Direction.RIGHT)) {
+						if (//!hasAttackButtonPressed && 
+							!hasRightButtonPressed
+							&& (//JoyStick.IsOnKeyDown(1) || 
+							JoyStick.onStickDirectionChanged && JoyStick.stickDirection == Direction.RIGHT)) {
 
 							//if (JoyStick.IsOnKeyDown(1)) hasAttackButtonPressed = true;
 							if (JoyStick.onStickDirectionChanged && JoyStick.stickDirection == Direction.RIGHT) hasRightButtonPressed = true;
 							strongSlashTimer.Start(20);
 							inSSCharge = true;
-						} else if ((/*hasAttackButtonPressed && JoyStick.onStickDirectionChanged && JoyStick.stickDirection == Direction.RIGHT || */hasRightButtonPressed && JoyStick.IsOnKeyDown(1))
+						} else if ((//hasAttackButtonPressed && JoyStick.onStickDirectionChanged && JoyStick.stickDirection == Direction.RIGHT ||
+							hasRightButtonPressed && JoyStick.IsOnKeyDown(1))
 								&& strongSlashTimer.TimerState == FrameTimer.State.Run) {
 								if (normalComboCount == 0) {// 単発の強攻撃
 									hasAttacked = isAttacking = isAttacking3 = isInCombo = sword.isBeingUsed = true;
 									time = 0;              // 最初に押したときから計り始める
 									sword.degreeCounter = 0;
-									hasRightButtonPressed = hasAttackButtonPressed /*= inSSCharge*/ = false;
+									hasRightButtonPressed = hasAttackButtonPressed  = false;
 									//normalComboCount = 1;
 									//inCombo1 = true;
 									inCombos[++normalComboCount] = true;
@@ -546,9 +549,9 @@ namespace _2DActionGame
 										hasAttacked = isAttacking = isAttacking3 = isInCombo = sword.isBeingUsed = true;
 										isAttacking2 = false;
 										time = sword.degreeCounter = 0;
-										/*normalComboCount = 3;
-										inCombo2 = false;
-										inCombo3 = true;*/
+										//normalComboCount = 3;
+										//inCombo2 = false;
+										//inCombo3 = true;
 										hasRightButtonPressed = hasAttackButtonPressed = false;
 										inCombos[normalComboCount] = false;
 										inCombos[++normalComboCount] = true;
@@ -560,7 +563,7 @@ namespace _2DActionGame
 							hasRightButtonPressed = hasAttackButtonPressed = inSSCharge = false;
 						}
 					}
-				}
+				}*/
 				#endregion
 				#region triangle
 				if (!inSSCharge && JoyStick.IsOnKeyDown(1)) {

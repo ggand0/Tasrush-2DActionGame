@@ -65,6 +65,7 @@ namespace _2DActionGame
                     //SoundControl.Pause();//SoundControl.Stop();
 					
 					isEndScene = true;
+					upperScene.isEndScene = true;
 				} else if (game.stageNum == Game1.maxStageNum && (form.IsDisposed || form == null)) {// To Ending
 					game.stageNum = 1;
 					game.hasReachedCheckPoint = false;

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace _2DActionGame
 {
-	public class EffectControl
+	public class EffectManeger
 	{
 		public static Game1 game;
 		Stage stage;
@@ -16,7 +16,7 @@ namespace _2DActionGame
 		//private int counter;
 		public List<Effect> effects { get; set; }//effects = new List<Effect>();
 
-		public EffectControl(Stage stage)
+		public EffectManeger(Stage stage)
 		{
 			this.stage = stage;
 			effects = new List<Effect>();

@@ -17,6 +17,7 @@ namespace _2DActionGame
         private readonly int musicTime = 6480;
         //1:48 = 108 * 60 = 6480frame
         private Texture2D[] textures = new Texture2D[textureNum];
+		private float[] timings = { 0, 18.5f, 37, 47, 60, 75, 84, 93, 102, 120 };
 		private void WriteScore()
 		{
 		}
@@ -51,7 +52,8 @@ namespace _2DActionGame
         {
 			if (textures[0] != null) {
                 for (int i = 0; i < textureNum; i++)
-					if (counter >= defDrawTime * i && counter < defDrawTime * (i + 1))
+					if (counter >= timings[i] * 60 && counter < timings[i + 1] * 60)
+					//if (counter >= defDrawTime * i && counter < defDrawTime * (i + 1))
 						spriteBatch.Draw(textures[i], Vector2.Zero, Color.White);
 			}
         }

@@ -99,9 +99,9 @@
     <Compile Include="Core\GameSystem\Camera.cs" />
     <Compile Include="Core\GameSystem\CollisionDetection.cs" />
     <Compile Include="Core\GameSystem\Damage.cs" />
-    <Compile Include="Core\GameSystem\DamageControl.cs" />
+    <Compile Include="Core\GameSystem\DamageManeger.cs" />
     <Compile Include="Core\GameSystem\DrawFPS.cs" />
-    <Compile Include="Core\GameSystem\EffectControl.cs" />
+    <Compile Include="Core\GameSystem\EffectManeger.cs" />
     <Compile Include="Core\GameSystem\FrameTimer.cs" />
     <Compile Include="Core\GameSystem\Reverse.cs" />
     <Compile Include="Core\GameSystem\SlowMotion.cs" />
@@ -153,6 +153,7 @@
     <None Include="Input\LoadMapData.cs" />
     <Compile Include="Media\Animation.cs" />
     <Compile Include="Media\Effect.cs" />
+    <Compile Include="Media\MessageTable.cs" />
     <Compile Include="Media\ScrollingBackground.cs" />
     <Compile Include="Media\ScrollingTASEffect.cs" />
     <Compile Include="Media\SoundControl.cs" />
@@ -224,10 +225,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\FontProcessors\FontProcessors.csproj">
-      <Project>{276C5AB5-1007-4986-9CFA-8F38F1961660}</Project>
-      <Name>FontProcessors</Name>
-    </ProjectReference>
     <ProjectReference Include="..\2DActionGameContent\2DActionGameContent.contentproj">
       <Name>_2DActionGameContent</Name>
       <XnaReferenceType>Content</XnaReferenceType>

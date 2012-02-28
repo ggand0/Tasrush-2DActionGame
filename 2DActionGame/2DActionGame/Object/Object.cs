@@ -155,7 +155,7 @@ namespace _2DActionGame
 		public bool hasDeathEffected { get; set; }
 		public bool deathEffected { get; set; }
 		public bool dashEffected { get; set; }
-
+		public bool blownEffected { get; set; }
 
 		// Etc
 		protected byte moveCount;
