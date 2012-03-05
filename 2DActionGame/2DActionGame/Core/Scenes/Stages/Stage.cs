@@ -1058,7 +1058,7 @@ namespace _2DActionGame
 						// 11/12/15 左の条件が要らなさそうだったのでアウトしてみた
 						if (/*(bullet.turret.user == character && !bullet.isHostile || bullet.isHostile) && */(bullet.isHostile && character is Player && !game.inDebugMode || !bullet.isHostile && character is Enemy)) {
 							CollisionDetection.RectangleCross(bullet, character, bullet.degree, character.degree);// メソッド内でtargetObject.isDmaged=trueにされる
-						} /*else if (!bullet.isHostile && character is Enemy) {
+						}/*else if (!bullet.isHostile && character is Enemy) {
 								CollisionDetection.RectangleCross(bullet, character, bullet.degree, character.degree);
 							}*/
 						if (!bullet.isHostile && character is Fuujin && character.isDamaged) { }

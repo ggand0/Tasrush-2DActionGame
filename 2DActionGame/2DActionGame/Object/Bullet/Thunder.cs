@@ -56,7 +56,8 @@ namespace _2DActionGame
 			texture2 = content.Load<Texture2D>("Object\\Weapon\\Beam");
 
 			// animation1は矩形、2はエフェクト
-			animation = new Animation(width, height);
+			//animation = new Animation(width, height);
+            animation = new Animation(texture.Width, texture.Height);
 			animations = new Animation[10];
 			for (int i = 0; i < animations.Length; i++) {
 				animations[i] = new Animation(texture.Width / 3, texture.Height);//32, 64

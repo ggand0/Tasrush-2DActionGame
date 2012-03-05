@@ -116,6 +116,7 @@ namespace _2DActionGame
         {
             this.user = user;
 			effectPos = new Vector2();
+            animation = new Animation(width, height);
         }
 
         public override void Update()

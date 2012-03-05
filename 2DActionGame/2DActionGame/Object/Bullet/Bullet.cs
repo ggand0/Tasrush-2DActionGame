@@ -68,6 +68,8 @@ namespace _2DActionGame
 		public int disappearPattern { get; protected set; }
 		public bool hasBeenShot { get; private set; }
 		public double movedDistance { get; internal set; }
+        public Vector2 collisionPos { get; set; }
+
 		// コンストラクタ
 		public Bullet(Stage stage, Turret turret, int width, int height)
 			: this(stage, turret, width, height, 0)
@@ -91,24 +93,24 @@ namespace _2DActionGame
 			// Load後にテクスチャのサイズから取得した方がいいよな...?
 			switch (textureType) {
 				case 0:
-					this.width = 32;
-					this.height = 32;
+					this.width = 10;//32;
+					this.height = 10;//32;
 					break;
 				case 1:
-					this.width = 32;
-					this.height = 32;
+					this.width = 10;//32;
+					this.height = 10;//32;
 					break;
 				case 2:
-					this.width = 32;
-					this.height = 32;
+					this.width = 10;//32;
+					this.height = 10;//32;
 					break;
 				case 3:
-					this.width = 32;
-					this.height = 16;
+					this.width = 10;//32;
+					this.height = 10;//16;
 					//degree = -180;
 					break;
 			}
-			animation = new Animation(this.width, this.height);
+            //animation = new Animation(texture.Width, texture.Height);//(this.width, this.height);
 			if (seName != "") {
 				shootSound = game.Content.Load<SoundEffect>("Audio\\SE\\" + seName);
 				shootSoundInstance = shootSound.CreateInstance();
@@ -124,22 +126,29 @@ namespace _2DActionGame
 			switch (textureType) {
 				case 0:
 					texture = content.Load<Texture2D>("Object\\Turret&Bullet\\Bullet_type0");
+                    animation = new Animation(texture.Width / 3, texture.Height);
 					break;
 				case 1:
 					texture = content.Load<Texture2D>("Object\\Turret&Bullet\\Bullet_type1");
+                    animation = new Animation(texture.Width, texture.Height);
 					break;
 				case 2:
 					texture = content.Load<Texture2D>("Object\\Turret&Bullet\\Bullet_type2");
+                    animation = new Animation(texture.Width, texture.Height);
 					break;
 				case 3:
 					texture = content.Load<Texture2D>("Object\\Turret&Bullet\\Bullet_type3a");
+                    animation = new Animation(texture.Width, texture.Height);
 					break;
 				case 4:
 					texture = content.Load<Texture2D>("Object\\Turret&Bullet\\airCutter");
+                    animation = new Animation(texture.Width, texture.Height);
 					this.width = 32; this.height = 48;
 					break;
 			}
 
+            if (textureType == 0) { }
+            
 			reflectSound = content.Load<SoundEffect>("Audio\\SE\\magic");
 		}
 		public override void Update()
@@ -162,7 +171,7 @@ namespace _2DActionGame
 		{
 			switch (textureType) {
 				case 0:
-					animation.Update(3, 0, width, height, 6, 1);
+					animation.Update(3, 0, texture.Width / 3, texture.Height, 6, 1);
 					break;
 				case 4:
 					animation.Update(1, 0, 32, 48, 6, 1);
@@ -281,9 +290,13 @@ namespace _2DActionGame
 		{
 			if (IsBeingUsed()) {
 				if (textureType == 4) {// 角度の計算が必要なタイプのテクスチャなら
-					spriteBatch.Draw(texture, drawPos, animation.rect, Color.Red, -rot - (float)Math.PI, new Vector2(width / 2, height / 2), 1, SpriteEffects.None, 0f);// originは中心の方が良さそう(Vector2.Zero→new Vector2(width/2, height/2))
+					spriteBatch.Draw(texture, drawPos + new Vector2(texture.Width / 2 - width / 2, texture.Height / 2 - height / 2), animation.rect, Color.Red, -rot - (float)Math.PI, new Vector2(width / 2, height / 2), 1, SpriteEffects.None, 0f);// originは中心の方が良さそう(Vector2.Zero→new Vector2(width/2, height/2))
 				} else {
-					spriteBatch.Draw(texture, drawPos, animation.rect, Color.White, -rot, new Vector2(width / 2, height / 2), 1, SpriteEffects.None, 0f);
+                    if (textureType == 0) {// 3コマ
+                        spriteBatch.Draw(texture, drawPos + new Vector2(texture.Width / 6 - width / 2, texture.Height / 2 - height / 2), animation.rect, Color.White, -rot, new Vector2(width / 2, height / 2), 1, SpriteEffects.None, 0f);
+                    } else {// 1枚絵
+                        spriteBatch.Draw(texture, drawPos + new Vector2(texture.Width / 2 - width / 2, texture.Height / 2 - height / 2), animation.rect, Color.White, -rot, new Vector2(width / 2, height / 2), 1, SpriteEffects.None, 0f);
+                    }
 				}
 			}
 		}

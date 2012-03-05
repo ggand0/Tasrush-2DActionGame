@@ -339,10 +339,7 @@ namespace _2DActionGame
 
 			base.Update();
 		}
-		public override void Draw(SpriteBatch spriteBatch)
-		{
-			base.Draw(spriteBatch);
-		}
+
 		/// <summary>
 		/// 今のところBossは仰け反らない仕様
 		/// </summary>
