@@ -144,6 +144,7 @@ namespace _2DActionGame
 		/// Hard用のパターン
 		/// </summary>
 		private int[] attackPattern1 = { 7, 1, 9 };// hard
+        private int attackBlinkCount;
 		
 		#region Update
 		/// <summary>
@@ -1285,6 +1286,8 @@ namespace _2DActionGame
 				totalHits += 1;
 				time = 0;
 				delayTime = 0;
+                blinkCount = 0;
+                e = 0;
 				isEffected = true;
 				damageEffected = true;
 				if (time < comboTime) comboCount++;
@@ -1302,15 +1305,17 @@ namespace _2DActionGame
 		{
 			//base.Draw(spriteBatch);
 			if (IsActive()) {
-				DrawDebugStatus(spriteBatch);
+				if (game.inDebugMode) DrawDebugStatus(spriteBatch);
 				if (inAttackNotice) {
-					if (blinkCount % 5 == 0) e += .05f;
+					if (attackBlinkCount % 5 == 0) e += .05f;
 					dColor = (float)Math.Sin(e * 8) / 2.0f + 0.5f;
 
 					spriteBatch.Draw(texture, drawPos, animation.rect, Color.Blue * dColor);
-					blinkCount++;
+					attackBlinkCount++;
 				} else {
-					base.Draw(spriteBatch);
+					//base.Draw(spriteBatch);
+                    DrawComboCount(spriteBatch);
+                    DrawDamageBlinkOnce(spriteBatch, Color.Red);
 				}
 			}
 		}

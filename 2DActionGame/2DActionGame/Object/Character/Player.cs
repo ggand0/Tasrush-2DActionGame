@@ -352,6 +352,7 @@ namespace _2DActionGame
 		{
 			#region General
 			// 主にDebug用
+#if DEBUG
 			if (KeyInput.IsOnKeyDown(Keys.D)) {//Space
 				if (!stage.isScrolled) stage.isScrolled = true;
 				else if (stage.isScrolled) stage.camera.isScrollingToPlayer = true;
@@ -384,6 +385,7 @@ namespace _2DActionGame
 			if (KeyInput.IsOnKeyDown(Keys.CapsLock)) {
 				if (turnsRight) { turnsRight = false; turnsLeft = true; } else if (!turnsRight) { turnsRight = true; turnsLeft = false; }
 			}
+#endif
 			// StageChange
 			/*if (KeyInput.IsOnKeyDown(Keys.F1)) { game.stageNum = 1; game.ReloadStage(false); }
 			if (KeyInput.IsOnKeyDown(Keys.F2)) { game.stageNum = 2; game.ReloadStage(false); }
@@ -443,8 +445,8 @@ namespace _2DActionGame
 								stage.isAccelerated = true;
 								break;
 						}
-                    if ((!game.twoButtonMode && JoyStick.KEY(2) || game.twoButtonMode && !JoyStick.KEY(5))
-                        || (!game.twoButtonMode && JoyStick.IsOnKeyUp(2) || game.twoButtonMode && JoyStick.IsOnKeyUp(5)))
+                    if (/*(!game.twoButtonMode && JoyStick.KEY(2) || game.twoButtonMode && !JoyStick.KEY(5))
+                        || */(!game.twoButtonMode && JoyStick.IsOnKeyUp(2) || game.twoButtonMode && JoyStick.IsOnKeyUp(5)))
 						switch (game.avilityNum) {
 							case 0:
 								stage.reverse.isReversed = false;
@@ -1558,7 +1560,9 @@ namespace _2DActionGame
 					spriteBatch.Draw(texture, drawPos, animation.rect, Color.Red * dColor);
 					blinkCount++;
 				}
+                #if DEBUG
 				spriteBatch.DrawString(game.pumpDemi, HP.ToString(), drawPos + new Vector2(width, -10), Color.Orange, 0, Vector2.Zero, new Vector2(.3f), SpriteEffects.None, 0f);
+                #endif
 			}
 		}
 	}

@@ -204,13 +204,14 @@ namespace _2DActionGame
 			gravity = defGravity;
 			friction = defFriction;
 			isAlive = true;
-			animation = new Animation(width, height);
+            //animation = new Animation(texture.Width, texture.Height);//(width, height);
 			locus.Add(Vector2.Zero);
 		}
 		#endregion
 		#region Load
 		protected virtual void Load()
 		{
+            
 		}
 		/// <summary>
 		/// Stageからtextureを読み込ませていた時に使っていたメソッド

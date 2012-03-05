@@ -76,6 +76,7 @@ namespace _2DActionGame
 		{
 			this.type = type;
 			activeDistance = 1280;
+            animation = new Animation(width, height);
 		}
 
 		public Terrain(Stage stage, float x, float y, int width, int height, Vector2 localPosition)
@@ -88,6 +89,7 @@ namespace _2DActionGame
 			this.user = user;
 			this.localPosition = localPosition;
 			activeDistance = 1280;
+            animation = new Animation(width, height);
 		}
 		#endregion
 

@@ -70,6 +70,8 @@ namespace _2DActionGame
 			animations = new Animation[10];
 			for (int i = 0; i < animations.Length; i++)
 				animations[i] = new Animation(texture.Width / 3, texture.Height);       // beam 64,64
+
+            animation = new Animation(texture.Width, texture.Height);
 		}
 
 		public override void UpdateFlying(int flyingTime)

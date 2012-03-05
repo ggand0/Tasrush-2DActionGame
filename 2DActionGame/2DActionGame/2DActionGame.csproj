@@ -123,14 +123,14 @@
     <Compile Include="Core\Scenes\SoundTest.cs" />
     <Compile Include="Core\Scenes\Tutorial.cs" />
     <None Include="app.config" />
-    <None Include="Core\Stages\BackGround.cs" />
-    <Compile Include="Core\Stages\BossTest.cs" />
-    <Compile Include="Core\Stages\MainStages.cs" />
-    <Compile Include="Core\Stages\Stage.cs" />
-    <Compile Include="Core\Stages\Stage0.cs" />
-    <Compile Include="Core\Stages\Stage1.cs" />
-    <Compile Include="Core\Stages\Stage2.cs" />
-    <Compile Include="Core\Stages\Stage3.cs" />
+    <None Include="Core\Scenes\Stages\BackGround.cs" />
+    <Compile Include="Core\Scenes\Stages\BossTest.cs" />
+    <Compile Include="Core\Scenes\Stages\MainStages.cs" />
+    <Compile Include="Core\Scenes\Stages\Stage.cs" />
+    <Compile Include="Core\Scenes\Stages\Stage0.cs" />
+    <Compile Include="Core\Scenes\Stages\Stage1.cs" />
+    <Compile Include="Core\Scenes\Stages\Stage2.cs" />
+    <Compile Include="Core\Scenes\Stages\Stage3.cs" />
     <Compile Include="Core\UI\Debug.cs" />
     <Compile Include="Core\UI\UIObject\UIObject.cs" />
     <Compile Include="Core\UI\UIObject\UI_BossHP.cs" />
@@ -261,9 +261,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="obj\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <!--

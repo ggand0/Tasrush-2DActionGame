@@ -45,7 +45,7 @@ namespace _2DActionGame
 				if (counter == logoDisplayTime) if (!game.isMuted) SoundControl.Play(true);
 
 				Debug();
-				if (JoyStick.IsOnKeyDown(8)) {
+                if (JoyStick.IsOnKeyDown(8) || JoyStick.IsOnKeyDown(1)) {
 					PushScene(new MainMenu(this));
 					if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 					counter = 0;
@@ -55,7 +55,7 @@ namespace _2DActionGame
         }
 
         public override void Draw(SpriteBatch spriteBatch)
-        {   
+        {
             // 文字列幅or高さの取得はfontArial.MeasureString 
 			if (counter < logoDisplayTime) {
 				if (counter < logoDisplayTime / 3.0)// 40

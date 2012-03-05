@@ -313,7 +313,7 @@ namespace _2DActionGame
             //JoyStick.Update(1);
             JoyStick.Update(1);
 			KeyInput.Update();
-            if (KeyInput.IsOnKeyDown(Keys.Escape)) Exit();
+            if (KeyInput.KEY(Keys.Escape) || KeyInput.IsOnKeyDown(Keys.Escape)) Exit();
 			dt = gameTime.ElapsedGameTime.TotalSeconds;
 
 			currentScene = scenes.Peek();
