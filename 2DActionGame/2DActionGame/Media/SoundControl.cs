@@ -46,7 +46,7 @@ namespace _2DActionGame
         {
             musicInstance.Volume = SoundControl.volumeAll;
             musicInstance.IsLooped = isLooped;
-            musicInstance.Play();
+            musicInstance.Resume();
         }
         public static void Play(bool isLooped, float volume) { musicInstance.Volume = volume; musicInstance.Play(); }
 		public static void Pause() { musicInstance.Pause(); }
