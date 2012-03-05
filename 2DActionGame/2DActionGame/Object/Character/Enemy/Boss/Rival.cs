@@ -1140,8 +1140,8 @@ namespace _2DActionGame
 			debugPoint = content.Load<Texture2D>("Debug\\debugPoint");
 			
 			for (int i = 0; i < 12; i++) isEnds.Add(false);
-			attackPatternNumList.Add(attackPattern0);
-			attackPatternNumList.Add(attackPattern1);
+			attackPatternNumList.Add(attackPattern1);//1
+			attackPatternNumList.Add(attackPattern0);//0
 			attackList = new List<int>();
 			if (game.isHighLvl) {
 				attackPatternNum = 1;

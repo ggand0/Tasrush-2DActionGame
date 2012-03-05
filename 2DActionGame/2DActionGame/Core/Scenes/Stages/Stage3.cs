@@ -28,7 +28,7 @@ namespace _2DActionGame
             sword = player.sword;
             weapons.Add(sword);
             staticTerrains.Add(new Block(this, 100, 200, 32, 32));
-            boss = new Rival(this, 15000, 300, 60, 60, 50, 0, 1, 1); 
+            boss = new Rival(this, 15000, 300, 60, 60, game.isHighLvl ? 50 : 25, 0, 1, 1); 
             characters.Add(boss);
             AddObjects();
 

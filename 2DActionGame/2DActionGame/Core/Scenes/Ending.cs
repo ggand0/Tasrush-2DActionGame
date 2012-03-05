@@ -46,8 +46,10 @@ namespace _2DActionGame
 				SoundControl.Stop();
 				SoundControl.IniMusic("Audio\\BGM\\menu_new");
 				//BackScene(5);
-                if (fromGame) BackScene(8);
-                else isEndScene = true;
+                if (fromGame) {
+                    game.InitializeStack();
+                    //BackScene(8);
+                } else isEndScene = true;
             }
             counter++;
         }

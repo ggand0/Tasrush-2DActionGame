@@ -38,6 +38,7 @@ namespace _2DActionGame
 				button[i].color = Color.Blue;
 
 			Load();
+            game.hasReachedCheckPoint = false;
         }
 
         public override void Load()
@@ -106,8 +107,15 @@ namespace _2DActionGame
 
             spriteBatch.Draw(mask, new Rectangle(0, 0, 640, 480), new Color(0, 0, 0, 100));
 			spriteBatch.Draw(button[0].texture, Vector2.Zero, Color.White);
-			spriteBatch.DrawString(game.pumpDemi, "GameTime:" + ((int)(gameStatus.time / 60.0)).ToString() + ":" + ((int)(gameStatus.time % 60)).ToString(), new Vector2(50, 250), Color.Orange);
-			spriteBatch.DrawString(game.pumpDemi, "TotalScore:" + scoreToDisplay.ToString(), new Vector2(50, 300), Color.Orange);
+
+            /*Vector2 origin = game.menuFont.MeasureString("GameTime:") / 2;
+            Vector2 v = TEXT_POSITION;
+            game.spriteBatch.DrawString(game.menuFont, "GameTime:",
+                v, Color.White,
+               0, origin, 1, SpriteEffects.None, 0);*/
+
+			spriteBatch.DrawString(game.pumpDemi, "GameTime:" + ((int)(gameStatus.time / 60.0)).ToString() + ":" + ((int)(gameStatus.time % 60)).ToString(), /*origin */new Vector2(100, 280), Color.Orange);
+			spriteBatch.DrawString(game.pumpDemi, "TotalScore:" + scoreToDisplay.ToString(), new Vector2(100, 350), Color.Orange);
         }
     }
 }

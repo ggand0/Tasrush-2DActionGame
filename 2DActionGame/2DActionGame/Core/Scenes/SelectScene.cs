@@ -65,7 +65,7 @@ namespace _2DActionGame
 		}
 		protected virtual void ButtonUpdate()
 		{
-			if (JoyStick.IsOnKeyDown(3)) {
+			if (JoyStick.IsOnKeyDown(3) || JoyStick.IsOnKeyDown(2)) {
 				isEndScene = true;
 				if (!game.isMuted) cancel.Play(SoundControl.volumeAll, 0f, 0f);
 			}

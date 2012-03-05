@@ -218,7 +218,11 @@ namespace _2DActionGame
 			/*sw.Write(output);
 			sw.Close();*/
 		}
-		
+        public void InitializeStack()
+        {
+            scenes.Clear();
+            scenes.Push(new MainTitle(null));
+        }
 
 		// コンストラクタ
 		public Game1()

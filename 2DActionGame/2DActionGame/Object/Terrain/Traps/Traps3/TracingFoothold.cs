@@ -98,6 +98,14 @@ namespace _2DActionGame
                 speed = Vector2.Zero;
             }
         }
+        public override void IsHit(Object targetObject)
+        {
+            base.IsHit(targetObject);
+
+            if (targetObject is RushingOutEnemy) {
+                isUnderSomeone = isHit = false;
+            }
+        }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
