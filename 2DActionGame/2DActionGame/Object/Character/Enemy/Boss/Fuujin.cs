@@ -316,7 +316,7 @@ namespace _2DActionGame
 			}
 
 			// 左の条件だけだと最後の弾が跳ね返せない気がする
-			if (cutterTurretAlternate.shootNumTotal == shootTime && cutterTurretAlternate.isEnd/*|| attackCounter > resWaitTime*/) {/*cutterTurretAlternate.isEnd*/
+			if (cutterTurretAlternate.shootNumTotal == shootTime && cutterTurretAlternate.isEnd|| attackCounter > resWaitTime) {/*cutterTurretAlternate.isEnd*/
 				isWaiting = true;
 				attackCounter = 0;
 				cutterTurretAlternate.isBeingUsed = false;
