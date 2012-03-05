@@ -1337,7 +1337,7 @@ namespace _2DActionGame
 				// Pad button
 				for (int i = 0; i < buttonCheck.Length; i++)
 					if (buttonCheck[i] == 1) {                  // 押されていないボタンをカット            
-						if (i == 2) {                          // 判定するボタンによって分ける. 今回の素材はmotionが少ないのでifで十分                   
+						if (game.twoButtonMode && i == 2 || !game.twoButtonMode && i == 3) {                          // 判定するボタンによって分ける. 今回の素材はmotionが少ないのでifで十分                   
 							isInJumpAnim = true;
 							animCounter = 0;
 							isMoving = true;

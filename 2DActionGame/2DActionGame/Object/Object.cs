@@ -219,11 +219,14 @@ namespace _2DActionGame
 		public virtual void Load(ContentManager content, string texture_name)
 		{
 			texture = content.Load<Texture2D>(texture_name);
+            animation = new Animation(texture.Width, texture.Height);
 		}
 		public virtual void Load(ContentManager content, string texture_name, string texture_name2)
 		{
 			texture = content.Load<Texture2D>(texture_name);
 			texture2 = content.Load<Texture2D>(texture_name2);
+            animation = new Animation(texture.Width, texture.Height);
+            animation2 = new Animation(texture2.Width, texture2.Height);
 		}
 		protected virtual void Initialize()
 		{

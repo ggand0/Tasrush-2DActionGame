@@ -228,6 +228,7 @@ namespace _2DActionGame
 			for (int i = 0; i < deathEffectNum; i++) {
 				if (effectCount[index] == -1) {
 					deathEffectsPlayer[index][i] = new Object(stage, defPos.X, defPos.Y, 25, 25);
+                    //deathEffectsPlayer[index][i].animation = new Animation(25, 25);
 					deathEffectsPlayer[index][i].Load(game.Content, "Effect\\playerDeathEffect0");
 				} else if (effectCount[index] == 0) {
 					deathEffectsPlayer[index][i].isActive = true;

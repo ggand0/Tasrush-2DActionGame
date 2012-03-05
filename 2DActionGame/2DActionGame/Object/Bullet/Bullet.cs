@@ -29,6 +29,7 @@ namespace _2DActionGame
 		/// 画面外に出てからBulletが消滅するまでの距離
 		/// </summary>
 		protected readonly float marginalDistance = 320;//120;
+        private Texture2D collisionRectTexture;
 		
 		/// <summary>
 		/// userの座標を基準にしたBUlletの位置。Turret手動に移行した今となっては使用していない。
@@ -148,7 +149,8 @@ namespace _2DActionGame
 			}
 
             if (textureType == 0) { }
-            
+
+            collisionRectTexture = content.Load<Texture2D>("Debug\\debugBind");
 			reflectSound = content.Load<SoundEffect>("Audio\\SE\\magic");
 		}
 		public override void Update()
@@ -289,15 +291,23 @@ namespace _2DActionGame
 		public override void Draw(SpriteBatch spriteBatch)
 		{
 			if (IsBeingUsed()) {
+                Vector2 colPos = textureType == 0 ? drawPos + new Vector2(texture.Width / 6 - width / 2, texture.Height / 2 - height / 2)
+                    : drawPos + new Vector2(texture.Width / 2 - width / 2, texture.Height / 2 - height / 2);
+
+                
+
 				if (textureType == 4) {// 角度の計算が必要なタイプのテクスチャなら
 					spriteBatch.Draw(texture, drawPos + new Vector2(texture.Width / 2 - width / 2, texture.Height / 2 - height / 2), animation.rect, Color.Red, -rot - (float)Math.PI, new Vector2(width / 2, height / 2), 1, SpriteEffects.None, 0f);// originは中心の方が良さそう(Vector2.Zero→new Vector2(width/2, height/2))
 				} else {
                     if (textureType == 0) {// 3コマ
-                        spriteBatch.Draw(texture, drawPos + new Vector2(texture.Width / 6 - width / 2, texture.Height / 2 - height / 2), animation.rect, Color.White, -rot, new Vector2(width / 2, height / 2), 1, SpriteEffects.None, 0f);
+                        spriteBatch.Draw(texture, drawPos - new Vector2(texture.Width / 6 - width / 2, texture.Height / 2 - height / 2), animation.rect, Color.White, -rot, new Vector2(width / 2, height / 2), 1, SpriteEffects.None, 0f);
                     } else {// 1枚絵
-                        spriteBatch.Draw(texture, drawPos + new Vector2(texture.Width / 2 - width / 2, texture.Height / 2 - height / 2), animation.rect, Color.White, -rot, new Vector2(width / 2, height / 2), 1, SpriteEffects.None, 0f);
+                        spriteBatch.Draw(texture, drawPos - new Vector2(texture.Width / 2 - width / 2, texture.Height / 2 - height / 2), animation.rect, Color.White, -rot, new Vector2(width / 2, height / 2), 1, SpriteEffects.None, 0f);
                     }
 				}
+                if (game.inDebugMode)
+                    spriteBatch.Draw(collisionRectTexture, new Rectangle((int)drawPos.X, (int)drawPos.Y, width, height)
+                , new Rectangle(0, 0, width, height), Color.White);
 			}
 		}
 

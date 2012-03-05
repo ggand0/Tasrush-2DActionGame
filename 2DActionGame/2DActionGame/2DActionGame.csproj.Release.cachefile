@@ -9,9 +9,9 @@ Content\Audio\BGM\gameover.xnb
 Content\Audio\BGM\hard_last.xnb
 Content\Audio\BGM\ice.xnb
 Content\Audio\BGM\machine.xnb
-Content\Audio\BGM\menu_new.xnb
-Content\Audio\BGM\menu.xnb
 Content\Audio\BGM\menu-b.xnb
+Content\Audio\BGM\menu.xnb
+Content\Audio\BGM\menu_new.xnb
 Content\Audio\SE\bird.xnb
 Content\Audio\SE\blast.xnb
 Content\Audio\SE\blast_small.xnb

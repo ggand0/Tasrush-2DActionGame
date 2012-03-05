@@ -226,7 +226,7 @@ namespace _2DActionGame
 
         private void UpdateKeyPress(KeyboardState keystate_now)
         {
-            if (!isAutoReversed && (!JoyStick.KEY(5) || JoyStick.IsOnKeyUp(5))) //自動発動でなければ
+            if (!isAutoReversed && ((game.twoButtonMode && (!JoyStick.KEY(5) || JoyStick.IsOnKeyUp(5))) || (!game.twoButtonMode && (!JoyStick.KEY(2) || JoyStick.IsOnKeyUp(2))))) //自動発動でなければ
                 isReversed = false;
         }
 
