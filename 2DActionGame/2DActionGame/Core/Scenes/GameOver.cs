@@ -30,19 +30,19 @@ namespace _2DActionGame
 				button[i].texture = content.Load<Texture2D>("General\\Menu\\GameOver" + i);
 
 			SoundControl.IniMusic("Audio\\BGM\\gameover");
-			if (!game.isMuted) SoundControl.Play();
+			if (!game.isMuted) SoundControl.Play(false);
         }
 
         protected override void ButtonUpdate()
         {
-            if (button[0].isSelected && (JoyStick.IsOnKeyDown(3) || JoyStick.IsOnKeyDown(8))) {		// Continue
+            if (button[0].isSelected && (JoyStick.IsOnKeyDown(1) || JoyStick.IsOnKeyDown(8))) {		// Continue
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 
                 game.ReloadStage(game.isHighLvl);
                 //SoundControl.Pause();//SoundControl.Stop();
 				isEndScene = true;
             }
-            if (button[1].isSelected && (JoyStick.IsOnKeyDown(3) || JoyStick.IsOnKeyDown(8))) {		// Back to Menu
+            if (button[1].isSelected && (JoyStick.IsOnKeyDown(1) || JoyStick.IsOnKeyDown(8))) {		// Back to Menu
                 if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 				SoundControl.Stop();
 				SoundControl.IniMusic("Audio\\BGM\\menu_new");
@@ -55,7 +55,7 @@ namespace _2DActionGame
                 {
                     SoundControl.Stop();
                     SoundControl.RestoreMusic();
-                    SoundControl.Play();
+                    SoundControl.Play(false);
                     if (!game.isMuted) { (upperScene as Stage).reverse.PlaySound(); }
                     isEndScene = true;
                     (upperScene as Stage).player.isAlive = true;

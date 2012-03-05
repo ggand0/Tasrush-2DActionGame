@@ -15,13 +15,13 @@ using Microsoft.Xna.Framework.Storage;
 namespace _2DActionGame
 {
     /// <summary>
-    /// アニメーションを管理するクラス.使うクラスが手動で(タイプを選んで)扱う.今のところ少し複雑すぎるかもしれない
+    /// アニメーションを管理するクラス。使うクラスが手動で(タイプを選んで)扱う.今のところ少し複雑すぎるかもしれない
+	/// サク・リバーさんのコードを元に作成
     /// </summary>
     public class Animation
     {
 		public static Game1 game;
 		
-		// リバーさんのコードを参考
 		/// <summary>
 		/// テクスチャ（大きな1枚絵）
 		/// </summary>
@@ -89,19 +89,21 @@ namespace _2DActionGame
         /// motionNumやrectはそのような指定方法でいいと思うがアニメーションのさせ方を全キャラ分ここに書くのはどうかと思う
         /// もっと自由に扱えるクラスを作って、複雑なアニメーションをするクラスはそちらを使うという感じにするべきだろうか？
         /// </summary>
-        /// <param name="poseNum"></param>ポーズ番号(→方向)
-        /// <param name="motionNum"></param>モーション番号(↓方向)
-        /// <param name="rectWidth"></param>
-        /// <param name="rectHeight"></param>
-        /// <param name="animationSpeed"></param>
-        /// <param name="animationType"></param>アニメーションのさせ方
+        /// <param name="poseNum">コマ数</param>
+        /// <param name="motionNum">モーション数</param>
+        /// <param name="rectWidth">1コマ当たりの幅</param>
+		/// <param name="rectHeight">1コマ当たりの高さ</param>
+        /// <param name="animationSpeed">アニメーション速度（数値が小さい程速い）</param>
+        /// <param name="animationType">アニメーションのさせ方</param>
         public void Update(int poseNum, int motionNum, int rectWidth, int rectHeight, int animationSpeed, int animationType)
         {
             Inicialize(poseNum, motionNum, rectWidth, rectHeight, animationSpeed);
             DrawRect(animationType);
             AnimationCount(animationType);
         }
-        // 静止画専用：領域直接指定 11/30 
+        /// <summary>
+		/// 静止画専用メソッド：領域直接指定
+        /// </summary>
         public void Update(int poseCount, int motionNum, int rectWidth, int rectHeight)
         {
             this.poseCount = poseCount;
@@ -109,14 +111,18 @@ namespace _2DActionGame
             DrawRect(0);
             //AnimationCount(0);
         }
-        // 部分ループ用に特化:でも多分失敗
+        /// <summary>
+		/// 部分ループ用に特化
+        /// </summary>
         public void Update(int poseNum, int motionNum, int rectWidth, int rectHeight, int animationSpeed, int animationType, int startPoseNum, int endPoseNum)
         {
             Inicialize(poseNum, motionNum, rectWidth, rectHeight, animationSpeed);
             DrawRect(animationType);
             AlternativeAnimation(startPoseNum, endPoseNum);
         }
-        // フラグで管理型
+        /// <summary>
+		/// フラグで管理型
+        /// </summary>
         public void Update(int poseNum, int motionNum, int rectWidth, int rectHeight, int animationSpeed, int animationType, bool timing)
         {
             Inicialize(poseNum, motionNum, rectWidth, rectHeight, animationSpeed);
@@ -132,10 +138,12 @@ namespace _2DActionGame
             this.rect.Height = rectHeight;
             this.animationSpeed = animationSpeed;
         }
-        //描画範囲を定義
+        /// <summary>
+		/// 描画範囲を定義
+        /// </summary>
         private void DrawRect(int animationType)
         {
-            rect.X = poseCount * rect.Width; // ここか
+            rect.X = poseCount * rect.Width;
             if (animationType == 2) rect.X = jumpPoseCount * rect.Width;// jumpのときは分けた
 
             rect.Y = motionNum * rect.Height;          
@@ -144,30 +152,58 @@ namespace _2DActionGame
         {
             //poseCount = 0;// 初期化
 
-            if (animationType == 0) StopAnimation();
-            else if (animationType == 1) LoopAnimation();
-            else if (animationType == 2) JumpAnimation();
-            else if (animationType == 5) EffectAnimation();
-            //else if (animationType == 3) ShootingAnimation(timing);
+			switch (animationType) {
+				case 0:
+					StopAnimation();
+					break;
+				case 1:
+					LoopAnimation();
+					break;
+				case 2:
+					JumpAnimation();
+					break;
+				case 5:
+					EffectAnimation();
+					break;
+			}
         }
         internal virtual void AnimationCount(int animationType, bool timing)
         {
             //poseCount = 0;// 初期化
-
-            if (animationType == 0) StopAnimation();
-            else if (animationType == 1) LoopAnimation();
-            else if (animationType == 2) JumpAnimation();
-            else if (animationType == 3) ShootAnimation(timing);
-            else if (animationType == 4) JumpAnimation2(timing);
-            else if (animationType == 5) EffectAnimation();
+			switch (animationType) {
+				case 0:
+					StopAnimation();
+					break;
+				case 1:
+					LoopAnimation();
+					break;
+				case 2:
+					JumpAnimation();
+					break;
+				case 3:
+					ShootAnimation(timing);
+					break;
+				case 4:
+					JumpAnimation2(timing);
+					break;
+				case 5:
+					EffectAnimation();
+					break;
+			}
         }
         #endregion
         #region AnimationTypes
-        private void StopAnimation()// animationType0
+		/// <summary>
+		/// // animationType0
+		/// </summary>
+        private void StopAnimation()
         {
             poseCount = poseNum;
         }
-        private void LoopAnimation()// animationType1
+		/// <summary>
+		/// animationType1
+		/// </summary>
+        private void LoopAnimation()
         {   // ただループさせるタイプ
             if (animationSpeed > 0) {
                 count++;
@@ -175,18 +211,28 @@ namespace _2DActionGame
                 if (poseCount >= poseNum) poseCount = 0;// ポーズの最後までアニメーションしたら初期化
             }
         }
-        private void LoopAnimation(int startPoseNum, int endPoseNum)// animationType1
-        {   // 指定区間をループさせるタイプ(4から1まで」などは想定してない)
+		/// <summary>
+		/// animationType1 : 指定区間をループさせるタイプ(4から1まで」などは想定してない)
+		/// </summary>
+		/// <param name="startPoseNum"></param>
+		/// <param name="endPoseNum"></param>
+        private void LoopAnimation(int startPoseNum, int endPoseNum)
+        {
             /*if(counter ==0) poseCount = startPoseNum;// もう少しスマートにしたい
             counter++;*/
             if (animationSpeed > 0) {
                 count++;
                 if (count % animationSpeed == 0) poseCount++;
                 if (poseCount >= endPoseNum) 
-                    poseCount = startPoseNum;// こう書くと1フレーム中にposeCountが1に戻っちゃう
+                    poseCount = startPoseNum;
             }
         }
-        private void AlternativeAnimation(int startPoseNum, int endPoseNum)// animationType1 多分未完成
+		/// <summary>
+		/// animationType1 未完成
+		/// </summary>
+		/// <param name="startPoseNum"></param>
+		/// <param name="endPoseNum"></param>
+        private void AlternativeAnimation(int startPoseNum, int endPoseNum)
         {   // 交互に表示させるタイプ
             if (animationSpeed > 0) {
                 count++;
@@ -194,37 +240,49 @@ namespace _2DActionGame
                 else if (count % animationSpeed == 0 && displayed) { poseCount = startPoseNum; displayed = false; }
             }
         }
-
-        private void JumpAnimation()// animationType2
-        {   // ジャンプのように最後のポーズを保つタイプ：押し続けないと最後までアニメーションされない...
+		/// <summary>
+		/// animationType2
+		/// </summary>
+        private void JumpAnimation()
+        {
             if (animationSpeed > 0) {
                 count++;
                 if (count % animationSpeed == 0) jumpPoseCount++;
                 if (jumpPoseCount >= poseNum-1) jumpPoseCount = poseNum-1;// ポーズの最後までアニメーションしてもそのまま
             }
         }
-
-        private void EffectAnimation()// animationType5
+		/// <summary>
+		/// animationType5
+		/// </summary>
+        private void EffectAnimation()
         {   
             if (animationSpeed > 0) {
                 count++;
                 if (count % animationSpeed == 0) poseCount++;
-                if (poseCount >= poseNum) poseCount = poseNum;// ポーズの最後までアニメーションしてもそのまま
+                if (poseCount >= poseNum) poseCount = poseNum;			// ポーズの最後までアニメーションしてもそのまま
             }
         }
-        private void JumpAnimation2(bool timing)// animationType4
-        {   // ループするか否かをbool値によって管理するタイプ
-            if (animationSpeed > 0) {//poseCount?
+		/// <summary>
+		/// animationType4 : ループするか否かをbool値によって管理するタイプ
+		/// </summary>
+		/// <param name="timing"></param>
+        private void JumpAnimation2(bool timing)
+        {
+            if (animationSpeed > 0) {									//poseCount?
                 count++;
                 if (count % animationSpeed == 0 && timing) poseCount++;
                 if (poseCount >= poseNum && timing)
-                    poseCount = poseNum;// 最後のポーズを持続
+                    poseCount = poseNum;								// 最後のポーズを持続
                 else if (poseCount >= poseNum && !timing)
-                    poseCount = 0;// 着地したら元に戻しておく
+                    poseCount = 0;										// 着地したら元に戻しておく
             }
         }
-        private void ShootAnimation(bool timing)// animationType3
-        {   // ループするか否かをbool値によって管理するタイプ
+		/// <summary>
+		/// animationType3 : ループするか否かをbool値によって管理するタイプ
+		/// </summary>
+		/// <param name="timing"></param>
+        private void ShootAnimation(bool timing)
+        {
             if (animationSpeed > 0) {
                 count++;
                 if (count % animationSpeed == 0 && timing) poseCount++;

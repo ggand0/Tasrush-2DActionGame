@@ -46,7 +46,7 @@ namespace _2DActionGame
 
             button[0].texture = content.Load<Texture2D>("General\\Menu\\StageClear");
 			SoundControl.IniMusic("Audio\\BGM\\clear");
-			if (!game.isMuted) SoundControl.Play();
+			if (!game.isMuted) SoundControl.Play(false);
 
 			// Scoreをcastして確定
 			this.scoreToDisplay = (int)game.stageScores[game.stageNum-1];
@@ -57,7 +57,7 @@ namespace _2DActionGame
         }
 		public override void Update(double dt)
 		{
-            if (JoyStick.IsOnKeyDown(3) || JoyStick.IsOnKeyDown(8)) {	// To Next Stage
+            if (JoyStick.IsOnKeyDown(1) || JoyStick.IsOnKeyDown(8)) {	// To Next Stage
 				if (game.stageNum < Game1.maxStageNum) {
 					game.stageNum++;
 					game.hasReachedCheckPoint = false;
@@ -69,7 +69,7 @@ namespace _2DActionGame
 				} else if (game.stageNum == Game1.maxStageNum && (form.IsDisposed || form == null)) {// To Ending
 					game.stageNum = 1;
 					game.hasReachedCheckPoint = false;
-					PushScene(new Ending(this));
+					PushScene(new Ending(this, true));
 				}
             }
 

@@ -17,16 +17,18 @@ namespace _2DActionGame
         private readonly int musicTime = 6480;
         //1:48 = 108 * 60 = 6480frame
         private Texture2D[] textures = new Texture2D[textureNum];
+        private bool fromGame;
 		private float[] timings = { 0, 18.5f, 37, 47, 60, 75, 84, 93, 102, 120 };
 		private void WriteScore()
 		{
 		}
 
-		public Ending(Scene privousScene)
+		public Ending(Scene privousScene, bool fromGame)
 			: base(privousScene)
         {
 			Load();
             defDrawTime = musicTime / textureNum;
+            this.fromGame = fromGame;
         }
 
         public override void Load() 
@@ -36,15 +38,16 @@ namespace _2DActionGame
 			}
 
 			SoundControl.IniMusic("Audio\\BGM\\ending_medley_newnew");
-			if (!game.isMuted) SoundControl.Play();
+			if (!game.isMuted) SoundControl.Play(false);
         }
 		public override void Update(double dt) 
         {
-            if (counter > defDrawTime * textureNum || JoyStick.IsOnKeyDown(3)) {
+            if (counter > defDrawTime * textureNum || JoyStick.IsOnKeyDown(1)) {
 				SoundControl.Stop();
 				SoundControl.IniMusic("Audio\\BGM\\menu_new");
 				//BackScene(5);
-                BackScene(8);
+                if (fromGame) BackScene(8);
+                else isEndScene = true;
             }
             counter++;
         }

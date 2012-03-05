@@ -784,7 +784,7 @@ namespace _2DActionGame
 			Collide();											// CollisionDetection(Terrain、Weapon等)
 			ScrollUpdate();										// スクロール時の座標変換(画面上のすべてのオブジェクトについて)
 			PlayBGM();											// BGM管理
-			damageControl.Update2();							// WeaponとEnemyのダメージ判定の調整
+			damageControl.Update();							// WeaponとEnemyのダメージ判定の調整
 			UpdateUICalculate();
 		}
 		private void UpdateReverse()
@@ -841,7 +841,7 @@ namespace _2DActionGame
 			// CollisionDetection(Terrain、Weapon等)
 			Collide();
 
-			damageControl.Update2();                //sword.DamageUpdate();　 // WeaponとEnemyのダメージ判定の調整
+			damageControl.Update();                //sword.DamageUpdate();　 // WeaponとEnemyのダメージ判定の調整
 			// スクロール時の座標変換(画面上のすべてのオブジェクトについて)
 			ScrollUpdate();
 
@@ -875,7 +875,7 @@ namespace _2DActionGame
 		{
 			// Update
 			foreach (Terrain terrain in activeDynamicTerrains) terrain.UpdateTimeCoef();
-			for (int i = 0; i < characters.Count; i++)//foreach(Character character in characters) {
+			for (int i = 0; i < characters.Count; i++)
 				characters[i].UpdateTimeCoef();
 			foreach (Bullet bullet in bullets)
 				bullet.UpdateTimeCoef();
@@ -1364,7 +1364,7 @@ namespace _2DActionGame
 					SoundControl.IniMusic("Audio\\BGM\\boss_normal");
 				} SoundControl.musicInstance.IsLooped = true;
 
-				if (!game.isMuted) SoundControl.Play();
+				if (!game.isMuted) SoundControl.Play(true);
 				BGMchanged = true;
 			}
 			/*else if(BGM != null && (BGM.IsStopped || BGM.IsPaused) && inBossBattle && !game.isClear && !game.isOvered) {

@@ -155,7 +155,7 @@ namespace _2DActionGame
 
 			tmp = original.Replace("\r\n", "\n").Split('\n');// 0が無視される...
 			tmp2 = new string[tmp.Length, 2];
-			for (int i = 0; i < tmp.Length; i++) {// 最後の行は削られることを想定してlength-1
+			for (int i = 0; i < /*tmp.Length*/tmp.Length - 1; i++) {// 最後の行は削られることを想定してlength-1
 				//try {
 				string[] t = tmp[i].Split('\t');
 				tmp2[i, 0] = t[0];
@@ -166,7 +166,7 @@ namespace _2DActionGame
 					// そもそもbs.lengthの時点で明らかに足りてない
 				}*/
 			}
-			for (int i = 0; i < tmp.Length; i++) {
+			for (int i = 0; i < /*tmp.Length*/tmp.Length - 1; i++) {
 				/*scores[i].rank = Int32.Parse(tmp2[i, 0]);
 				scores[i].score = Double.Parse(tmp2[i, 2]);
 				scores[i].name = tmp2[i, 1];*/
@@ -236,7 +236,7 @@ namespace _2DActionGame
 
 			random = new Random();
 
-			isMuted = true;
+			//isMuted = true;
 			//noEnemy = true;
 			stageScores = new double[maxStageNum];
 			//scores = dummyScore.ToList<RankingStatus>();// 復号化失敗のとき用＋テスト用＋要素数確保
@@ -313,6 +313,7 @@ namespace _2DActionGame
             //JoyStick.Update(1);
             JoyStick.Update(1);
 			KeyInput.Update();
+            if (KeyInput.IsOnKeyDown(Keys.Escape)) Exit();
 			dt = gameTime.ElapsedGameTime.TotalSeconds;
 
 			currentScene = scenes.Peek();

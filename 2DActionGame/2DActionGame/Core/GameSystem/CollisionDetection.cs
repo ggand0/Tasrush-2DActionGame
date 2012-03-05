@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 namespace _2DActionGame
 {
 	/// <summary>
-	/// 当たり判定処理を行うクラス。
+	/// 当たり判定処理を行うクラス。交差判定以外の判定メソッドは古いコード
 	/// </summary>
 	public static class CollisionDetection
 	{
@@ -1241,6 +1241,5 @@ namespace _2DActionGame
 			}*/
 		}
 		#endregion
-
 	}
 }

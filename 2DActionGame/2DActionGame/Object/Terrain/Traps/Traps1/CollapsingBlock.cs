@@ -10,6 +10,7 @@ namespace _2DActionGame
     public class CollapsingBlock : Block
     {
         private int timeToFall = 10;
+        protected bool isHitPlayer;
 
         public CollapsingBlock()
         { 
@@ -32,7 +33,7 @@ namespace _2DActionGame
 
         public override void Update()
         {
-            if(isUnderSomeone) UpdateNumbers();
+            if (isUnderSomeone && isHitPlayer) UpdateNumbers();
         }
         protected override void UpdateNumbers()
         {
@@ -74,6 +75,7 @@ namespace _2DActionGame
 				// 当たりあり
 				isHit = true;// collapsingBlock:objectsのはtrueになってもdynamicTerrrainsのほうはtrueにならないでござる(解決)
 				targetObject.isHit = true;
+                if (targetObject is Player) isHitPlayer = true;
 				firstTimeInAFrame = false;
 				ontop = false; onleft = false; onright = false;// 初期化(デバッグ用)
 

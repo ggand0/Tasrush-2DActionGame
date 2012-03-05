@@ -34,9 +34,7 @@ namespace _2DActionGame
 			choose = content.Load<SoundEffect>("Audio\\SE\\choose");
 			cancel = content.Load<SoundEffect>("Audio\\SE\\cancel"); //choose.Play(SoundControl.volumeAll, 0f, 0f);
 		}
-		
 		protected static SoundEffect choose, cancel;
-		//public static Color 
 
 		protected Texture2D backGround, mask;
 		protected SoundEffect music;

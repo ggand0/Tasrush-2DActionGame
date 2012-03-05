@@ -395,7 +395,7 @@ namespace _2DActionGame
 				}
 				// 右に移動中
 				if (targetObject.speed.X - speed.X > 0 && !isRight && !isRightSlope) {
-					// (重要) 既に上で補正されている場合はtargetPosじゃないよねっていう...!!
+					// (重要) 既に上で補正されている場合はtargetPosじゃない...!!
 					//targetObject.position.Y > position.Y - targetObject.height && targetPos.Y < position.Y + height
 					//targetPos.Y > position.Y - targetObject.height && targetPos.Y < position.Y + height
 					if ((!targetObject.isOnSomething && targetPos.Y > position.Y - targetObject.height || targetObject.isOnSomething && targetObject.position.Y > position.Y - targetObject.height)

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 
-namespace _2DCompetitionGame
+namespace _2DActionGame
 {
     /// <summary>
-    /// Vector2のラッパー？クラス
+    /// Vector2のラッパークラス
     /// </summary>
 	public class Vector
 	{

@@ -77,37 +77,37 @@ namespace _2DActionGame
 		{
 			base.ButtonUpdate();
 
-			if (button[0].isSelected && JoyStick.IsOnKeyDown(3)) {
+			if (button[0].isSelected && JoyStick.IsOnKeyDown(1)) {
 				if (!game.isMuted) cancel.Play(SoundControl.volumeAll, 0f, 0f);
 				isEndScene = true;
 			}
-			if (button[1].isSelected && JoyStick.IsOnKeyDown(3)) {
+			if (button[1].isSelected && JoyStick.IsOnKeyDown(1)) {
 				if (!game.inDebugMode) game.inDebugMode = true;
 				else game.inDebugMode = false;
 
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 			}
-			if (button[2].isSelected && JoyStick.IsOnKeyDown(3)) {
+			if (button[2].isSelected && JoyStick.IsOnKeyDown(1)) {
 				if (!game.isMuted) game.isMuted = true;
 				else game.isMuted = false;
 
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 			}
-			if (button[3].isSelected && JoyStick.IsOnKeyDown(3)) {
+			if (button[3].isSelected && JoyStick.IsOnKeyDown(1)) {
 				if (!game.visibleSword) game.visibleSword = true;
 				else game.visibleSword = false;
 
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 			}
 
-			if (button[4].isSelected && JoyStick.IsOnKeyDown(3)) {
+			if (button[4].isSelected && JoyStick.IsOnKeyDown(1)) {
 				if (!game.visibleScore) game.visibleScore = true;
 				else game.visibleScore = false;
 
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 			}
 
-			if (button[5].isSelected && JoyStick.IsOnKeyDown(3)) {
+			if (button[5].isSelected && JoyStick.IsOnKeyDown(1)) {
 				if (!stage.player.syouryuuMode) stage.player.syouryuuMode = true;
 				else stage.player.syouryuuMode = false;
 
@@ -115,20 +115,20 @@ namespace _2DActionGame
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 			}
 
-			if (button[6].isSelected && JoyStick.IsOnKeyDown(3)) {
+			if (button[6].isSelected && JoyStick.IsOnKeyDown(1)) {
 				if (!stage.player.thrustChargeMode) stage.player.thrustChargeMode = true;
 				else stage.player.thrustChargeMode = false;
 
 
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 			}
-			if (button[7].isSelected && JoyStick.IsOnKeyDown(3)) {
+			if (button[7].isSelected && JoyStick.IsOnKeyDown(1)) {
 				if (!game.twoButtonMode) game.twoButtonMode = true;
 				else game.twoButtonMode = false;
 
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 			}
-			if (button[8].isSelected && JoyStick.IsOnKeyDown(3)) {
+			if (button[8].isSelected && JoyStick.IsOnKeyDown(1)) {
 			}
 		}
 

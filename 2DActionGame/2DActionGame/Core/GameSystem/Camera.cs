@@ -33,8 +33,6 @@ namespace _2DActionGame
 
 		public void ScrollUpdate(Object targetObject)
 		{
-			//if (targetObject is Weapon) return;// 11/12/15:WeaponはisBeingUsedのみに依存させることにした
-			
 			this.speed.X = stage.ScrollSpeed;
 			distanceToPlayer = (stage.player.position.X - this.position.X);
 			if (stage.boss != null) distanceToBoss = stage.boss.position.X - position.X;
@@ -45,7 +43,6 @@ namespace _2DActionGame
 				if (stage.player.position.X < stage.bossScreenEdgeLeft || stage.player.position.X > stage.bossScreenEdgeRight) {
 					EdgeScrollUpdate(targetObject);
 				} else {
-					//NormalScrollUpdate(targetObject);
 					CenterScrollUpdate(targetObject);
 				}
 			} else {
@@ -57,7 +54,6 @@ namespace _2DActionGame
 				RemoveDistance(stage.player);
 
                 if (distanceToPlayer < 2) {
-				//if (distanceToPlayer < 0 && distanceToPlayer > 0) {
 					stage.isScrolled = false;
 					isScrollingToPlayer = false;
 				}
@@ -79,7 +75,7 @@ namespace _2DActionGame
 			UpdateStageList(targetObject);
 
 			if (stage.boss != null && distanceToBoss < 300) {
-				stage.toBossScene = true;										// ボス戦フラグ
+				stage.toBossScene = true;
 			}
 		}
 		/// <summary>
@@ -95,7 +91,6 @@ namespace _2DActionGame
 			// ボス戦フラグ
 			if (stage.boss != null && distanceToBoss < 300 + 1000) {
 				stage.toBossScene = true;
-				//stage.isScrolled = false;
 			}
 			if (stage.toBossScene && distanceToBoss < 300) {
 				stage.isScrolled = false;
@@ -109,9 +104,9 @@ namespace _2DActionGame
 		private void EdgeScrollUpdate(Object targetObject)
 		{
 			if (targetObject is ScrollingBackground) {
-				(targetObject as ScrollingBackground).ScrollUpdateBoss(this.position);//stage.player.position);
+				(targetObject as ScrollingBackground).ScrollUpdateBoss(this.position);
 			} else {
-				targetObject.ScrollUpdate(this.position, true);//stage.player.position
+				targetObject.ScrollUpdate(this.position, true);
 			}
 
 			UpdateStageList(targetObject);
@@ -140,7 +135,7 @@ namespace _2DActionGame
 		/// <param name="targetObject"></param>
 		private void UpdateStageList(Object targetObject)
 		{
-			if (targetObject.distanceToCamara < targetObject.activeDistance) {	// ==画面内に表示されているオブジェクト
+			if (targetObject.distanceToCamara < targetObject.activeDistance) {	// 画面内に表示されているオブジェクト
 				targetObject.isActive = true;
 				stage.activeObjects.Add(targetObject);							// まず大元のListに追加
 
@@ -151,15 +146,13 @@ namespace _2DActionGame
 					if (IsDynamicTetrrain(targetObject)) {
 						stage.activeDynamicTerrains.Add(targetObject as Terrain);
 
-						if (/*targetObject is SnowBall
-							|| */(targetObject is Block && (targetObject as Block).user != null))
+						if ((targetObject is Block && (targetObject as Block).user != null))
 							stage.activeDynamicTerrains1.Add(targetObject as Terrain);
 						else
 							stage.activeDynamicTerrains2.Add(targetObject as Terrain);
 					} else
 						stage.activeStaticTerrains.Add(targetObject as Terrain);
-				} else if (targetObject is Bullet && (targetObject as Bullet).isShot/*((((targetObject as Bullet).turret != null && (targetObject as Bullet).turret.isBeingUsed)// これが原因
-					  || (targetObject as Bullet).turret == null))*/)
+				} else if (targetObject is Bullet && (targetObject as Bullet).isShot)
 					stage.activeBullets.Add(targetObject as Bullet);
 			} else {
 				targetObject.isActive = false;
@@ -168,7 +161,7 @@ namespace _2DActionGame
 		private bool IsDynamicTetrrain(Object terrain)
 		{
 			return terrain is SnowBall
-						|| (terrain is Block && (terrain as Block).user != null) //)|| (terrain is DamageBlock && (terrain as DamageBlock).user != null))
+						|| (terrain is Block && (terrain as Block).user != null)
 						|| terrain is CollapsingBlock
 						|| terrain is CollapsingFloor
 						|| terrain is Water
@@ -189,7 +182,7 @@ namespace _2DActionGame
 		public void RemoveDistance(Object targetObject)
 		{
 			if (distanceToPlayer > 0) {
-				this.position.X += 0.05f;		// 0にするとなるとかなり難しい 0.1fでもバグる
+				this.position.X += 0.05f;	// あまり小さい値にすると機能しない？
 			} else if (distanceToPlayer < 0) {
 				this.position.X -= 0.05f;
 			}

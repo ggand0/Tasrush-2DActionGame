@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Audio;
 namespace _2DActionGame
 {
 	/// <summary>
-	///  Bulletの射撃の管理クラス。射撃する敵は全てTurretを生成して射撃処理を委譲させるのが楽。
+	///  Bulletの射撃の管理クラス。（汚くて）超絶カオスクラス
 	/// </summary>
 	public class Turret : Weapon
 	{

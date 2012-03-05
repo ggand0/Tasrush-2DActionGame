@@ -52,27 +52,30 @@ namespace _2DActionGame
         {
 			base.ButtonUpdate();
 
-            if (button[0].isSelected && JoyStick.IsOnKeyDown(3)) {// reverse
+            if (button[0].isSelected && JoyStick.IsOnKeyDown(1)) {// reverse
+                if (!game.isMuted) start.Play(SoundControl.volumeAll, 0f, 0f);
                 //game.stageNum = 1; // StageSelectでstageNumを変えるため
                 game.avilityNum = 0;
 				SoundControl.Stop();
                 //game.ReloadStage(game.isHighLvl);
 				PushStage();
-                if (!game.isMuted) start.Play(SoundControl.volumeAll, 0f, 0f);
+                
             }
-			if (button[1].isSelected && JoyStick.IsOnKeyDown(3)) {// slow
+			if (button[1].isSelected && JoyStick.IsOnKeyDown(1)) {// slow
+                if (!game.isMuted) start.Play(SoundControl.volumeAll, 0f, 0f);
                 //game.stageNum = 1;
                 game.avilityNum = 1;
 				SoundControl.Stop();
 				PushStage(); //PushScene(new Stage1(this, game.isHighLvl));
-				if (!game.isMuted) start.Play(SoundControl.volumeAll, 0f, 0f);
+				
             }
-			if (button[2].isSelected && JoyStick.IsOnKeyDown(3)) {// accel
+			if (button[2].isSelected && JoyStick.IsOnKeyDown(1)) {// accel
+                if (!game.isMuted) start.Play(SoundControl.volumeAll, 0f, 0f);
                 //game.stageNum = 1;
                 game.avilityNum = 2;
 				SoundControl.Stop();
 				PushStage(); //PushScene(new Stage1(this, game.isHighLvl));
-				if (!game.isMuted) start.Play(SoundControl.volumeAll, 0f, 0f);
+				
             }
         }
         public override void Draw(SpriteBatch spriteBatch)

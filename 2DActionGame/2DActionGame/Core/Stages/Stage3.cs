@@ -45,23 +45,7 @@ namespace _2DActionGame
 			} else {
 				SoundControl.IniMusic("Audio\\BGM\\boss");
 			} SoundControl.musicInstance.IsLooped = true;
-			if (!game.isMuted) SoundControl.Play();
+			if (!game.isMuted) SoundControl.Play(true);
         }
-		public override void Update(double dt)
-        {
-            base.Update(dt);
-
-            /*if (!toBossScene && BGM.IsStopped && !inBossBattle && !game.isOvered&& !game.inMenu) {
-                if (!game.isHighLvl)
-                    BGM = game.soundBank.GetCue("machine");
-                else
-                    BGM = game.soundBank.GetCue("hard_last");
-                BGM.Play(SoundControl.volumeAll, 0f, 0f);
-            }
-            else if (!toBossScene && BGM.IsPaused && !inBossBattle && !game.isOvered && !game.inMenu)
-                BGM.Resume();// BGM.Play(SoundControl.volumeAll, 0f, 0f);*/
-
-        }
-
     }
 }

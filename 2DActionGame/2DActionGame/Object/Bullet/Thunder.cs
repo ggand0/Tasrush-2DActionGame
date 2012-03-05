@@ -12,7 +12,6 @@ namespace _2DActionGame
 {
 	/// <summary>
 	/// 1Bossの技などに使用。直線的な稲妻(矩形で表現)で、矩形自体を伸ばしていく方針。
-	/// Beam内で追加に実装してもできそうだが面倒なので新しいクラスで。
 	/// </summary>
 	public class Thunder : Bullet
 	{
@@ -59,8 +58,9 @@ namespace _2DActionGame
 			// animation1は矩形、2はエフェクト
 			animation = new Animation(width, height);
 			animations = new Animation[10];
-			for (int i = 0; i < animations.Length; i++)
+			for (int i = 0; i < animations.Length; i++) {
 				animations[i] = new Animation(texture.Width / 3, texture.Height);//32, 64
+			}
 		}
 
 		/*public override void Load(ContentManager content, string texture_name, string texture_name2)
@@ -72,14 +72,11 @@ namespace _2DActionGame
 			for (int i = 0; i < animations.Length; i++)
 				animations[i] = new Animation(texture.Width / 3, texture.Height);//32, 64
 		}*/
-		/// <summary>
-		/// ごり☆押し
-		/// </summary>
-		private void PlaySE()
+
+		private void PlaySound()
 		{
 			if (isActive && isShot && (turret == null || (turret != null && turret.isBeingUsed)) && !game.isMuted) {
-				if (counter == 5) thunderSoundSmall.Play(SoundControl.volumeAll, 0f, 0f);
-				if (counter == 35) thunderSoundSmall.Play(SoundControl.volumeAll, 0f, 0f);
+				if (counter == 5 || counter == 35) thunderSoundSmall.Play(SoundControl.volumeAll, 0f, 0f);
 				if (counter == 55) thunderSoundBig.Play(SoundControl.volumeAll, 0f, 0f);
 			}
 		}
@@ -88,7 +85,7 @@ namespace _2DActionGame
 			base.Update();
 
 			position = turret.position + new Vector2(turret.width / 2, turret.height);
-			PlaySE();
+			PlaySound();
 		}
 		/// <summary>
 		/// turretとかが呼ぶ

@@ -6,8 +6,7 @@ using System.Text;
 namespace _2DActionGame
 {
 	/// <summary>
-	/// どのCharacterからダメージを受けたか、何フレーム目で判定を入れるかなどの処理をする？
-	/// DamageControlで管理.
+	/// Characterにダメージを与えるクラス。DamageManagerで管理される
 	/// </summary>
 	public class Damage
 	{
@@ -17,7 +16,6 @@ namespace _2DActionGame
 		/// </summary>
 		private int damageFrame;
 		private int damageCounter;
-		//private int movementType;                             // ダメージのタイプ.damagedObject側で指定してもよい.
 
 		/// <summary>
 		/// 攻撃をヒットさせたObject
@@ -70,7 +68,7 @@ namespace _2DActionGame
 					}
 
 					adObject.object2.isDamaged = false;                                             // 決まったフレームでのみtrueにする.それ以外ではfalse
-					if (adObject.object1 is Bullet) (adObject.object1 as Bullet).isShot = false;			// 10/20 ここでfalseにしてしまう
+					if (adObject.object1 is Bullet) (adObject.object1 as Bullet).isShot = false;	// 10/20 ここでfalseにしてしまう
 					damageCounter++;
 				} else {// flyingenemy→stationalEで生成されるが攻撃してないので当然1frame目でここに.
 					hasDamaged = true;
@@ -136,6 +134,5 @@ namespace _2DActionGame
 				}
 			}
 		}
-
 	}
 }

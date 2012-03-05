@@ -47,16 +47,16 @@ namespace _2DActionGame
 			base.ButtonUpdate();
 
 			if (!waitingInput) {
-				if (button[0].isSelected && JoyStick.IsOnKeyDown(3)) {
+				if (button[0].isSelected && JoyStick.IsOnKeyDown(1)) {
 					// crossのconfig処理
 					waitingInput = true;
 					if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 				}
-				if (button[1].isSelected && JoyStick.IsOnKeyDown(3)) {
+				if (button[1].isSelected && JoyStick.IsOnKeyDown(1)) {
 					// leftButtonのconfig処理
 					if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 				}
-				if (button[2].isSelected && JoyStick.IsOnKeyDown(3)) {
+				if (button[2].isSelected && JoyStick.IsOnKeyDown(1)) {
 					isEndScene = true;
 					if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 				}

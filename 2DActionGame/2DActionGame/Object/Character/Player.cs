@@ -398,37 +398,40 @@ namespace _2DActionGame
 				if (game.inDebugMode) {
 					switch (game.avilityNum) {
 						case 0://Reverse
-							if (JoyStick.KEY(5))
+                            if (!game.twoButtonMode && JoyStick.KEY(2) || game.twoButtonMode && JoyStick.KEY(5))
 								stage.reverse.StartReverse();
-							if (JoyStick.IsOnKeyDown(5)) {
+                            if (!game.twoButtonMode && JoyStick.IsOnKeyDown(2) || game.twoButtonMode && JoyStick.IsOnKeyDown(5)) {
 								if (!game.isMuted) tasSound.Play(SoundControl.volumeAll, 0f, 0f);
 							}
 
-							if (!JoyStick.KEY(5) || JoyStick.IsOnKeyUp(5))
+                            if ((!game.twoButtonMode && JoyStick.KEY(2) || game.twoButtonMode && !JoyStick.KEY(5))
+                                || (!game.twoButtonMode && JoyStick.IsOnKeyUp(2) || game.twoButtonMode && JoyStick.IsOnKeyUp(5)))
 								stage.reverse.isReversed = false;
 							break;
 						case 1://SlowMotion
-							if (JoyStick.KEY(5))
+                            if (!game.twoButtonMode && JoyStick.KEY(2) || game.twoButtonMode && JoyStick.KEY(5))
 								stage.slowmotion.StartSlowMotion();
-							if (JoyStick.IsOnKeyDown(5)) {
+                            if (!game.twoButtonMode && JoyStick.IsOnKeyDown(2) || game.twoButtonMode && JoyStick.IsOnKeyDown(5)) {
 								if (!game.isMuted) tasSound.Play(SoundControl.volumeAll, 0f, 0f);
 							}
 
-							if (!JoyStick.KEY(5) || JoyStick.IsOnKeyUp(5))
+                            if ((!game.twoButtonMode && JoyStick.KEY(2) || game.twoButtonMode && !JoyStick.KEY(5))
+                                || (!game.twoButtonMode && JoyStick.IsOnKeyUp(2) || game.twoButtonMode && JoyStick.IsOnKeyUp(5)))
 								stage.slowmotion.FinishSlowMotion();
 							break;
 						case 2://Accel
-							if (JoyStick.KEY(5))
+                            if (!game.twoButtonMode && JoyStick.KEY(2) || game.twoButtonMode && JoyStick.KEY(5))
 								stage.isAccelerated = true;
-							if (JoyStick.IsOnKeyDown(5)) {
+                            if (!game.twoButtonMode && JoyStick.IsOnKeyDown(2) || game.twoButtonMode && JoyStick.IsOnKeyDown(5)) {
 								if (!game.isMuted) tasSound.Play(SoundControl.volumeAll, 0f, 0f);
 							}
-							if (!JoyStick.KEY(5) || JoyStick.IsOnKeyUp(5))
+                            if ((!game.twoButtonMode && JoyStick.KEY(2) || game.twoButtonMode && !JoyStick.KEY(5))
+                                || (!game.twoButtonMode && JoyStick.IsOnKeyUp(2) || game.twoButtonMode && JoyStick.IsOnKeyUp(5)))
 								stage.isAccelerated = false;
 							break;
 					}
 				} else {
-					if (JoyStick.IsOnKeyDown(5))
+                    if (!game.twoButtonMode && JoyStick.IsOnKeyDown(2) || game.twoButtonMode && JoyStick.IsOnKeyDown(5))
 						switch (game.avilityNum) {
 							case 0:
 								stage.reverse.StartReverse();
@@ -440,7 +443,8 @@ namespace _2DActionGame
 								stage.isAccelerated = true;
 								break;
 						}
-					if (!JoyStick.KEY(5) || JoyStick.IsOnKeyUp(5))
+                    if ((!game.twoButtonMode && JoyStick.KEY(2) || game.twoButtonMode && !JoyStick.KEY(5))
+                        || (!game.twoButtonMode && JoyStick.IsOnKeyUp(2) || game.twoButtonMode && JoyStick.IsOnKeyUp(5)))
 						switch (game.avilityNum) {
 							case 0:
 								stage.reverse.isReversed = false;
@@ -452,7 +456,7 @@ namespace _2DActionGame
 								stage.isAccelerated = false;
 								break;
 						}
-					if (JoyStick.IsOnKeyDown(5)) {
+                    if (!game.twoButtonMode && JoyStick.IsOnKeyDown(2) || game.twoButtonMode && JoyStick.IsOnKeyDown(5)) {
 						if (!game.isMuted) tasSound.Play(SoundControl.volumeAll, 0f, 0f);
 					}
 				}
@@ -1092,7 +1096,7 @@ namespace _2DActionGame
 			#endregion
 			#region Jumping
 			// ジャンプ
-			if (JoyStick.KEY(2) && !isInCombo) {
+			if (!game.twoButtonMode && JoyStick.KEY(3) || game.twoButtonMode && JoyStick.KEY(2) && !isInCombo) {
 				jumpTime++;                                         // 押下時間をチェック
 				if (jumpTime >= miniJumpWaitTime && !isJumping) {
 					Jump(12, false);// ジャンプ１段目
@@ -1102,12 +1106,12 @@ namespace _2DActionGame
                         CancelAttacking();
 					}
 				}
-			} else if (JoyStick.KEY(2) && isInCombo) {           // キャンセル用
+            } else if (!game.twoButtonMode && JoyStick.KEY(3) || game.twoButtonMode && JoyStick.KEY(2) && isInCombo) {           // キャンセル用
                 CancelAttacking();
 			}
 			//　counter++;// これってUpdate直下でしてるから要らなくないか...?
 			// 2段目以降は、空中なのでIsOnKeyDownでおｋ
-			if (JoyStick.IsOnKeyDown(2)) {// 一気にjumpCountが0～2までいくのを修正.3/10 ここだけだとちょっとキャンセル具合がよろしくないのでKEYでも.
+            if (!game.twoButtonMode && JoyStick.IsOnKeyDown(3) || game.twoButtonMode && JoyStick.IsOnKeyDown(2)) {// 一気にjumpCountが0～2までいくのを修正.3/10 ここだけだとちょっとキャンセル具合がよろしくないのでKEYでも.
                 inJumpCharge = true;
                 if (isAttacking) {// || isInCombo) {
                     CancelAttacking();
@@ -1121,14 +1125,14 @@ namespace _2DActionGame
 				}
 			}
             // mini jump
-			if (JoyStick.IsOnKeyUp(2) && jumpTime < miniJumpWaitTime && !isInCombo && !isJumping) {// jumpTime > 0 IsOnKeyDown???
+            if (!game.twoButtonMode && JoyStick.IsOnKeyUp(3) || game.twoButtonMode && JoyStick.IsOnKeyUp(2) && jumpTime < miniJumpWaitTime && !isInCombo && !isJumping) {// jumpTime > 0 IsOnKeyDown???
                 if (!isJumping) {
                     Jump(jumpTime, true);
                     miniJump = true;
                 }
 			}
             if (isOnSomething && !inJumpCharge) jumpTime = 0;
-            if (JoyStick.IsOnKeyUp(2)) inJumpCharge = false;
+            if (!game.twoButtonMode && JoyStick.IsOnKeyUp(3) || game.twoButtonMode && JoyStick.IsOnKeyUp(2)) inJumpCharge = false;
 
 			// 可変長ジャンプ：押下時間で高さを変えるパターン:不使用だが残す
 			if (KeyInput.IsOnKeyDown(Keys.Tab)) {
@@ -1289,9 +1293,6 @@ namespace _2DActionGame
 
 				if (HP >= 0) {
 					if (!game.isMuted) damageSound.Play(SoundControl.volumeAll, 0f, 0f);
-				} else {
-					//Cue cue = game.soundBank.GetCue("critical");
-					//if(!game.isMuted) cue.Play(SoundControl.volumeAll, 0f, 0f);
 				}
 
 				totalHits += 1;

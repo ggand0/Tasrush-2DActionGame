@@ -120,6 +120,7 @@ namespace _2DActionGame
         public override void Update()
         {
 			if (IsActive()) {
+
 				foreach (Terrain terrain in mapObjects) {
 					if (terrain is Icicle) { }
 

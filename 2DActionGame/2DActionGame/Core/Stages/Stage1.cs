@@ -20,7 +20,7 @@ namespace _2DActionGame
         {
 			if (!isHighLvl) {
 				LoadMapData(1, "Stage1_Easy.txt", 0, 0);
-				boss = new Raijin(this, 14000, 100, 300, 280, 50);//210, 210
+				boss = new Raijin(this, 14000, 100, 300, 280, 50);// (210, 210) (300, 280)
 				characters.Add(boss);
 			} else {
 				LoadMapData(1, "Stage1_Hard.txt", 0, 0);
@@ -34,7 +34,6 @@ namespace _2DActionGame
             characters.Add(player);
             sword = player.sword;
             weapons.Add(sword);
-			//this.dynamicTerrains.Add(new SnowBall(this, 100, 100, 128, 128));
 			AddObjects();
             
             base.Load();
@@ -42,28 +41,10 @@ namespace _2DActionGame
 				if (weapon is Turret) weapon.Load(game.Content, "Object\\Turret&Bullet" + "\\" + "windTurret2");
 			}
 
-            //BGM = game.soundBank.GetCue("forest");
-            //if (!game.isMuted) BGM.Play(SoundControl.volumeAll, 0f, 0f);
 			SoundControl.Stop();
 			SoundControl.IniMusic("Audio\\BGM\\forest");
 			SoundControl.musicInstance.IsLooped = true;
-            if (!game.isMuted) SoundControl.Play();
-        }
-
-		public override void Update(double dt)
-        {
-            base.Update(dt);
-
-            //if (!pauseMenu.Pausing && game.isInStage && (BGM.IsStopped || BGM.IsPaused) && !inBossBattle) {
-			/*if (!toBossScene && BGM.IsStopped && !inBossBattle && !game.isOvered && !game.inMenu) {// game.inStageならでいいじゃん !pauseMenu.Pausing &&
-                if (!game.isHighLvl)
-                    BGM = game.soundBank.GetCue("forest");
-                else
-                    BGM = game.soundBank.GetCue("forest");
-                BGM.Play(SoundControl.volumeAll, 0f, 0f);
-            }
-			else if (!toBossScene && BGM.IsPaused && !inBossBattle && !game.isOvered && !game.inMenu)//!pauseMenu.Pausing && 
-                BGM.Resume();// BGM.Play(SoundControl.volumeAll, 0f, 0f);*/
+            if (!game.isMuted) SoundControl.Play(true);
         }
     }
 }

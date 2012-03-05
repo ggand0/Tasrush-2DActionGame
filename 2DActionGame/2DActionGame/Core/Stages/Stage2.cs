@@ -36,7 +36,7 @@ namespace _2DActionGame
             AddObjects();
             base.Load();
 
-			if (!game.isMuted) SoundControl.Play();
+			if (!game.isMuted) SoundControl.Play(true);
         }
     }    
 }

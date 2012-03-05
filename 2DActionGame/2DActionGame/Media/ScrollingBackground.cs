@@ -40,15 +40,8 @@ namespace _2DActionGame
 		public void Load(GraphicsDevice device, ContentManager content, string texture_name)
 		{
 			texture = content.Load<Texture2D>(texture_name);
-			//screenheight = 960;// device.Viewport.Height;// screenheight = Height
-			screenwidth = 1280;//device.Viewport.Width;
-			// Set the origin so that we're drawing from the 
-			// center of the top edge.
-			origin = new Vector2(0, 0);// textures.Width / 2
-			// Set the screen position to the center of the screen.
-			//↓最初から削ってったっけ？削らないと動かない状態だったが...
-			//screenpos = new Vector2(screenwidth , 0);//screenwidth / 2, screenheight / 2
-			// Offset to draw the second textures, when necessary.
+			screenwidth = 1280;
+			origin = new Vector2(0, 0);
 			texturesize = new Vector2(texture.Width, 0);
 		}
 
@@ -60,10 +53,10 @@ namespace _2DActionGame
 					if (screenpos.X < 0) screenpos.X = texture.Width;
 				} else {
 					screenpos.X += deltaX * 0.4f;// 0.5f
-					if (screenpos.X >  texture.Width) screenpos.X = 0;//texture.Width;
+					if (screenpos.X >  texture.Width) screenpos.X = 0;
 				}
             }
-            //screenpos.X = screenpos.X % textures.Width;　正の向きに動かすときはこう書くとｽﾏｰﾄ
+            // screenpos.X = screenpos.X % textures.Width;
         }
 		// 補助メソッド
 		public void ScrollUpdateBoss(Vector2 criteriaPosition)
@@ -87,8 +80,7 @@ namespace _2DActionGame
         /// </summary>
         public override void Draw(SpriteBatch spriteBatch)
         {
-            // DrawEffect the textures, if it is still onscreen.
-			if (stage != null && (!stage.isScrolled /*|| stage.inBossBattle*/)) {
+			if (stage != null && (!stage.isScrolled)) {
 				if (isFrontal) {
 					spriteBatch.Draw(texture, drawPos, null, Color.White, 0, origin, 1, SpriteEffects.None, 0f);
 					spriteBatch.Draw(texture, drawPos - new Vector2(-640, 0), null, Color.White, 0, origin, 1, SpriteEffects.None, .0f);// 背景の深度値は.0fに統一すべきか？ 3/28 drawVec=0
@@ -103,8 +95,6 @@ namespace _2DActionGame
 			} else {
 				if (screenpos.X < screenwidth) {
 					spriteBatch.Draw(texture, screenpos, null, Color.White, 0, origin, 1, SpriteEffects.None, .0f);
-					// DrawEffect the textures a second time, behind the first,
-					// to create the scrolling illusion.
 					spriteBatch.Draw(texture, screenpos - texturesize, null, Color.White, 0, origin, 1, SpriteEffects.None, .0f);
 				}
 			}

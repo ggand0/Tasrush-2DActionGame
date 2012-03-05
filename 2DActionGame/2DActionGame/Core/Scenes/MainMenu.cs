@@ -43,15 +43,15 @@ namespace _2DActionGame
 				SoundControl.IniMusic("Audio\\BGM\\menu_new");
 			}
 
-            if (button[0].isSelected && JoyStick.IsOnKeyDown(3)) {
+            if (button[0].isSelected && JoyStick.IsOnKeyDown(1)) {
 				PushScene(new LvlSelect(this));
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
             }
-			if (button[1].isSelected && JoyStick.IsOnKeyDown(3)) {
+			if (button[1].isSelected && JoyStick.IsOnKeyDown(1)) {
 				PushScene(new Tutorial(this));
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
             }
-			if (button[2].isSelected && JoyStick.IsOnKeyDown(3)) {
+			if (button[2].isSelected && JoyStick.IsOnKeyDown(1)) {
 				PushScene(new Option(this));
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
             }

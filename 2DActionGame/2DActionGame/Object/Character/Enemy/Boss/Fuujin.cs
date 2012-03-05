@@ -560,9 +560,11 @@ namespace _2DActionGame
 		public Fuujin(Stage stage, float x, float y, int width, int height, int HP, float vx, int bulletType, int shootType)
 			: base(stage, x, y, width, height, HP, bulletType, shootType) 
 		{
+            bindSize = new Vector2(180, 100);
             bindPos = new Vector2(50, 50);
-            defBindPos = new Vector2(50, 50);
-			defBindPosOther = new Vector2(width - 50 - bindSize.X, 50);
+            defBindPos = new Vector2(95, 83);
+			defBindPosOther = new Vector2(width - defBindPos.X - bindSize.X, 50);
+            
 
 			this.defaultPosition = position;
 			tmpPosition = defaultPosition + new Vector2(-100, -200);

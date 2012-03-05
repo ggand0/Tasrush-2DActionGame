@@ -1,0 +1,12 @@
+C:\Users\pentiumx\Dropbox\ActionGame\2DActionGame\pipeline\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\pentiumx\Dropbox\ActionGame\2DActionGame\pipeline\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Users\pentiumx\Dropbox\ActionGame\2DActionGame\pipeline\bin\x86\Debug\pipeline.dll
+C:\Users\pentiumx\Dropbox\ActionGame\2DActionGame\pipeline\bin\x86\Debug\pipeline.pdb
+C:\Users\pentiumx\Dropbox\ActionGame\2DActionGame\pipeline\obj\x86\Debug\pipeline.dll
+C:\Users\pentiumx\Dropbox\ActionGame\2DActionGame\pipeline\obj\x86\Debug\pipeline.pdb
+C:\Users\tomoyuki\Documents\My Dropbox\ActionGame\2DActionGame\pipeline\bin\x86\Debug\pipeline.dll
+C:\Users\tomoyuki\Documents\My Dropbox\ActionGame\2DActionGame\pipeline\bin\x86\Debug\pipeline.pdb
+C:\Users\tomoyuki\Documents\My Dropbox\ActionGame\2DActionGame\pipeline\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\tomoyuki\Documents\My Dropbox\ActionGame\2DActionGame\pipeline\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Users\tomoyuki\Documents\My Dropbox\ActionGame\2DActionGame\pipeline\obj\x86\Debug\pipeline.dll
+C:\Users\tomoyuki\Documents\My Dropbox\ActionGame\2DActionGame\pipeline\obj\x86\Debug\pipeline.pdb

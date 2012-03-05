@@ -90,7 +90,7 @@ namespace _2DActionGame
 					if (musicIndex > 0) musicIndex--;
 				}
 			}
-			if (button[0].isSelected && JoyStick.IsOnKeyDown(3)) {
+			if (button[0].isSelected && JoyStick.IsOnKeyDown(1)) {
 				SoundControl.Stop();
 				musicInstance.Stop();
 				musicInstance = musics[musicIndex].CreateInstance();
@@ -113,7 +113,7 @@ namespace _2DActionGame
 					if (seIndex > 0) seIndex--;
 				}
 			}
-			if (button[2].isSelected && JoyStick.IsOnKeyDown(3)) {
+			if (button[2].isSelected && JoyStick.IsOnKeyDown(1)) {
 				SoundControl.Stop();
 				seInstance.Stop();
 				seInstance = soundEffects[seIndex].CreateInstance();
@@ -128,14 +128,14 @@ namespace _2DActionGame
 				}
 			}
 
-			if (button[4].isSelected && JoyStick.IsOnKeyDown(3)) {				// Back
+			if (button[4].isSelected && JoyStick.IsOnKeyDown(1)) {				// Back
 				musicInstance.Stop();
 				seInstance.Stop();
 				SoundControl.Stop();
 				if (!game.isMuted) cancel.Play(SoundControl.volumeAll, 0f, 0f);
 				isEndScene = true;
 				SoundControl.IniMusic("Audio\\BGM\\menu_new");
-				SoundControl.Play();
+				SoundControl.Play(true);
 			}
 		}
 

@@ -31,7 +31,7 @@ namespace _2DActionGame
 			if (JoyStick.IsOnKeyDown(2)) {
 				isEndScene = true;
 			}
-			if (JoyStick.IsOnKeyDown(3)) {
+			if (JoyStick.IsOnKeyDown(1)) {
 				page++;
 				if (page >= pageNum) {
 					page = pageNum - 1;

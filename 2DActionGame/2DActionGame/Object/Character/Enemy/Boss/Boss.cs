@@ -65,22 +65,7 @@ namespace _2DActionGame
 		/// </summary>
 		public bool isEndingAttack { get; protected set; }
 
-		/// <summary>
-		/// 射撃をturretに任せるパターン
-		/// </summary>
-		/// <param name="turretNumber">射撃したいTurretのindex</param>
-		protected void UpdateTurrets(int turretNumber)
-		{
-			if (turretNumber == -1) {// 一斉射撃
-				for (int i = 0; i < turrets.Count; i++) {
-					turrets[i].Update();
-				}
-			} else if (turretNumber < turrets.Count) {// 個別
-				turrets[turretNumber].Update();
-			} else {// 範囲外の値を指定された場合はListの最後のturretに射撃させる
-				turrets[turrets.Count - 1].Update();
-			}
-		}
+		
 
 
 		private List<Vector2> speedVectors = new List<Vector2>();
@@ -100,7 +85,7 @@ namespace _2DActionGame
 		/// 攻撃パターンのリスト。管理しやすいように二次元構造にした。
 		/// </summary>
 		protected List<int[]> attackPatternNumList = new List<int[]>();
-		// Raijinのせいで無駄に増えているので要修正
+		// この辺もっとスマートにしたかった
 		protected Action attackMethodType0;
 		protected Action<float> attackMethodType1;
 		protected Action<int> attackMethodType2;
@@ -123,12 +108,28 @@ namespace _2DActionGame
         protected Vector2 defBindPos = new Vector2(100, 100);
         protected Vector2 defBindPosOther = new Vector2(100, 100);
 
+		/// <summary>
+		/// 射撃をturretに任せるパターン
+		/// </summary>
+		/// <param name="turretNumber">射撃したいTurretのindex</param>
+		protected void UpdateTurrets(int turretNumber)
+		{
+			if (turretNumber == -1) {// 一斉射撃
+				for (int i = 0; i < turrets.Count; i++) {
+					turrets[i].Update();
+				}
+			} else if (turretNumber < turrets.Count) {// 個別
+				turrets[turretNumber].Update();
+			} else {// 範囲外の値を指定された場合はListの最後のturretに射撃させる
+				turrets[turrets.Count - 1].Update();
+			}
+		}
         /// <summary>
 		/// 自Objectをウェイポイントに沿って移動させるメソッド。
 		/// </summary>
 		/// <param name="moveSpeed">移動速度[pixel/frame]</param>
 		/// <param name="wayPoints">ウェイポイントのリスト</param>
-		protected override void Move(float moveSpeed, Vector2[] wayPoints)//params 
+		protected override void Move(float moveSpeed, Vector2[] wayPoints)
 		{
 			if (isStartingAttack) {
 				speedVectors.Clear();

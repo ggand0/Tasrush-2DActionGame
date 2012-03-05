@@ -42,7 +42,13 @@ namespace _2DActionGame
         public static void CacheMusic(SoundEffectInstance musicInstance) { musicTmp = SoundControl.musicInstance; }
         public static void RestoreMusic() { SoundControl.musicInstance = musicTmp; }
 
-        public static void Play() { musicInstance.Volume = SoundControl.volumeAll; musicInstance.Play();}
+        public static void Play(bool isLooped)
+        {
+            musicInstance.Volume = SoundControl.volumeAll;
+            musicInstance.IsLooped = isLooped;
+            musicInstance.Play();
+        }
+        public static void Play(bool isLooped, float volume) { musicInstance.Volume = volume; musicInstance.Play(); }
 		public static void Pause() { musicInstance.Pause(); }
 		public static void Stop() { musicInstance.Stop(); }
 		public static void Resume() { musicInstance.Resume(); }

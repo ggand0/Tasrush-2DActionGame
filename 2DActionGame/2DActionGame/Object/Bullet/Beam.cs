@@ -37,17 +37,8 @@ namespace _2DActionGame
 				animations[i] = new Animation(64, 64);
 		}
 		public Beam(Stage stage, Turret turret, int width, int height, int type)
-			: base(stage, turret, width, height)
+			: this(stage, turret, width, height, type, 0)
 		{
-			// turretに追従させるパターン
-			this.shootPosition = turret.position;
-			this.position = shootPosition;
-
-			// 821追加↓
-			animation2 = new Animation(48, 24);
-			animations = new Animation[10];
-			for (int i = 0; i < animations.Length; i++)
-				animations[i] = new Animation(64, 64);
 		}
 		public Beam(Stage stage, Turret turret, int width, int height, int type, int disappearType)
 			: base(stage, turret, width, height)
@@ -57,7 +48,6 @@ namespace _2DActionGame
 			this.position = shootPosition;
 			this.disappearPattern = disappearType;
 
-			// 821追加↓
 			animation2 = new Animation(48, 24);
 			animations = new Animation[10];
 			for (int i = 0; i < animations.Length; i++)
@@ -85,7 +75,7 @@ namespace _2DActionGame
 		public override void UpdateFlying(int flyingTime)
 		{
 			if (isShot) {
-				position = turret.position;// Turretでこの１行あるから忌み名い
+				position = turret.position;
 				counter++;
 
 				if (counter > flyingTime) {
@@ -112,16 +102,16 @@ namespace _2DActionGame
 		{
 			base.UpdateNumbers();
 			int t = (int)stage.CheckGroundHeight(position.X);
-			height = Math.Abs(416 - (int)position.Y);// デバッグの結果ここが原因では無いことがわかった
+			height = Math.Abs(416 - (int)position.Y);
 			if (t != 416) { }//100!?
 		}
 
 		public override void Draw(SpriteBatch spriteBatch)
 		{
 			if (isActive && isShot && (turret == null || (turret != null && turret.isBeingUsed))) { // RaijinのturretのBeamでなぜか最初!isShotなのに描画されてる
-				//spriteBatch.Draw(texture, drawPos, animation.rect, Color.White);//if(isShot)       // 判定用の矩形
-				DrawBeams(spriteBatch);                                                                  // 実際のテクスチャ
-				DrawSparkEffects(spriteBatch);                                                           // 着弾位置と射撃位置付近のエフェクト
+				//spriteBatch.Draw(texture, drawPos, animation.rect, Color.White);//if(isShot)      // 判定用の矩形
+				DrawBeams(spriteBatch);                                                             // 実際のテクスチャ
+				DrawSparkEffects(spriteBatch);                                                      // 着弾位置と射撃位置付近のエフェクト
 			}
 		}
 		/// <summary>
@@ -129,7 +119,6 @@ namespace _2DActionGame
 		/// </summary>
 		private void DrawBeams(SpriteBatch spriteBatch)
 		{
-			// 全く描画されてない瞬間は何故か!isShotになってた...
 			int debug = 0;
 			for (int i = 0; i < animations.Length; i++) {// toolong:height:205 heightのせいだった明らかに目視で100くらいなのに
 				animations[i].hasStarted = false;
@@ -163,8 +152,6 @@ namespace _2DActionGame
 				if (ani.hasStarted)
 					spriteBatch.Draw(texture, ani.vector, ani.rect, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, .0f);
 			}
-
-			//spriteBatch.Draw(textures,position,Color.White)
 		}
 		private void DrawSparkEffects(SpriteBatch spriteBatch)
 		{
