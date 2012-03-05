@@ -182,6 +182,7 @@ namespace _2DActionGame
                         damageSound.Play(SoundControl.volumeAll, 0f, 0f);
                         hasPlayedSoundEffect = true;
                     }
+                //if (isAlive) game.stageScores[game.stageNum - 1] += 10000; // Clear時に移動す
                 isAlive = false;
                 isMovingAround = false;
                 speed = Vector2.Zero;
@@ -381,7 +382,8 @@ namespace _2DActionGame
 				if (time < deathComboTime) {
 					comboCount++;
 				}
-				game.stageScores[game.stageNum-1] += stage.inComboObjects.Count + (1 + stage.gameStatus.maxComboCount * .01f);
+				game.stageScores[game.stageNum-1] += stage.inComboObjects.Count * 200 + (1 + stage.gameStatus.maxComboCount * .01f);
+                if (HP == 0) game.stageScores[game.stageNum - 1] += 1000;
 			}
 		}
 		/// <summary>
@@ -420,5 +422,6 @@ namespace _2DActionGame
 			locus.Add(position);
 			if (locus.Count > 2) locus.RemoveAt(0);
 		}
+        
 	}
 }

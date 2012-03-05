@@ -85,10 +85,12 @@ namespace _2DActionGame
                         damageSound.Play(SoundControl.volumeAll, 0f, 0f);
                         hasPlayedSoundEffect = true;
                     }
+                if (isAlive) game.stageScores[game.stageNum - 1] += 100;
                 isAlive = false;
                 isMovingAround = false;
                 speed = Vector2.Zero;
                 gravity = 0;
+                
             }
             if (!isAlive && counter == 0) {
                 isEffected = true;
@@ -132,66 +134,67 @@ namespace _2DActionGame
 			float distance = position.X - stage.player.position.X;
 			int seType = 0;
 
-			if (isDamaged && isAlive) {
-				if (stage.player.isCuttingUp) {
-					BlownAwayMotionUp(5, 65);
-					//isBlownAway = true;
-				} else if (stage.player.isCuttingAway) {
-					BlownAwayMotionRight(2, 60);
-					isBlownAway = true;
-					//blownEffected = true;
-					seType = 1;
-				} else if (stage.player.isCuttingDown) {
-					BlownAwayMotionDown(5, 60);
-				} else if (stage.player.isAttacking3) {
-					/*if (distance > 0) speed.X += 5 * timeCoef;
-					else speed.X += -5 * timeCoef;
-					speed.Y -= 5;*/
-					//blownEffected = true;
-					BlownAwayMotionRight(1.0f, 60);
-					HP--;
-				} else if (stage.player.isAirial) {
-					if (distance > 0) speed.X += 5 * timeCoef;
-					else speed.X += -5 * timeCoef;
-					speed.Y += 5 * timeCoef;
-					//HP--;
-				} else if (stage.player.isThrusting && time % 5 == 0) {
-					if (distance > 0) speed.X += .1f * timeCoef;// 1 * timeCoef
-					else speed.X += -.1f * timeCoef;
-					speed.Y -= .1f * timeCoef;
-				} else if (!stage.player.isThrusting) {
-					if (distance > 0) speed.X += 1.5f * timeCoef;
-					else speed.X += -1.5f * timeCoef;
-				}
+            if (isDamaged && isAlive) {
+                if (stage.player.isCuttingUp) {
+                    BlownAwayMotionUp(5, 65);
+                    //isBlownAway = true;
+                } else if (stage.player.isCuttingAway) {
+                    BlownAwayMotionRight(2, 60);
+                    isBlownAway = true;
+                    //blownEffected = true;
+                    seType = 1;
+                } else if (stage.player.isCuttingDown) {
+                    BlownAwayMotionDown(5, 60);
+                } else if (stage.player.isAttacking3) {
+                    /*if (distance > 0) speed.X += 5 * timeCoef;
+                    else speed.X += -5 * timeCoef;
+                    speed.Y -= 5;*/
+                    //blownEffected = true;
+                    BlownAwayMotionRight(1.0f, 60);
+                    HP--;
+                } else if (stage.player.isAirial) {
+                    if (distance > 0) speed.X += 5 * timeCoef;
+                    else speed.X += -5 * timeCoef;
+                    speed.Y += 5 * timeCoef;
+                    //HP--;
+                } else if (stage.player.isThrusting && time % 5 == 0) {
+                    if (distance > 0) speed.X += .1f * timeCoef;// 1 * timeCoef
+                    else speed.X += -.1f * timeCoef;
+                    speed.Y -= .1f * timeCoef;
+                } else if (!stage.player.isThrusting) {
+                    if (distance > 0) speed.X += 1.5f * timeCoef;
+                    else speed.X += -1.5f * timeCoef;
+                }
 
-				if (!game.isMuted) {
-					switch (seType) {
-						case 1:
-							blownSound.Play(SoundControl.volumeAll, 0f, 0f);
-							break;
-						default:
-							hitSound.Play(SoundControl.volumeAll, 0f, 0f);
-							break;
-					}
-				}
-				if (stage.player.normalComboCount >= 3) deathComboTime = 60;
-				else deathComboTime = 30;
+                if (!game.isMuted) {
+                    switch (seType) {
+                        case 1:
+                            blownSound.Play(SoundControl.volumeAll, 0f, 0f);
+                            break;
+                        default:
+                            hitSound.Play(SoundControl.volumeAll, 0f, 0f);
+                            break;
+                    }
+                }
+                if (stage.player.normalComboCount >= 3) deathComboTime = 60;
+                else deathComboTime = 30;
 
-				HP--;
-				totalHits += 1;
-				time = 0;
-				delayTime = 0;
-				isEffected = true;
-				damageEffected = true;
-				if (time < deathComboTime) comboCount++;
-				time++;
-				effectPos = new Vector2(position.X + width / 2 > stage.player.position.X + stage.player.width / 2 ? width / 4 : width * 3 / 4
-					, position.Y + height / 2 > stage.player.position.Y + stage.player.height / 2 ? height / 4 : height * 3 / 4);
+                HP--;
+                totalHits += 1;
+                time = 0;
+                delayTime = 0;
+                isEffected = true;
+                damageEffected = true;
+                if (time < deathComboTime) comboCount++;
+                time++;
+                effectPos = new Vector2(position.X + width / 2 > stage.player.position.X + stage.player.width / 2 ? width / 4 : width * 3 / 4
+                    , position.Y + height / 2 > stage.player.position.Y + stage.player.height / 2 ? height / 4 : height * 3 / 4);
 
-				int adj = 0;
-				adj = stage.gameStatus.maxComboCount;
-				game.stageScores[game.stageNum-1] += stage.inComboObjects.Count + (1 + stage.gameStatus.maxComboCount * .01f);//10 * stage.inComboObjects.Count * stage.maxComboCount;
-			}
+                int adj = 0;
+                adj = stage.gameStatus.maxComboCount;
+                game.stageScores[game.stageNum - 1] += stage.inComboObjects.Count + (1 + stage.gameStatus.maxComboCount * .1f);//10 * stage.inComboObjects.Count * stage.maxComboCount;
+                //if (HP == 0) game.stageScores[game.stageNum - 1] += 100;
+            }
 		}
 		protected virtual void MotionDelay()
 		{

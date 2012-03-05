@@ -50,6 +50,7 @@ namespace _2DActionGame
         public GraphicsDeviceManager graphics { get; set; }
 		public SpriteBatch spriteBatch { get; private set; }
         private DebugMessage dm;
+        public GameStatus tmpGameStatus { get; set; }
 
         // Scene
 		public Stack<Scene> scenes = new Stack<Scene>();
@@ -243,6 +244,7 @@ namespace _2DActionGame
 			//isMuted = true;
 			//noEnemy = true;
 			stageScores = new double[maxStageNum];
+            tmpGameStatus = new GameStatus();
 			//scores = dummyScore.ToList<RankingStatus>();// 復号化失敗のとき用＋テスト用＋要素数確保
 		}
         /// <summary>

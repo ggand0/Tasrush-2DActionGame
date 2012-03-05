@@ -687,11 +687,14 @@ namespace _2DActionGame
 			// BGM
 			//SoundControl.IniMusic("Audio\\BGM\\forest");
 			//SoundControl.Play();
-			gameStatus = new GameStatus();
+			//\
+            
+            
+            gameStatus = new GameStatus();
 			DrawBackGround();// 背景バッファの作成
 			player.position = new Vector2(game.hasReachedCheckPoint ? 13400 : 100, 100);
-			gameTimeNormal = 0;
-			gameTimeTAS = 0;
+			//gameTimeNormal = 0;
+			//gameTimeTAS = 0;
 
 			bossScreenEdgeLeft = boss.defaultPosition.X - 640;// -Player.screenPosition.X;
 			bossScreenEdgeRight = boss.defaultPosition.X + 640 + 100;// 100
@@ -702,6 +705,7 @@ namespace _2DActionGame
 			hasEffectedBossExplosion = false;
 			inBossBattle = false;
 			BGMchanged = false;
+            gameStatus = game.tmpGameStatus;
 			#endregion
 		}
 
@@ -858,6 +862,8 @@ namespace _2DActionGame
 		}
 		private void UpdateUICalculate()
 		{
+            //game.stageScores[game.stageNum - 1] = game.score;
+
 			for (int i = 0; i < inComboObjects.Count; i++)    // 列要素を比較
 				if (gameStatus.maxComboCount < (inComboObjects[i] as Enemy).comboCount) {
 					gameStatus.maxComboCount = (inComboObjects[i] as Enemy).comboCount;
@@ -1150,6 +1156,7 @@ namespace _2DActionGame
 			if (toGameOver && hasEffectedPlayerDeath) {
                 SoundControl.CacheMusic(musicInstance);
 				SoundControl.Pause();
+                game.tmpGameStatus = gameStatus;
 				PushScene(new GameOver(this));
 			}
 			if (boss.position.Y > 600) boss.isAlive = false;// characterが自分で殺すようにする...?
@@ -1161,10 +1168,6 @@ namespace _2DActionGame
 		}
 
 		// Sub Methods
-		/// <summary>
-		/// 静的な地形で、隣接する地形がある場合、その方向の当たり判定をしないフラグを立てる
-		/// わかりづらい＼(^o^)／
-		/// </summary>
 		protected void SetTerrainDirection()
 		{
 			// 重いのでLoad時1回だけ実行　
@@ -1463,7 +1466,9 @@ namespace _2DActionGame
 				spriteBatch.DrawString(game.pumpDemi, "Score:" + game.score.ToString(), new Vector2(0, 128), Color.Orange);
 			} else {
 				spriteBatch.DrawString(game.pumpDemi, "Time:"
-				+ ((int)(gameStatus.time / 60.0)).ToString() + ":" + ((int)(gameStatus.time % 60)).ToString(), new Vector2(0, 32), Color.Orange, 0, Vector2.Zero, 1, SpriteEffects.None, 0f);
+				    + ((int)(gameStatus.time / 60.0)).ToString() + ":" + ((int)(gameStatus.time % 60)).ToString(), new Vector2(0, 32), Color.Orange, 0, Vector2.Zero, 1, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(game.pumpDemi, "Score:"
+                    + game.stageScores[game.stageNum - 1].ToString("N"), new Vector2(0, 64), Color.Orange, 0, Vector2.Zero, 1, SpriteEffects.None, 0f);
 
 				//if (gameStatus.comboCountVisibleTime < gameStatus.maxComboCountVisibleTime) 
 					spriteBatch.DrawString(game.pumpDemi, "MAX:" + gameStatus.maxComboCount.ToString() + "HIT", new Vector2(500, 32), Color.Orange, 0, Vector2.Zero, new Vector2(.6f, .6f), SpriteEffects.None, 0f);

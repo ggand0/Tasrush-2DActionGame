@@ -39,6 +39,8 @@ namespace _2DActionGame
 
 			Load();
             game.hasReachedCheckPoint = false;
+            game.tmpGameStatus = new GameStatus();
+            game.stageScores[game.stageNum - 1] += 10000;
         }
 
         public override void Load()
