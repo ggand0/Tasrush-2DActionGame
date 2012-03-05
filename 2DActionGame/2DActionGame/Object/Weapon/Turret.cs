@@ -742,8 +742,8 @@ namespace _2DActionGame
 		protected override void UpdateNumbers()
 		{
 			if (user != null && isSubsidiary) {
-				if (shootPosition != Vector2.Zero) this.position = user.position + shootPosition;
-				else this.position = user.position + this.defaultPosition;
+				if (shootPosition != Vector2.Zero) this.position = (user.position + shootPosition) * timeCoef;
+				else this.position = (user.position + this.defaultPosition) * timeCoef;
 			}
 		}
 		public override void UpdateAnimation()

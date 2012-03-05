@@ -770,7 +770,7 @@ namespace _2DActionGame
 			}
 			
 			// 終了処理:ATWTの終了を待って終わるようにしたい
-			if (thunderTurret.isEnd) {//isWaiting || attackCounter > 240) {
+			if (thunderTurret.isEnd || attackCounter > 240) {
 				thunderTurret.isEnd = false;
 				hasReached = false;
 				gravity = defGravity;
@@ -1233,7 +1233,7 @@ namespace _2DActionGame
 			}*/
 
 			// 位置に加算
-			position += speed;
+			position += speed * timeCoef;
 
 			// 端
 			//if (!isBacking && position.Y < 0) position.Y = 0;

@@ -409,7 +409,7 @@ namespace _2DActionGame
 				if (speed.X > 0) speed.X = 0;
 			}
 			if (System.Math.Abs(speed.Y) > maxSpeed) speed.Y = maxSpeed;
-			position += speed;
+			position += speed * timeCoef;
 
 			locus.Add(this.drawPos);
 			if (locus.Count > 2) locus.RemoveAt(0);
