@@ -895,7 +895,7 @@ namespace _2DActionGame
 				#endregion
 			} else {
 				#region Charge
-				if (JoyStick.KeyTime(1) > 20) {//normaSecondComboTime) {
+                if (JoyStick.KeyTime(1) > 20 && TASpower >= thrustPowerConsumption) {//normaSecondComboTime) {
 					inThrustCharge = true;
 				}
 				if (JoyStick.IsOnKeyUp(1) && inThrustCharge) {

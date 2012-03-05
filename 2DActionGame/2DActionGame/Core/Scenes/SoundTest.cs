@@ -134,7 +134,7 @@ namespace _2DActionGame
 				SoundControl.Stop();
 				if (!game.isMuted) cancel.Play(SoundControl.volumeAll, 0f, 0f);
 				isEndScene = true;
-				SoundControl.IniMusic("Audio\\BGM\\menu_new");
+				SoundControl.IniMusic("Audio\\BGM\\menu-b");
 				SoundControl.Play(true);
 			}
 		}

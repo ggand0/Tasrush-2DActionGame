@@ -138,20 +138,6 @@ namespace _2DActionGame
 			foreach (String s in contextString) {
 				spriteBatch.DrawString(game.japaneseFont, MessageTable.debugMenuMsgs[curButton], CONTEXT_POSITION, Color.Orange);
 			}
-			//spriteBatch.DrawString(game.Arial, "てすと", new Vector2(250, 30), Color.Orange);
-			/*spriteBatch.Draw(backGround, Vector2.Zero, Color.White);
-			spriteBatch.DrawString(game.Arial, "Debug Options", new Vector2(250, 30), Color.Orange);
-			spriteBatch.DrawString(game.menuFont, "change on/off", new Vector2(200, 70), Color.Orange);
-			spriteBatch.DrawString(game.menuFont, "inDebugMode", new Vector2(200, 100), button[0].color);
-			spriteBatch.DrawString(game.menuFont, "isMuted", new Vector2(200, 120), button[1].color);
-			spriteBatch.DrawString(game.menuFont, "visibleSword", new Vector2(200, 140), button[2].color);
-			spriteBatch.DrawString(game.menuFont, "score", new Vector2(200, 160), button[3].color);
-			spriteBatch.DrawString(game.menuFont, "Back", new Vector2(200, 180), button[4].color);
-			spriteBatch.DrawString(game.menuFont, "syoryuMode (Stage1 only)", new Vector2(200, 200), button[5].color);
-			spriteBatch.DrawString(game.menuFont, "empty", new Vector2(200, 220), button[6].color);
-			spriteBatch.DrawString(game.menuFont, "empty", new Vector2(200, 240), button[7].color);
-			spriteBatch.DrawString(game.menuFont, "empty", new Vector2(200, 260), button[8].color);
-			spriteBatch.DrawString(game.menuFont, "empty", new Vector2(200, 280), button[9].color);*/
 		}
 	}
 }

@@ -84,26 +84,30 @@ namespace _2DActionGame
             if (counter < ClearScene.displayTime) {
                 //minute = second / 60;
                 //sec = second % 60;
-            } else if (counter == ClearScene.displayTime){
-				/* sec2 = second;
-				 * if (game.avilityNum == 2)
-					game.score *= (sec2 / 20);		// アクセルなら
-				else if (sec2 / 20 != 0)
-					game.score /= (sec2 / 20);
-				second = 0;
-				minute = 0;
-				sec = 0;*/
-				
-				if (game.avilityNum == 2) {
-					game.stageScores[game.stageNum-1] *= (gameStatus.time / 20.0);// 20.0:補正値
-				} else if (scoreCount / 20.0 != 0) {
-					game.stageScores[game.stageNum-1] /= (gameStatus.time / 20.0);
-				}
-				// 再度castしつつ更新
-				scoreToDisplay = (int)game.stageScores[game.stageNum-1];
-				
-				scoreCount++;
-			}
+            } else if (counter == ClearScene.displayTime) {
+                /* sec2 = second;
+                 * if (game.avilityNum == 2)
+                    game.score *= (sec2 / 20);		// アクセルなら
+                else if (sec2 / 20 != 0)
+                    game.score /= (sec2 / 20);
+                second = 0;
+                minute = 0;
+                sec = 0;*/
+
+                if (game.avilityNum == 2) {
+                    game.stageScores[game.stageNum - 1] *= Math.Log(1 / (double)gameStatus.time * 100000);//(gameStatus.time / 20.0);
+                } else if (game.avilityNum == 1) {
+                    game.stageScores[game.stageNum - 1] *= Math.Log(1 / (double)gameStatus.time * 10000);//(gameStatus.time / 40.0);
+                } else {
+                    game.stageScores[game.stageNum - 1] *= Math.Log(1 / (double)gameStatus.time * 1000);
+                }/*else if (scoreCount / 20.0 != 0) {
+                    game.stageScores[game.stageNum - 1] /= (gameStatus.time / 20.0);
+                }*/
+                // 再度castしつつ更新
+                scoreToDisplay = (int)game.stageScores[game.stageNum - 1];
+
+                scoreCount++;
+            }
 
             spriteBatch.Draw(mask, new Rectangle(0, 0, 640, 480), new Color(0, 0, 0, 100));
 			spriteBatch.Draw(button[0].texture, Vector2.Zero, Color.White);

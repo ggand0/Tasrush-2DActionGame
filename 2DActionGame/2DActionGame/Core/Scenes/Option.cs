@@ -108,9 +108,12 @@ namespace _2DActionGame
             if (button[8].isSelected && JoyStick.IsOnKeyDown(1) || JoyStick.IsOnKeyDown(3)) {						// Back To Menu
 				if (!game.isMuted) cancel.Play(SoundControl.volumeAll, 0f, 0f);
 				isEndScene = true;
-                SoundControl.Stop();
-                SoundControl.IniMusic("Audio\\BGM\\menu_new");
-                SoundControl.Play(true);
+
+                if (upperScene is MainMenu) {
+                    SoundControl.Stop();
+                    SoundControl.IniMusic("Audio\\BGM\\menu_new");
+                    SoundControl.Play(true);
+                }
 			}
         }
 
