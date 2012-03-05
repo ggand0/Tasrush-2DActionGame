@@ -50,12 +50,12 @@ namespace _2DActionGame
 
 				BackScene(game.stageNum + 4);//5
             }
-            if (JoyStick.KEY(5) && game.avilityNum == 0 ) {
+            if ( (!game.twoButtonMode && JoyStick.KEY(2)||game.twoButtonMode&&JoyStick.KEY(5)) && game.avilityNum == 0 ) {
                 if ((upperScene as Stage).reverse.ReduceTAS() != 0)
                 {
                     SoundControl.Stop();
                     SoundControl.RestoreMusic();
-                    SoundControl.Play(false);
+                    SoundControl.Resume();
                     if (!game.isMuted) { (upperScene as Stage).reverse.PlaySound(); }
                     isEndScene = true;
                     (upperScene as Stage).player.isAlive = true;
