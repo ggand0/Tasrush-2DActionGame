@@ -1345,13 +1345,13 @@ namespace _2DActionGame
 				SoundControl.Stop();
 				if (game.stageNum == 3) {
 					//BGM = game.soundBank.GetCue("boss");
-					SoundControl.IniMusic("Audio\\BGM\\hard_last");
+                    SoundControl.IniMusic("Audio\\BGM\\hard_last", true);
 				} else {
 					//BGM = game.soundBank.GetCue("boss_normal");
-					SoundControl.IniMusic("Audio\\BGM\\boss_normal");
+                    SoundControl.IniMusic("Audio\\BGM\\boss_normal", true);
 				} SoundControl.musicInstance.IsLooped = true;
 
-				if (!game.isMuted) SoundControl.Play(true);
+				if (!game.isMuted) SoundControl.Play();
 				BGMchanged = true;
 			}
 			/*else if(BGM != null && (BGM.IsStopped || BGM.IsPaused) && inBossBattle && !game.isClear && !game.isOvered) {

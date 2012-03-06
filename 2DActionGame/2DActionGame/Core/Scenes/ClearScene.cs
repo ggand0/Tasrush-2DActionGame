@@ -48,8 +48,8 @@ namespace _2DActionGame
 			base.Load();
 
             button[0].texture = content.Load<Texture2D>("General\\Menu\\StageClear");
-			SoundControl.IniMusic("Audio\\BGM\\clear");
-			if (!game.isMuted) SoundControl.Play(false);
+			SoundControl.IniMusic("Audio\\BGM\\clear", false);
+			if (!game.isMuted) SoundControl.Play();
 
 			// Scoreをcastして確定
 			this.scoreToDisplay = (int)game.stageScores[game.stageNum-1];

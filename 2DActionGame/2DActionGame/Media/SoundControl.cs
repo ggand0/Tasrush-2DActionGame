@@ -32,7 +32,7 @@ namespace _2DActionGame
 			menuMusicInstance.Volume = defVolume;
 		}
 		
-		public static void IniMusic(string fileName)
+		public static void IniMusic(string fileName, bool isLooped)
 		{
 			music = content.Load<SoundEffect>(fileName);
 			musicInstance = music.CreateInstance();
@@ -42,11 +42,12 @@ namespace _2DActionGame
         public static void CacheMusic(SoundEffectInstance musicInstance) { musicTmp = SoundControl.musicInstance; }
         public static void RestoreMusic() { SoundControl.musicInstance = musicTmp; }
 
-        public static void Play(bool isLooped)
+        public static void Play(/*bool isLooped*/)
         {
             musicInstance.Volume = SoundControl.volumeAll;
-            musicInstance.IsLooped = isLooped;
-            musicInstance.Resume();
+            //if (musicInstance.State == SoundState.Stopped) musicInstance.IsLooped = isLooped;
+            if (musicInstance.State == SoundState.Paused) musicInstance.Resume();
+            else if (musicInstance.State == SoundState.Stopped) musicInstance.Play();
         }
         public static void Play(bool isLooped, float volume) { musicInstance.Volume = volume; musicInstance.Play(); }
 		public static void Pause() { musicInstance.Pause(); }

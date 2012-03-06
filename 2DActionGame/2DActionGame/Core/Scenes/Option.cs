@@ -51,8 +51,8 @@ namespace _2DActionGame
 			base.Load();
 			button[0].texture = content.Load<Texture2D>("General\\Menu\\Option");
             SoundControl.Stop();
-            SoundControl.IniMusic("Audio//BGM//menu-b");
-            SoundControl.Play(true);
+            SoundControl.IniMusic("Audio//BGM//menu-b", true);
+            SoundControl.Play();
 
             CONTEXT_POSITION = new Vector2(0, Game1.Height - game.japaneseFont.MeasureString("あ").Y);
         }
@@ -69,8 +69,8 @@ namespace _2DActionGame
                 if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
             }*/
             if (!isEndScene && SoundControl.musicInstance.State == SoundState.Stopped) {
-                SoundControl.IniMusic("Audio\\BGM\\menu-b");
-                SoundControl.Play(true);
+                SoundControl.IniMusic("Audio\\BGM\\menu-b", true);
+                SoundControl.Play();
             }
 
 			if (button[0].isSelected && JoyStick.IsOnKeyDown(1)) {						// FullScreen / Window
@@ -93,7 +93,7 @@ namespace _2DActionGame
 					SoundControl.Stop();
 				} else {
 					game.isMuted = false;
-					SoundControl.Play(true);
+					SoundControl.Play();
 				}
 			}
 			if (button[3].isSelected && JoyStick.IsOnKeyDown(1)) {						// Sound Test
@@ -120,9 +120,9 @@ namespace _2DActionGame
 				isEndScene = true;
                 SoundControl.Stop();
                 if (upperScene is MainMenu) {
-                    
-                    SoundControl.IniMusic("Audio\\BGM\\menu_new");
-                    SoundControl.Play(true);
+
+                    SoundControl.IniMusic("Audio\\BGM\\menu_new", true);
+                    SoundControl.Play();
                 }
 			}
         }

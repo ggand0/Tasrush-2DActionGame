@@ -18,10 +18,10 @@ namespace _2DActionGame
         {
 			if (!isHighLvl) {
 				LoadMapData(1, "Stages\\Stage2_Easy.txt", 0, 0);
-				SoundControl.IniMusic("Audio\\BGM\\cave");
+                SoundControl.IniMusic("Audio\\BGM\\cave", true);
 			} else {
                 LoadMapData(1, "Stages\\Stage2_Hard.txt", 0, 0);
-				SoundControl.IniMusic("Audio\\BGM\\ice");
+                SoundControl.IniMusic("Audio\\BGM\\ice", true);
 			} SoundControl.musicInstance.IsLooped = true;
 			
             player = new Player(this, 100, 100, 48, 48, 10);
@@ -36,7 +36,7 @@ namespace _2DActionGame
             AddObjects();
             base.Load();
 
-			if (!game.isMuted) SoundControl.Play(true);
+			if (!game.isMuted) SoundControl.Play();
         }
     }    
 }

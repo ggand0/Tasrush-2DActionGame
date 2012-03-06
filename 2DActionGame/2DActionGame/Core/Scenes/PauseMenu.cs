@@ -14,15 +14,16 @@ namespace _2DActionGame
 		{
 			sceneTitle = "Pause";
 			drawBackGround = false;
-			buttonNum = 5;
-			button = new Button[buttonNum];
+			
 			menuString = new string[] {
 				"Resume",
-				"Option", 
+				//"Option", 
 				"BackToMenu",
 				"DebugMenu",
 				"Exit"
 			};
+            buttonNum = menuString.Length;
+            button = new Button[buttonNum];
 			for (int i = 0; i < buttonNum; i++) {
 				button[i].color = Color.Blue;
 				button[i].name = menuString[i];
@@ -52,25 +53,25 @@ namespace _2DActionGame
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
             }
 
-			if (button[1].isSelected && JoyStick.IsOnKeyDown(1)) {		// Option
+			/*if (button[1].isSelected && JoyStick.IsOnKeyDown(1)) {		// Option
 				PushScene(new Option(this));
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
-            }
+            }*/
 
-			if (button[2].isSelected && JoyStick.IsOnKeyDown(1)) {		// to Menu
+			if (button[1].isSelected && JoyStick.IsOnKeyDown(1)) {		// to Menu
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
-				SoundControl.IniMusic("Audio\\BGM\\menu_new");
-				if (!game.isMuted) SoundControl.Play(true);
+				SoundControl.IniMusic("Audio\\BGM\\menu_new", true);
+				if (!game.isMuted) SoundControl.Play();
 				BackScene(4);
 				
 			}
 
-			if (button[3].isSelected && JoyStick.IsOnKeyDown(1)) {		// to DebugMenu
+			if (button[2].isSelected && JoyStick.IsOnKeyDown(1)) {		// to DebugMenu
 				PushScene(new DebugMenu(this, (upperScene as Stage)));
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 			}
 
-			if (button[4].isSelected && JoyStick.IsOnKeyDown(1)) {		// Exit
+			if (button[3].isSelected && JoyStick.IsOnKeyDown(1)) {		// Exit
 				game.Exit();
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 			}

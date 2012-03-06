@@ -31,8 +31,8 @@ namespace _2DActionGame
 			for (int i = 0; i < buttonNum; i++)
 				button[i].texture = content.Load<Texture2D>("General\\Menu\\GameOver" + i);
 
-			SoundControl.IniMusic("Audio\\BGM\\gameover");
-			if (!game.isMuted) SoundControl.Play(false);
+			SoundControl.IniMusic("Audio\\BGM\\gameover", false);
+			if (!game.isMuted) SoundControl.Play();
         }
 
         protected override void ButtonUpdate()
@@ -49,7 +49,7 @@ namespace _2DActionGame
             if (button[1].isSelected && (JoyStick.IsOnKeyDown(1) || JoyStick.IsOnKeyDown(8))) {		// Back to Menu
                 if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 				SoundControl.Stop();
-				SoundControl.IniMusic("Audio\\BGM\\menu_new");
+                SoundControl.IniMusic("Audio\\BGM\\menu_new", true);
 				//isEndScene = true;
 
 				//BackScene(game.stageNum + 4);//5
