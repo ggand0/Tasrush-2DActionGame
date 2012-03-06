@@ -807,10 +807,10 @@ namespace _2DActionGame
 				triangle = false;
 				cross = false;
 			}*/
+            
 
 
-
-			if (isStartingAttack) {
+			if (isStartingAttack && inputCounter > 50) {
 				obstacleWindSmall.isBeingUsed = true;
 				shootRightSide = targetInRightSide;
 				attackList.Add(5);

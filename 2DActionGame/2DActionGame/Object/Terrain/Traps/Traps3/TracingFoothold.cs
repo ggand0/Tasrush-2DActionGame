@@ -100,6 +100,8 @@ namespace _2DActionGame
         }
         public override void IsHit(Object targetObject)
         {
+            if (targetObject is RushingOutEnemy) return;
+
             base.IsHit(targetObject);
 
             if (targetObject is RushingOutEnemy) {

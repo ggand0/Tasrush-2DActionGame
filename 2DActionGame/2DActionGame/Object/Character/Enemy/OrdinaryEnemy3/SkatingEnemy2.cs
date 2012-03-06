@@ -40,6 +40,11 @@ namespace _2DActionGame
 
 			base.Update();
 		}
+        public override void UpdateAnimation()
+        {
+            animation.Update(3, 0, width, height, 6, 1);
+        }
+
 
 		public override void Draw(SpriteBatch spriteBatch)
 		{

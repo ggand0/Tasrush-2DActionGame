@@ -22,31 +22,33 @@ namespace _2DActionGame
 			sceneTitle = "Debug Menu";
 			this.stage = stage;
 
-			buttonNum = 9;
-			button = new Button[buttonNum];
+			
 			menuString = new string[] { 
 				"Back",
 				//"change on/off",
 				"inDebugMode",
 				"isMuted",
 				"visibleSword",
-				"score",
+				//"score",
 				"syoryuMode",
 				"thrustChargeMode",
 				"twoButtonMode",
-				"empty",
+				//"empty",
 			};
 			contextString = new string[] { 
 				"戻る",
 				"デバッグモードをオン／オフにします",
 				"ミュートのオン／オフ",
 				"ゲーム中、剣の判定矩形を表示します",
-				"ゲーム中、画面上にスコアを表示します",
+				//"ゲーム中、画面上にスコアを表示します",
 				"斬り上げ時のモーションを変更します",
 				"連続突きを発動するアサインを変更します",
 				"攻撃を２ボタンで行うモードをオン／オフします",
-				"空の項目",
+				//"空の項目",
 			};
+            buttonNum = menuString.Length;
+			button = new Button[buttonNum];
+
 			for (int i = 0; i < buttonNum; i++) {
 				button[i].color = Color.Blue;
 				button[i].name = menuString[i];
@@ -68,10 +70,10 @@ namespace _2DActionGame
 			button[1].name = "inDebugMode : " + game.inDebugMode.ToString();
 			button[2].name = "isMuted : " + game.isMuted.ToString();
 			button[3].name = "visibleSword : " + game.visibleSword.ToString();
-			button[4].name = "score : " + game.visibleScore.ToString();
-			button[5].name = "syoryuMode : " + stage.player.syouryuuMode.ToString();
-			button[6].name = "thrustChargeMode : " + stage.player.thrustChargeMode.ToString();
-			button[7].name = "twoButtonMode : " + game.twoButtonMode.ToString();
+			//button[4].name = "score : " + game.visibleScore.ToString();
+			button[4].name = "syoryuMode : " + stage.player.syouryuuMode.ToString();
+			button[5].name = "thrustChargeMode : " + stage.player.thrustChargeMode.ToString();
+			button[6].name = "twoButtonMode : " + game.twoButtonMode.ToString();
 		}
 		protected override void ButtonUpdate()
 		{
@@ -100,14 +102,14 @@ namespace _2DActionGame
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 			}
 
-			if (button[4].isSelected && JoyStick.IsOnKeyDown(1)) {
+			/*if (button[4].isSelected && JoyStick.IsOnKeyDown(1)) {
 				if (!game.visibleScore) game.visibleScore = true;
 				else game.visibleScore = false;
 
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
-			}
+			}*/
 
-			if (button[5].isSelected && JoyStick.IsOnKeyDown(1)) {
+			if (button[4].isSelected && JoyStick.IsOnKeyDown(1)) {
 				if (!stage.player.syouryuuMode) stage.player.syouryuuMode = true;
 				else stage.player.syouryuuMode = false;
 
@@ -115,20 +117,18 @@ namespace _2DActionGame
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 			}
 
-			if (button[6].isSelected && JoyStick.IsOnKeyDown(1)) {
+			if (button[5].isSelected && JoyStick.IsOnKeyDown(1)) {
 				if (!stage.player.thrustChargeMode) stage.player.thrustChargeMode = true;
 				else stage.player.thrustChargeMode = false;
 
 
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 			}
-			if (button[7].isSelected && JoyStick.IsOnKeyDown(1)) {
+			if (button[6].isSelected && JoyStick.IsOnKeyDown(1)) {
 				if (!game.twoButtonMode) game.twoButtonMode = true;
 				else game.twoButtonMode = false;
 
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
-			}
-			if (button[8].isSelected && JoyStick.IsOnKeyDown(1)) {
 			}
 		}
 
