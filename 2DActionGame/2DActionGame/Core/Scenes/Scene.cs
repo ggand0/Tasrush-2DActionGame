@@ -65,6 +65,7 @@ namespace _2DActionGame
 			}
 		}
 
+#if DEBUG
 		protected void Debug()
 		{
 			if (KeyInput.IsOnKeyDown(Keys.U)) {
@@ -72,6 +73,7 @@ namespace _2DActionGame
 				else game.isMuted = false;
 			}
 		}
+#endif
 
 		/// <summary>
 		/// シーンを終了させるときtrueにする。

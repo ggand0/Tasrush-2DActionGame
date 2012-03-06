@@ -17,7 +17,8 @@
     <XnaProfile>Reach</XnaProfile>
     <XnaCrossPlatformGroupID>4922bf6e-97d3-4375-867b-dc07d73540bd</XnaCrossPlatformGroupID>
     <XnaOutputType>Game</XnaOutputType>
-    <ApplicationIcon>Game.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
     <Thumbnail>GameThumbnail.png</Thumbnail>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
@@ -34,8 +35,9 @@
     <ProductName>Tasrush</ProductName>
     <PublisherName>Kawaz</PublisherName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <ApplicationVersion>1.0.0.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -62,6 +64,18 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <PlatformTarget>x86</PlatformTarget>
     <XnaCompressContent>true</XnaCompressContent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>E77CC16CCE5AA90A0687E82D03B1B7932CAFF5A0</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>2DActionGame_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
@@ -126,6 +140,7 @@
     <Compile Include="Core\Scenes\SelectScene.cs" />
     <Compile Include="Core\Scenes\SoundTest.cs" />
     <Compile Include="Core\Scenes\Tutorial.cs" />
+    <None Include="2DActionGame_TemporaryKey.pfx" />
     <None Include="app.config" />
     <None Include="Core\Scenes\Stages\BackGround.cs" />
     <Compile Include="Core\Scenes\Stages\BossTest.cs" />

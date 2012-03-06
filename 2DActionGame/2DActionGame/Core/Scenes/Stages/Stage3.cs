@@ -18,9 +18,9 @@ namespace _2DActionGame
         public override void Load()
         {
 			if (!isHighLvl) {
-				LoadMapData(1, "Stage3_Easy.txt", 0, 0);
+                LoadMapData(1, "Stages\\Stage3_Easy.txt", 0, 0);
 			} else {
-				LoadMapData(1, "Stage3_Hard.txt", 0, 0);
+                LoadMapData(1, "Stages\\Stage3_Hard.txt", 0, 0);
 			}
 
             player = new Player(this, 100, 100, 48, 48, 10);
@@ -28,7 +28,7 @@ namespace _2DActionGame
             sword = player.sword;
             weapons.Add(sword);
             staticTerrains.Add(new Block(this, 100, 200, 32, 32));
-            boss = new Rival(this, 15000, 300, 60, 60, game.isHighLvl ? 50 : 25, 0, 1, 1); 
+            boss = new Rival(this, 15000, 300, 60, 60, game.isHighLvl ? 60 : 25, 0, 1, 1); 
             characters.Add(boss);
             AddObjects();
 

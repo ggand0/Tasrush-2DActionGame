@@ -19,11 +19,11 @@ namespace _2DActionGame
         public override void Load()
         {
 			if (!isHighLvl) {
-				LoadMapData(1, "Stage1_Easy.txt", 0, 0);
+                LoadMapData(1, "Stages\\Stage1_Easy.txt", 0, 0);
 				boss = new Raijin(this, 14000, 100, 300, 280, 50);// (210, 210) (300, 280)
 				characters.Add(boss);
 			} else {
-				LoadMapData(1, "Stage1_Hard.txt", 0, 0);
+                LoadMapData(1, "Stages\\Stage1_Hard.txt", 0, 0);
 				boss = new Raijin(this, 14300, 100, 300, 280, 50);
 				characters.Add(boss);
 			}

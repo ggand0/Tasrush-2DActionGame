@@ -28,7 +28,7 @@ namespace _2DActionGame
 		}
 		public override void Update(double dt)
 		{
-			if (JoyStick.IsOnKeyDown(2)) {
+            if (JoyStick.IsOnKeyDown(2) || JoyStick.IsOnKeyDown(3)) {
 				isEndScene = true;
 			}
 			if (JoyStick.IsOnKeyDown(1)) {

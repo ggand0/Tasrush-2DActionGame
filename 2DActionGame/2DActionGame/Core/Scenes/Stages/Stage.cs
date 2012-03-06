@@ -1443,7 +1443,7 @@ namespace _2DActionGame
 				spriteBatch.DrawString(game.pumpDemi, "Time : "
 					+ ((int)(gameStatus.time / 60.0)).ToString() + ":" + ((int)(gameStatus.time % 60)).ToString(), new Vector2(0, 32), Color.Orange, 0, Vector2.Zero, new Vector2(.4f), SpriteEffects.None, 0f);
                 spriteBatch.DrawString(game.pumpDemi, "Score : "
-					+ game.stageScores[game.stageNum - 1].ToString("N"), new Vector2(0, 48), Color.Orange, 0, Vector2.Zero, new Vector2(.4f), SpriteEffects.None, 0f);
+					+ game.stageScores[game.stageNum - 1].ToString("N0"), new Vector2(0, 48), Color.Orange, 0, Vector2.Zero, new Vector2(.4f), SpriteEffects.None, 0f);
 
 				//if (gameStatus.comboCountVisibleTime < gameStatus.maxComboCountVisibleTime) 
 					spriteBatch.DrawString(game.pumpDemi, "MAX:" + gameStatus.maxComboCount.ToString() + "HIT", new Vector2(550, 32), Color.Orange, 0, Vector2.Zero, new Vector2(.4f), SpriteEffects.None, 0f);

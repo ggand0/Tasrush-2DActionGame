@@ -80,7 +80,10 @@ namespace _2DActionGame
 		}
 		protected override void ButtonUpdate()
 		{
-			base.ButtonUpdate();
+            /*if () {
+                isEndScene = true;
+                if (!game.isMuted) cancel.Play(SoundControl.volumeAll, 0f, 0f);
+            }*/
 
 			// BGM
 			if (button[0].isSelected && JoyStick.onStickDirectionChanged) {		// BGM
@@ -128,7 +131,7 @@ namespace _2DActionGame
 				}
 			}
 
-			if (button[4].isSelected && JoyStick.IsOnKeyDown(1)) {				// Back
+            if (button[4].isSelected && JoyStick.IsOnKeyDown(1) || JoyStick.IsOnKeyDown(3) || JoyStick.IsOnKeyDown(2)) {				// Back
 				musicInstance.Stop();
 				seInstance.Stop();
 				SoundControl.Stop();

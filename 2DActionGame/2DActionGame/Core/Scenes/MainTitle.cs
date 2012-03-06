@@ -44,7 +44,9 @@ namespace _2DActionGame
 			} else {
 				if (counter == logoDisplayTime) if (!game.isMuted) SoundControl.Play(true);
 
+#if DEBUG
 				Debug();
+#endif
                 if (JoyStick.IsOnKeyDown(8) || JoyStick.IsOnKeyDown(1)) {
 					PushScene(new MainMenu(this));
 					if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
@@ -70,6 +72,8 @@ namespace _2DActionGame
 				spriteBatch.Draw(texture[1], Vector2.Zero, Color.White);
 				spriteBatch.Draw(texture[2], Vector2.Zero, Color.White * dColor);//new Color(255, 255, 255, dColor
 			} else {
+                if (JoyStick.IsOnKeyDown(2) || JoyStick.IsOnKeyDown(3)) BackToLogo();
+
 				if (counter % 5 == 0) e += .02f;//if (d >= 360) e = 0;
 				dColor = (float)Math.Sin(e * 8) / 2.0f + 0.5f;
 
@@ -81,6 +85,11 @@ namespace _2DActionGame
         private void SkipLogo()
         {
             counter = logoDisplayTime - 1;
+        }
+        private void BackToLogo()
+        {
+            counter = 0;
+            SoundControl.Stop();
         }
     }
 }

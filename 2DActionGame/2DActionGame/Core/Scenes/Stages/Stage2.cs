@@ -17,10 +17,10 @@ namespace _2DActionGame
         public override void Load()
         {
 			if (!isHighLvl) {
-				LoadMapData(1, "Stage2_Easy.txt", 0, 0);
+				LoadMapData(1, "Stages\\Stage2_Easy.txt", 0, 0);
 				SoundControl.IniMusic("Audio\\BGM\\cave");
 			} else {
-				LoadMapData(1, "Stage2_Hard.txt", 0, 0);
+                LoadMapData(1, "Stages\\Stage2_Hard.txt", 0, 0);
 				SoundControl.IniMusic("Audio\\BGM\\ice");
 			} SoundControl.musicInstance.IsLooped = true;
 			

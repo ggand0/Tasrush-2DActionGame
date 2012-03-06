@@ -1,15 +1,16 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Resources;
 
 // アセンブリに関する全般的な情報は、以下の一連の属性によって管理されます。 
 // アセンブリに関連付けられている情報を変更するには、これらの属性値を変更します。
 // 
-[assembly: AssemblyTitle("2DActionGame")]
-[assembly: AssemblyProduct("2DActionGame")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2011")]
+[assembly: AssemblyTitle("Tasrush")]
+[assembly: AssemblyProduct("")]
+[assembly: AssemblyDescription("2DActionGame")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyCopyright("Copyright © Kawaz")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,3 +33,4 @@ using System.Runtime.InteropServices;
 //      リビジョン
 //
 [assembly: AssemblyVersion("1.0.0.0")]
+[assembly: NeutralResourcesLanguageAttribute("ja-JP")]

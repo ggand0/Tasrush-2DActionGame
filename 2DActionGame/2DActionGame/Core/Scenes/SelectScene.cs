@@ -60,7 +60,9 @@ namespace _2DActionGame
 
 			ButtonUpdate();
 			UpdateTexts();
+#if DEBUG
 			Debug();
+#endif
 			counter++;
 		}
 		protected virtual void ButtonUpdate()
