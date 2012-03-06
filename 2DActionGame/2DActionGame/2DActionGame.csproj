@@ -106,6 +106,7 @@
     <Compile Include="Core\GameSystem\Reverse.cs" />
     <Compile Include="Core\GameSystem\SlowMotion.cs" />
     <Compile Include="Core\GameSystem\SlowMotionCounter.cs" />
+    <Compile Include="Core\GameSystem\Timer.cs" />
     <Compile Include="Core\Scenes\AvilitySelect.cs" />
     <Compile Include="Core\Scenes\ClearScene.cs" />
     <Compile Include="Core\Scenes\Debug\DebugMenu.cs" />
