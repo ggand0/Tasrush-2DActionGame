@@ -17,6 +17,7 @@ namespace _2DActionGame
         private Texture2D[] texture = new Texture2D[4];
         private float dColor, e;
 		private Random rnd = new Random();
+        private bool hasDisplayed;
 
 		public MainTitle(Scene privousScene)
 			: base(privousScene)
@@ -32,7 +33,7 @@ namespace _2DActionGame
 			if (game.random.Next(1, 20) == 1) texture[2] = content.Load<Texture2D>("General\\OP\\OP3");
 			texture[3] = content.Load<Texture2D>("General\\Menu\\PushStart");
 
-			SoundControl.IniMusic("Audio\\BGM\\menu_new");
+            SoundControl.IniMusic("Audio\\BGM\\menu_new", true);
 			KeyConfig.LoadXML("KeyConfig", "Xml\\KeyConfig.xml");
         }
 
@@ -42,7 +43,10 @@ namespace _2DActionGame
 				if (JoyStick.IsOnKeyDown(8) || JoyStick.IsOnKeyDown(1))
 					SkipLogo();
 			} else {
-				if (counter == logoDisplayTime) if (!game.isMuted) SoundControl.Play(true);
+                if (counter == logoDisplayTime) {
+                    if (!game.isMuted) SoundControl.Play();
+                    hasDisplayed = true;
+                }
 
 #if DEBUG
 				Debug();
@@ -72,6 +76,7 @@ namespace _2DActionGame
 				spriteBatch.Draw(texture[1], Vector2.Zero, Color.White);
 				spriteBatch.Draw(texture[2], Vector2.Zero, Color.White * dColor);//new Color(255, 255, 255, dColor
 			} else {
+                
                 if (JoyStick.IsOnKeyDown(2) || JoyStick.IsOnKeyDown(3)) BackToLogo();
 
 				if (counter % 5 == 0) e += .02f;//if (d >= 360) e = 0;
@@ -84,12 +89,16 @@ namespace _2DActionGame
 
         private void SkipLogo()
         {
-            counter = logoDisplayTime - 1;
+            if (!hasDisplayed)
+                counter = logoDisplayTime - 1;
         }
         private void BackToLogo()
         {
-            counter = 0;
-            SoundControl.Stop();
+            if (hasDisplayed) {
+                counter = 0;
+                hasDisplayed = false;
+                SoundControl.Stop();
+            }
         }
     }
 }

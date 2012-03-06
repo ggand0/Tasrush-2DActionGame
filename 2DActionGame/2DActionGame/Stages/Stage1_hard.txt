@@ -1565,6 +1565,6 @@ DamageBlock,1248,384,32,32,0,0
 DamageBlock,1280,384,32,32,0,0
 DamageBlock,1312,384,32,32,0,0
 DamageBlock,1344,384,32,32,0,0
+DamageBlock,1376,384,32,32,0,0
 DamageBlock,1408,384,32,32,0,0
 DamageBlock,1440,384,32,32,0,0
-DamageBlock,1376,384,32,32,0,0

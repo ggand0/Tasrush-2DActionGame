@@ -39,8 +39,8 @@ namespace _2DActionGame
 				textures[i] = content.Load<Texture2D>("General\\Credit\\SC0" + (i + 1).ToString());
 			}
 
-			SoundControl.IniMusic("Audio\\BGM\\ending_medley_newnew");
-			if (!game.isMuted) SoundControl.Play(false);
+			SoundControl.IniMusic("Audio\\BGM\\ending_medley_newnew", false);
+			if (!game.isMuted) SoundControl.Play();
         }
 		public override void Update(double dt) 
         {
@@ -49,7 +49,7 @@ namespace _2DActionGame
             }
             if (timer.TotalTime() > (float)timings.Last() || JoyStick.IsOnKeyDown(1)) {
 				SoundControl.Stop();
-				SoundControl.IniMusic("Audio\\BGM\\menu_new");
+                SoundControl.IniMusic("Audio\\BGM\\menu_new", true);
 				//BackScene(5);
                 if (fromGame) {
                     game.InitializeStack();
