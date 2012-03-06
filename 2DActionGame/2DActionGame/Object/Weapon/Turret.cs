@@ -100,7 +100,7 @@ namespace _2DActionGame
 		/// userが任意の方向に飛ばさせたい時に指定
 		/// </summary>
 		public Vector2 bulletSpeed { get; set; }
-		public float bulletSpeed1D { get; private set; }
+		public float bulletSpeed1D { get; /*private */set; }
 
 		/// <summary>
 		/// １つの射撃パターンのみを使って射撃する通常モードなのか、それらの組み合わせて使うモードなのかどうか

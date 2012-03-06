@@ -152,7 +152,7 @@ namespace _2DActionGame
 								spriteBatch.DrawString(game.debugFont, "boss.syurikenTurret.bullets[0]:" + (stage.boss as Rival).syuriken.bullets[0].position.ToString(), new Vector2(0, 190 + y), fontColor[1]);
 								spriteBatch.DrawString(game.debugFont, "boss.position" + stage.boss.drawPos.ToString(), new Vector2(0, 200 + y), fontColor[1]);
 								spriteBatch.DrawString(game.debugFont, "boss.speed" + stage.boss.speed.ToString(), new Vector2(0, 210 + y), fontColor[1]);
-								spriteBatch.DrawString(game.debugFont, "boss.max_speed" + maxValue.ToString(), new Vector2(0, 220 + y), fontColor[1]);
+								spriteBatch.DrawString(game.debugFont, "boss.turnsRIght" + stage.boss.turnsRight.ToString(), new Vector2(0, 220 + y), fontColor[1]);
 							}
 							for (int i = 0; i < stage.boss.attackList.Count; i++) {
 								spriteBatch.DrawString(game.debugFont, "boss.attackList:" + stage.boss.attackList[i].ToString(), new Vector2(0, 230 + i * 10 + y), fontColor[1]);
