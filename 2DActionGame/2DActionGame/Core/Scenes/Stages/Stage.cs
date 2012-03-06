@@ -731,7 +731,7 @@ namespace _2DActionGame
 			}*/
 
 			if (isAccelerated) {
-				player.TASpower += -1;
+				player.TASpower += -2;
 				scrollingTASEffect.Update(5);
 			}
 			if (player.TASpower < 1) {

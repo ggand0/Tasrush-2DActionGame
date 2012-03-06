@@ -84,7 +84,7 @@ namespace _2DActionGame
         public void RegenerateTAS()
         {
             //時間回復
-            if(stage.player.TASpower < stage.player.MAXTAS && !stage.toGameOver) {
+            if(stage.player.TASpower < stage.player.MAXTAS && !stage.toGameOver && !stage.isAccelerated) {
                 if (game.isHighLvl) {
                     stage.player.TASpower += 1;
                 } else {
