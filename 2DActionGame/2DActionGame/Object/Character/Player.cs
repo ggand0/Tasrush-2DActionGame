@@ -397,7 +397,7 @@ namespace _2DActionGame
 
 			// TAS
 			if (TASpower > 0) {
-				if (game.inDebugMode) {
+				/*if (game.inDebugMode) {
 					switch (game.avilityNum) {
 						case 0://Reverse
                             if (!game.twoButtonMode && JoyStick.KEY(2) || game.twoButtonMode && JoyStick.KEY(5))
@@ -432,7 +432,7 @@ namespace _2DActionGame
 								stage.isAccelerated = false;
 							break;
 					}
-				} else {
+				} else {*/
                     if (!game.twoButtonMode && JoyStick.IsOnKeyDown(2) || game.twoButtonMode && JoyStick.IsOnKeyDown(5))
 						switch (game.avilityNum) {
 							case 0:
@@ -461,7 +461,7 @@ namespace _2DActionGame
                     if (!game.twoButtonMode && JoyStick.IsOnKeyDown(2) || game.twoButtonMode && JoyStick.IsOnKeyDown(5)) {
 						if (!game.isMuted) tasSound.Play(SoundControl.volumeAll, 0f, 0f);
 					}
-				}
+				//}
 			} else if (stage.slowmotion.isSlow) {
 				stage.slowmotion.FinishSlowMotion();
 			}

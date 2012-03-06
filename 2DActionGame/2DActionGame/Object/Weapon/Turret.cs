@@ -743,7 +743,7 @@ namespace _2DActionGame
 		{
 			if (user != null && isSubsidiary) {
 				if (shootPosition != Vector2.Zero) this.position = (user.position + shootPosition) * timeCoef;
-				else this.position = (user.position + this.defaultPosition) * timeCoef;
+				else this.position = (user.position + this.defaultPosition)/* * timeCoef*/;
 			}
 		}
 		public override void UpdateAnimation()

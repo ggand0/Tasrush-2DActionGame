@@ -33,7 +33,7 @@ namespace _2DActionGame
 		/// <summary>
 		/// 真下に否妻
 		/// </summary>
-		private Turret beamTurret;
+        public Turret beamTurret { get; private set; }
 		private JumpingEnemy jumpingEnemy;
 
 		private Obstacle obstacle;
@@ -443,7 +443,7 @@ namespace _2DActionGame
 					break;
 				case 1:
 					targetTurret.speed = new Vector2(-speedX, 0);
-					targetTurret.position += targetTurret.speed;
+					targetTurret.position += targetTurret.speed * timeCoef;
 					break;
 				//UpdateTurrets(3);
 			}

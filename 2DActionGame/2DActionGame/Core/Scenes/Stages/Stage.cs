@@ -1287,6 +1287,7 @@ namespace _2DActionGame
 
 			foreach (Object object1 in objects) {
 				if (object1 is Player) { }
+                if (object1 is Beam) { }
 				camera.ScrollUpdate(object1);
 			}
 			camera.ScrollUpdate(scrollingBackGround);

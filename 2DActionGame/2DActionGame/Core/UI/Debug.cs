@@ -92,9 +92,13 @@ namespace _2DActionGame
 							spriteBatch.DrawString(game.debugFont, "player.isOnSomething:" + stage.player.isOnSomething.ToString(), new Vector2(0, 180 + y), fontColor[1]);
 							spriteBatch.DrawString(game.debugFont, "player.isHitLeftSide:" + stage.player.isHitLeftSide.ToString(), new Vector2(0, 190 + y), fontColor[1]);
 							spriteBatch.DrawString(game.debugFont, "boss.position:" + stage.boss.position.ToString(), new Vector2(0, 200 + y), fontColor[1]);
+                            spriteBatch.DrawString(game.debugFont, "boss.beamTurret:" + (stage.boss as Raijin).beamTurret.isBeingUsed.ToString(), new Vector2(0, 210 + y), fontColor[1]);
+                            spriteBatch.DrawString(game.debugFont, "boss.hasShot:" + (stage.boss as Raijin).beamTurret.hasShot.ToString(), new Vector2(0, 220 + y), fontColor[1]);
+                            spriteBatch.DrawString(game.debugFont, "boss.b[0].isActive:" + (stage.boss as Raijin).beamTurret.bullets[0].isActive.ToString(), new Vector2(0, 230 + y), fontColor[1]);
+                            spriteBatch.DrawString(game.debugFont, "boss.b[0].isShot:" + (stage.boss as Raijin).beamTurret.bullets[0].isShot.ToString(), new Vector2(0, 240 + y), fontColor[1]);
 						}
 						for (int i = 0; i < stage.boss.attackList.Count; i++) {
-							spriteBatch.DrawString(game.debugFont, "boss.attackList:" + stage.boss.attackList[i].ToString(), new Vector2(0, 230 + i * 10 + y), fontColor[1]);
+							spriteBatch.DrawString(game.debugFont, "boss.attackList:" + stage.boss.attackList[i].ToString(), new Vector2(0, 260 + i * 10 + y), fontColor[1]);
 						}
 						break;
 					case 2:
