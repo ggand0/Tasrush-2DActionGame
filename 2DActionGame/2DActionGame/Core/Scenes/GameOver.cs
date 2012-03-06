@@ -12,6 +12,8 @@ namespace _2DActionGame
 {
     public class GameOver : SelectScene
     {
+        private bool nowLoading, hasDisplayed;
+
         public GameOver(Scene privousScene)
 			: base(privousScene)
         {
@@ -39,9 +41,10 @@ namespace _2DActionGame
 				SoundControl.Stop();
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 
-                game.ReloadStage(game.isHighLvl);
+                
                 //SoundControl.Pause();//SoundControl.Stop();
-				isEndScene = true;
+				//isEndScene = true;
+                nowLoading = true;
             }
             if (button[1].isSelected && (JoyStick.IsOnKeyDown(1) || JoyStick.IsOnKeyDown(8))) {		// Back to Menu
                 if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
@@ -69,6 +72,11 @@ namespace _2DActionGame
                     (upperScene as Stage).ResetDeathEffect();
                 }
             }
+
+            if (hasDisplayed) {
+                game.ReloadStage(game.isHighLvl);
+                isEndScene = true;
+            }
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -77,6 +85,11 @@ namespace _2DActionGame
 
 			for (int i = 0; i < buttonNum; i++)
 				if (button[i].isSelected) spriteBatch.Draw(button[i].texture, Vector2.Zero, Color.White);
+
+            if (nowLoading) {
+                spriteBatch.DrawString(game.pumpDemi, "Now Loading...", new Vector2(0, 460), Color.Orange, 0, Vector2.Zero, new Vector2(.4f), SpriteEffects.None, 0f);
+                hasDisplayed = true;
+            }
         }
     }
 }
