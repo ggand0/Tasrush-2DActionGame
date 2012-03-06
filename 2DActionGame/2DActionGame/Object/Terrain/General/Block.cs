@@ -110,7 +110,7 @@ namespace _2DActionGame
 				case 0:
 					this.friction = defFriction; break;
 				case 1:
-					this.friction = .18f; break;
+					this.friction = .25f; break;// .18f
 
 				case 2: // hardcording注意
 					this.friction = .18f;
@@ -376,7 +376,7 @@ namespace _2DActionGame
 							targetObject.isJumping = false;　// 着地したらJumpできるように
 							targetObject.position.X += this.speed.X;
 							if (type == 0) targetObject.friction = defFriction;
-							else if (type == 1) targetObject.friction = .05f;
+							else if (type == 1) targetObject.friction = .15f;// .05f
 
 							ontop = true;
 							isUnderSomeone = true;

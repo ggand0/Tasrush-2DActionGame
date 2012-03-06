@@ -9,9 +9,9 @@ namespace _2DActionGame
 {
 	public class Tutorial : Scene
 	{
-		private readonly int pageNum = 2;
+		private const int pageNum = 6;
 
-		private Texture2D[] tutorial = new Texture2D[2];
+		private Texture2D[] tutorial = new Texture2D[pageNum];
 		private int page;
 
 		public Tutorial(Scene privousScene)
@@ -22,8 +22,8 @@ namespace _2DActionGame
 
 		public override void Load()
 		{
-			for (int i = 0; i < tutorial.Length; i++) {
-				tutorial[i] = content.Load<Texture2D>("General\\Menu\\sousa" + i);
+			for (int i = 0; i < pageNum; i++) {
+				tutorial[i] = content.Load<Texture2D>("General\\Menu\\HowTo\\Nsousa" + (i + 1).ToString());
 			}
 		}
 		public override void Update(double dt)

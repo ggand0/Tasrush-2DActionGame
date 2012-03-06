@@ -117,7 +117,7 @@ namespace _2DActionGame
 		/// <param name="targetObject"></param>
 		private void CenterScrollUpdate(Object targetObject)
 		{
-			this.position.X = stage.player.position.X - Player.screenPosition.X;
+			this.position.X = stage.player.position.X - Game1.Width / 2 + stage.player.width;//Player.screenPosition.X;	// ボス戦時は画面中心にする
 
 			if (targetObject is ScrollingBackground) {
 				(targetObject as ScrollingBackground).ScrollUpdateBoss(this.position);

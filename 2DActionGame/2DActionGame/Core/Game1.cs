@@ -65,6 +65,7 @@ namespace _2DActionGame
         
         // Game
 		private const int rankingNodeNum = 5;
+        public float tasScore { get; set; }
 		//public RankingStatus[] scores = new RankingStatus[rankingNodeNum];
 		public List<RankingStatus> scores = new List<RankingStatus>();
 		public RankingStatus[] dummyScore = { new RankingStatus(100, "nanashi")

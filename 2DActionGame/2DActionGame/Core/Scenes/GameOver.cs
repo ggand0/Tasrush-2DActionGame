@@ -36,6 +36,7 @@ namespace _2DActionGame
         protected override void ButtonUpdate()
         {
             if (button[0].isSelected && (JoyStick.IsOnKeyDown(1) || JoyStick.IsOnKeyDown(8))) {		// Continue
+				SoundControl.Stop();
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 
                 game.ReloadStage(game.isHighLvl);
@@ -48,7 +49,10 @@ namespace _2DActionGame
 				SoundControl.IniMusic("Audio\\BGM\\menu_new");
 				//isEndScene = true;
 
-				BackScene(game.stageNum + 4);//5
+				//BackScene(game.stageNum + 4);//5
+				game.hasReachedCheckPoint = false;
+				game.tmpGameStatus = new GameStatus();
+				game.InitializeStack();
             }
             if ( (!game.twoButtonMode && JoyStick.KEY(2)||game.twoButtonMode&&JoyStick.KEY(5)) && game.avilityNum == 0 ) {
                 if ((upperScene as Stage).reverse.ReduceTAS() != 0)

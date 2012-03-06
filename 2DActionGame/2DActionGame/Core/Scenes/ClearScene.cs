@@ -64,14 +64,17 @@ namespace _2DActionGame
 				if (game.stageNum < Game1.maxStageNum) {
 					game.stageNum++;
 					game.hasReachedCheckPoint = false;
+					SoundControl.Stop();
 					game.ReloadStage(game.isHighLvl);
                     //SoundControl.Pause();//SoundControl.Stop();
+
 					
 					isEndScene = true;
 					upperScene.isEndScene = true;
 				} else if (game.stageNum == Game1.maxStageNum && (form.IsDisposed || form == null)) {// To Ending
 					game.stageNum = 1;
 					game.hasReachedCheckPoint = false;
+					SoundControl.Stop();
 					PushScene(new Ending(this, true));
 				}
             }

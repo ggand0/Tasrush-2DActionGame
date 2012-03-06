@@ -705,7 +705,10 @@ namespace _2DActionGame
 			hasEffectedBossExplosion = false;
 			inBossBattle = false;
 			BGMchanged = false;
-            gameStatus = game.tmpGameStatus;
+            if (game.hasReachedCheckPoint) {
+                gameStatus = game.tmpGameStatus;
+                hasEffectedBeginning = true;
+            }
 			#endregion
 		}
 
@@ -946,7 +949,6 @@ namespace _2DActionGame
 			foreach (Terrain terrain in activeDynamicTerrains) {
 				if (!terrain.isAlive) continue;
 				if (terrain.user != null && !terrain.isBeingUsed) continue;
-				//if (terrain is MapObjects) continue;
 
 				foreach (Character character in activeCharacters) {
 					if (!character.isAlive) continue;
@@ -1083,7 +1085,6 @@ namespace _2DActionGame
 				}*/
 
 			}
-			if (adObjects.Count > 0) { }
 			if (!game.inDebugMode) {
 				foreach (Character character in activeCharacters) {
 					if (!(character is Player) && character is Enemy && character.isAlive && !(character as Enemy).isWinced) {
@@ -1104,51 +1105,33 @@ namespace _2DActionGame
 			#region Etc
 			// 上端
 			if (player.position.Y < 32) player.position.Y = 32;
-			// スクロール挟まり判定
-			/*if (isScrolled && (player.position.X + 2 < camera.position.X && 
-					activeStaticTerrains.Any((x) => !(x is Slope) && x.position.X < player.position.X + player.width - 5)
-						&& activeStaticTerrains.Any((y) => !(y is Slope) && y.position.X < player.position.X + player.width - 5 && player.position.Y + player.height > y.position.Y + adj && player.position.Y + adj < y.position.Y + y.height))) {
-
-				player.position = new Vector2(camera.position.X + 320, 100);
-				adObjects.Add(new Object2(camera, player));
-				player.isDamaged = true;
-				player.damageFromTouching = true;
-				player.HP += -1;
-			}*/
+			
 			// 左側が露出している地形だけ見るように改良
             if ((isScrolled || inBossBattle) && player.position.X <= camera.position.X) {
                 player.position.X = camera.position.X;									// 位置を前に変更
                 player.speed.X = scrollSpeed;											// 押す
                 player.scrollPush = true;
-            } else {
+			} else if ((isScrolled || inBossBattle) && player.position.X + player.width > camera.position.X + Game1.Width) {
+				player.position.X = camera.position.X + Game1.Width - player.width;
+			}
+			else {
                 player.scrollPush = false;
             }
 
-			if (isScrolled && (player.position.X <= camera.position.X && player.isHitLeftSide/*&&
-				   activeStaticTerrains.Any((x) => !(x is Slope) && !x.isRightSlope && !x.isLeftSlope && x.isLeft && !x.isRight
-					   && x.position.X < player.position.X + player.width && player.position.Y + player.height > x.position.Y + adj && player.position.Y + adj < x.position.Y + x.height))*/
-				)) {
+			// スクロール挟まり判定
+			if (isScrolled && (player.position.X <= camera.position.X && player.isHitLeftSide)) {
 				player.position = new Vector2(camera.position.X + 320, 100);
 				adObjects.Add(new Object2(camera, player));
 				player.isDamaged = true;
 				player.damageFromTouching = true;
 				player.HP += -1;
 			}
-			//if (isScrolled && boss.position.X < camera.position.X) boss.position.X = camera.position.X;
-			//if (inBossBattle && boss.position.X < camera.position.X) boss.position.X = camera.position.X;
 
 			/// Game Over処理
 			if (!toGameOver && (player.HP < 1 || player.position.Y > 600)) {// 600 546 540
-				//camera.isScrollingToPlayer = true;// スクロールモードの差を取り除く
-				//playerDeathDrawPos = player.drawPos;
-				//player.position += Player.screenPosition;
-
-				//camera.position.X -= Player.screenPosition.X; //player.drawPos == (-8, 199.8); 2430
 				if (player.position.Y > 600) {
 					player.deathByFalling = true;
-					
 				}
-				//isScrolled = false;
 				player.isAlive = false;
 				toGameOver = true;
 				hasEffectedPlayerDeath = false;
@@ -1159,7 +1142,7 @@ namespace _2DActionGame
                 game.tmpGameStatus = gameStatus;
 				PushScene(new GameOver(this));
 			}
-			if (boss.position.Y > 600) boss.isAlive = false;// characterが自分で殺すようにする...?
+			if (boss.position.Y > 600) boss.isAlive = false;
 			if (hasEffectedBossExplosion && game.stageNum != 0 && !boss.isAlive) {
 				SoundControl.Stop();
 				PushScene(new ClearScene(this));
@@ -1387,6 +1370,7 @@ namespace _2DActionGame
 		/// <param name="gameTime"></param>
 		protected virtual void DrawBackGround()
 		{
+			// XNA3.1版
 			// GraphicDeviceのセット
 			/*foreach (BackGround bg in backGrounds) {
 				game.GraphicsDevice.SetRenderTarget(0, bg.renderTarget);
@@ -1416,11 +1400,7 @@ namespace _2DActionGame
 			// xna4.0版
 			foreach (BackGround bg in backGrounds) {
 				game.GraphicsDevice.SetRenderTarget(bg.renderTarget);
-				/*// Cache the current depth buffer
-				DepthStencilBuffer old = game.GraphicsDevice.DepthStencilBuffer;
-				// Set our custom depth buffer
-				game.GraphicsDevice.DepthStencilBuffer = bg.depthStencilBuffer;*/
-				game.GraphicsDevice.Clear(Color.Transparent);				// 透明
+				game.GraphicsDevice.Clear(Color.Transparent);
 
 				foreach (Terrain terrain in staticTerrains) {
 					terrain.drawPos.Y = terrain.position.Y;
@@ -1435,9 +1415,7 @@ namespace _2DActionGame
 					}
 				}
 
-				/*game.GraphicsDevice.SetRenderTarget(0, null); // nullをセットして、元に戻す。
-				game.GraphicsDevice.DepthStencilBuffer = old;*/
-				bg.texture = bg.renderTarget;//GetTexture();	.GraphicsDevice.GetRenderTargets();
+				bg.texture = bg.renderTarget;
 			}
 
 			game.GraphicsDevice.SetRenderTarget(null);
@@ -1456,22 +1434,18 @@ namespace _2DActionGame
 		/// <param name="spriteBatch"></param>
 		protected virtual void DrawGameStatus(SpriteBatch spriteBatch)
 		{
-			//gameStatus.second = (int)(gameTimeNormal % 60);
-			//gameStatus.minute = (int)(gameStatus.second / 60.0);
-
 			if (game.visibleScore) {
-				spriteBatch.DrawString(game.pumpDemi, "GameTime(frame):" + this.gameTimeNormal.ToString(), new Vector2(0, 32), Color.Orange);
-				//spriteBatch.DrawString(game.pumpDemi, "GameTime(frame):" + minute.ToString() + ":" + sec.ToString(), new Vector2(0, 64), Color.Orange);
+				/*spriteBatch.DrawString(game.pumpDemi, "GameTime(frame):" + this.gameTimeNormal.ToString(), new Vector2(0, 32), Color.Orange);
 				spriteBatch.DrawString(game.pumpDemi, "TAS Time(frame):" + this.gameTimeTAS.ToString(), new Vector2(0, 96), Color.Orange);
-				spriteBatch.DrawString(game.pumpDemi, "Score:" + game.score.ToString(), new Vector2(0, 128), Color.Orange);
+				spriteBatch.DrawString(game.pumpDemi, "Score:" + game.score.ToString(), new Vector2(0, 128), Color.Orange);*/
 			} else {
-				spriteBatch.DrawString(game.pumpDemi, "Time:"
-				    + ((int)(gameStatus.time / 60.0)).ToString() + ":" + ((int)(gameStatus.time % 60)).ToString(), new Vector2(0, 32), Color.Orange, 0, Vector2.Zero, 1, SpriteEffects.None, 0f);
-                spriteBatch.DrawString(game.pumpDemi, "Score:"
-                    + game.stageScores[game.stageNum - 1].ToString("N"), new Vector2(0, 64), Color.Orange, 0, Vector2.Zero, 1, SpriteEffects.None, 0f);
+				spriteBatch.DrawString(game.pumpDemi, "Time : "
+					+ ((int)(gameStatus.time / 60.0)).ToString() + ":" + ((int)(gameStatus.time % 60)).ToString(), new Vector2(0, 32), Color.Orange, 0, Vector2.Zero, new Vector2(.4f), SpriteEffects.None, 0f);
+                spriteBatch.DrawString(game.pumpDemi, "Score : "
+					+ game.stageScores[game.stageNum - 1].ToString("N"), new Vector2(0, 48), Color.Orange, 0, Vector2.Zero, new Vector2(.4f), SpriteEffects.None, 0f);
 
 				//if (gameStatus.comboCountVisibleTime < gameStatus.maxComboCountVisibleTime) 
-					spriteBatch.DrawString(game.pumpDemi, "MAX:" + gameStatus.maxComboCount.ToString() + "HIT", new Vector2(500, 32), Color.Orange, 0, Vector2.Zero, new Vector2(.6f, .6f), SpriteEffects.None, 0f);
+					spriteBatch.DrawString(game.pumpDemi, "MAX:" + gameStatus.maxComboCount.ToString() + "HIT", new Vector2(550, 32), Color.Orange, 0, Vector2.Zero, new Vector2(.4f), SpriteEffects.None, 0f);
 			}
 		}
 		/// <summary>
