@@ -139,11 +139,11 @@ namespace _2DActionGame
 		/// <summary>
 		/// Easy用のメインパターン（これをループ）
 		/// </summary>
-		private int[] attackPattern0 = { 1, 2, 3 };//, 4 };
+		private int[] attackPattern0 = { 1, 2, 3 };// hard
 		/// <summary>
 		/// Hard用のパターン
 		/// </summary>
-		private int[] attackPattern1 = { 7, 1, 9 };// hard
+		private int[] attackPattern1 = { 7, 1, 9 };// easy
         private int attackBlinkCount;
 		
 		#region Update
@@ -300,7 +300,7 @@ namespace _2DActionGame
 			#region Moving
 			// 左右移動
 			if (Right) {
-				turnsRight = true;
+				//turnsRight = true;
 				if (isDashing) speed.X = 8.0f;
 				else speed.X = 6.0f;
 
@@ -311,7 +311,7 @@ namespace _2DActionGame
 				}
 			}
 			if (Left) {
-				turnsRight = false;
+				//turnsRight = false;
 				if (isDashing) speed.X = -8.0f;
 				else speed.X = -6.0f;
 
@@ -600,15 +600,19 @@ namespace _2DActionGame
 
 			// 攻撃する方向：Playerのいるsideに。
 			if (position.X - stage.player.position.X > 0) {
-				turnsRight = false;
+				/*if (isJumping)*/ turnsRight = false;
 				targetInRightSide = false;
 				cutterTurret.bulletSpeed = new Vector2(-10, 0);
 				cutterTurret.bullets[0].degree = 0;
+                //syuriken.bulletSpeed1D = -10;
+                syuriken.bulletSpeed = new Vector2(-10, 0);
 			} else {
-				turnsRight = true;
+                turnsRight = true;
 				targetInRightSide = true;
 				cutterTurret.bulletSpeed = new Vector2(10, 0);
 				cutterTurret.bullets[0].degree = 180;
+                //syuriken.bulletSpeed1D = 10;
+                syuriken.bulletSpeed = new Vector2(10, 0);
 			}
 		}
 		/// <summary>
@@ -624,8 +628,8 @@ namespace _2DActionGame
 			this.speed.X = -(float)Math.Cos(rad) * speed;
 			this.speed.Y = -(float)Math.Sin(rad) * speed;
 
-			if (this.speed.X < 0) turnsRight = false;
-			else turnsRight = true;
+			/*if (this.speed.X < 0) turnsRight = false;
+			else turnsRight = true;*/
 		}
 		/// <summary>
 		/// 移動せずに3回、1段目を振るだけ
@@ -829,7 +833,7 @@ namespace _2DActionGame
 
 			//if(Math.Abs(attackPosition.Y - position.Y) < 12) hasReached = true;
 			// 終了処理
-			if (obstacleWindSmall.isEnd) {//isWaiting || attackCounter > 240) {
+			if (obstacleWindSmall.isEnd || attackCounter > 240) {//isWaiting || attackCounter > 240) {
 				obstacleWindSmall.isEnd = false;
 				isWaiting = true;
 				isShootingThunder = false;
@@ -1068,6 +1072,7 @@ namespace _2DActionGame
 				syuriken.isActive = true;
 
 				isStartingAttack = false;
+
 			}
 
 			if (syuriken.shootNumTotal == shootTime/*|| attackCounter > resWaitTime*/) {/*syuriken.isEnd*/
@@ -1122,7 +1127,7 @@ namespace _2DActionGame
 			defPosOtherSide = new Vector2(x - 480, y);
 			attackPosition = new Vector2(x, y - 200);							// 雷撃とか用
 			CenterPos = new Vector2(defaultPosition.X - 240, 240);
-			turnsRight = true;
+			//turnsRight = true;
 			animation = new Animation(48, 48);
 			jumpAnimation = new Animation(48, 48);
 			rnd = new Random();
@@ -1254,7 +1259,7 @@ namespace _2DActionGame
 				if (stage.player.isCuttingUp) {
 					BlownAwayMotionUp(3, 65);
 					//isBlownAway = true;
-				} else if (stage.player.isCuttingAway) BlownAwayMotionRight(1, 60);
+				} //else if (stage.player.isCuttingAway) BlownAwayMotionRight(0.5f, 60);
 				else if (stage.player.isCuttingDown) BlownAwayMotionDown(1.5f, 60);// 3,60だとブロックをすり抜ける...
 				else if (stage.player.isAttacking3) {
 					if (distance > 0) speed.X += 5 * timeCoef;
@@ -1310,12 +1315,12 @@ namespace _2DActionGame
 					if (attackBlinkCount % 5 == 0) e += .05f;
 					dColor = (float)Math.Sin(e * 8) / 2.0f + 0.5f;
 
-					spriteBatch.Draw(texture, drawPos, animation.rect, Color.Blue * dColor);
+                    spriteBatch.Draw(texture, drawPos, animation.rect, Color.Blue * dColor, 0, Vector2.Zero, 1, !turnsRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
 					attackBlinkCount++;
 				} else {
-					//base.Draw(spriteBatch);
-                    DrawComboCount(spriteBatch);
-                    DrawDamageBlinkOnce(spriteBatch, Color.Red);
+					base.Draw(spriteBatch);
+                    //DrawComboCount(spriteBatch);
+                    //DrawDamageBlinkOnce(spriteBatch, Color.Red);
 				}
 			}
 		}
