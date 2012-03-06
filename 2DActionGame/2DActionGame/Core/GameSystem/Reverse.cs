@@ -95,7 +95,7 @@ namespace _2DActionGame
             if (score_prev > game.tasScore) { score_prev = 0; }
 
             //Score依存回復
-            if (game.stageScores[game.stageNum-1] > score_prev) {
+            if (game.tasScore > score_prev) {
                 //(game.score - score_prev) * (stage.player.MAXTAS / 150) が基本的なTASの回復量。
 
 				if (stage.player.TASpower + (int)(game.tasScore - score_prev) * (stage.player.MAXTAS / 150) < stage.player.MAXTAS) {
