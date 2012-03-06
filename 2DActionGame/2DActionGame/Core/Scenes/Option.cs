@@ -33,6 +33,7 @@ namespace _2DActionGame
 				"ViewRanking",
 				"StageSelect",
                 "Credit",
+                "Simple / Technical",
 				"Back" 
 			};
             buttonNum = menuString.Length;
@@ -61,6 +62,7 @@ namespace _2DActionGame
 			base.UpdateTexts();
 			button[1].name = "BGM volume : " + SoundControl.volumeAll.ToString("F2");
 			button[2].name = "Mute all sound " + (game.isMuted ? "On" : "Off");
+            button[7].name = "TwoButtonMode : " + game.twoButtonMode.ToString();
 		}
         protected override void ButtonUpdate()
         {
@@ -115,7 +117,13 @@ namespace _2DActionGame
                 if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
                 PushScene(new Ending(this, false));
             }
-            if (button[7].isSelected && JoyStick.IsOnKeyDown(1) || JoyStick.IsOnKeyDown(3)) {// Back To Menu
+            if (button[7].isSelected && JoyStick.IsOnKeyDown(1)) {
+                if (!game.twoButtonMode) game.twoButtonMode = true;
+                else game.twoButtonMode = false;
+
+                if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
+            }
+            if (button[8].isSelected && JoyStick.IsOnKeyDown(1) || JoyStick.IsOnKeyDown(3)) {// Back To Menu
 				if (!game.isMuted) cancel.Play(SoundControl.volumeAll, 0f, 0f);
 				isEndScene = true;
                 SoundControl.Stop();

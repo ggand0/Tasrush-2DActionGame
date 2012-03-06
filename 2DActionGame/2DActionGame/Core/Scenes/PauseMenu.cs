@@ -20,7 +20,7 @@ namespace _2DActionGame
 				//"Option", 
 				"BackToMenu",
 				"DebugMenu",
-				"Exit"
+				//"Exit"
 			};
             buttonNum = menuString.Length;
             button = new Button[buttonNum];
@@ -71,10 +71,10 @@ namespace _2DActionGame
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
 			}
 
-			if (button[3].isSelected && JoyStick.IsOnKeyDown(1)) {		// Exit
+			/*if (button[3].isSelected && JoyStick.IsOnKeyDown(1)) {		// Exit
 				game.Exit();
 				if (!game.isMuted) choose.Play(SoundControl.volumeAll, 0f, 0f);
-			}
+			}*/
 
         }
 
