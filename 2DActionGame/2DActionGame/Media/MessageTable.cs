@@ -26,8 +26,10 @@ namespace _2DActionGame
             "ランキングを確認する",
             "ステージ選択してゲームを始める",
              "スタッフロールを見る",
+             "攻撃のモードを切り替える",
             "メニューに戻る"
         };
+
 
         public static string[] Messages = {
             "日本語メッセージテスト\n"+
