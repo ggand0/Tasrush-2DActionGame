@@ -120,7 +120,6 @@ namespace _2DActionGame
 							spriteBatch.DrawString(game.debugFont, "sword.isHit:" + stage.player.sword.isHit.ToString(), new Vector2(0, 170 + y), fontColor[1]);
 							spriteBatch.DrawString(game.debugFont, "game.score:" + game.score.ToString(), new Vector2(0, 180 + y), fontColor[1]);
 							spriteBatch.DrawString(game.debugFont, "player.isTouchSomeCeiling:" + stage.player.isTouchSomeCeiling.ToString(), new Vector2(0, 190 + y), fontColor[1]);
-							//spriteBatch.DrawString(game.Arial2, "boss.Turret:" + (stage.boss as Fuujin).cutterTurret5Way.defaultPosition.ToString(), new Vector2(0, 180), fontColor[1]);
 							if (stage.boss is Fuujin) {
 								spriteBatch.DrawString(game.debugFont, "boss.Turret:" + (stage.boss as Fuujin).cutterTurret5Way.position.ToString(), new Vector2(0, 200 + y), fontColor[1]);
 								spriteBatch.DrawString(game.debugFont, "boss.dFA:" + (stage.boss as Fuujin).damageFromAttacking.ToString(), new Vector2(0, 210 + y), fontColor[1]);

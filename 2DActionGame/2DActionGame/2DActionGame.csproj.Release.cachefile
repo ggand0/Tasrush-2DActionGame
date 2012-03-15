@@ -347,3 +347,15 @@ Content\General\menuFont.xnb
 Content\General\titleFont.xnb
 Content\General\Pump_Demi_Bold.xnb
 Content\General\Pump_Demi_Bold2.xnb
+Ranking.txt
+Stages\Stage1_Easy.txt
+Stages\Stage1_hard.txt
+Stages\Stage2_Easy.txt
+Stages\Stage2_Hard.txt
+Stages\Stage3_Easy.txt
+Stages\Stage3_Hard.txt
+Xml\KeyConfig.xml
+Xml\Objects_Base.xml
+Xml\Objects_Enemy_Stage1.xml
+Xml\Objects_Enemy_Stage2.xml
+Xml\Objects_Enemy_Stage3.xml

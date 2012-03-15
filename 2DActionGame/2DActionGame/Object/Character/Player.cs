@@ -1083,7 +1083,7 @@ namespace _2DActionGame
 			}
 			if (!hasDashed && isDashing) {
 			}
-
+#if DEBUG
 			if (KeyInput.IsOnKeyDown(Keys.B) || JoyStick.KEY(7)) {// debug用超ダッシュ
 				isDashing = true;
 				if (speed.X > 0) {
@@ -1095,6 +1095,7 @@ namespace _2DActionGame
 					else speed.X = -24;
 				}
 			}
+#endif
 			#endregion
 			#region Jumping
 			// ジャンプ

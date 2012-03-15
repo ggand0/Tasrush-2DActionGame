@@ -4,6 +4,9 @@ using System.Text;
 
 namespace _2DActionGame
 {
+	/// <summary>
+	/// 日本語表示のテキストを格納するクラス
+	/// </summary>
     static class MessageTable
     {
 		public static string[] debugMenuMsgs = {

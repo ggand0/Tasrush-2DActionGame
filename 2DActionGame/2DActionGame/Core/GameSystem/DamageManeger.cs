@@ -55,39 +55,6 @@ namespace _2DActionGame
 		}
 
 		/// <summary>
-		/// Sword.DamageUpdateを移植
-		/// </summary>
-		/*public void Update()
-		{
-			// Playerと敵の判定に限定→より汎用的にしたい
-			if (!stage.player.hasAttacked) {
-				for (int i = 0; i < stage.activeObjects.Count; i++) {
-					if (stage.activeObjects[i].isDamaged) {											// 最初にtrueになったときのみに限定
-						if (stage.activeObjects[i] is Player)
-							stage.player.MotionUpdate();											// Raijinの件はここが原因か.HP制にする場合はここを消すだけで行けるような気が...
-
-						if (damagedObjectNum.Any((x) => x == i)) {									// 既にList中にある場合は何もしない
-						} else {
-							damagedObjects.Add(stage.activeObjects[i]);								// 無い場合（新しくダメージをもらったObjectのとき）Listに追加
-							damagedObjectNum[0 + (damagedObjects.Count - 1)] = i;		// 判定済みの敵を記憶
-						}
-						for (int l = 0; l < damagedObjects.Count; l++) {                            // その敵の判定開始 2回(damageC.Count分)damageTimeが判定されてしまう　面倒だ
-							damageTime[l]++;
-						}
-						for (int m = 0; m < stage.damagedObjects.Count; m++) {
-							if (damageTime[0 + m] == 1) {
-								stage.activeObjects[damagedObjectNum[m]].MotionUpdate();
-							}
-						}
-						counter++;
-						stage.activeObjects[i].isDamaged = false;
-					}
-				}
-			}
-
-		}*/
-
-		/// <summary>
 		/// より汎用的な処理に改良。
 		/// </summary>
 		public void Update()
